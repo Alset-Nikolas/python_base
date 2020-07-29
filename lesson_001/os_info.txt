@@ -1,0 +1,4 @@
+OS info is 
+uname_result(system='Windows', node='WIN-8OHT4JTSMEO', release='7', version='6.1.7601', machine='AMD64', processor='AMD64 Family 16 Model 4 Stepping 3, AuthenticAMD')
+
+Python version is 3.8.3 (tags/v3.8.3:6f8c832, May 13 2020, 22:20:19) [MSC v.1925 32 bit (Intel)] ('32bit', 'WindowsPE')
