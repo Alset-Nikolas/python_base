@@ -12,3 +12,5 @@ print(result)
 
 result_25 = 1 * 2 + 3 + 4 * 5
 print(result_25)
+
+# зачёт! 🚀
