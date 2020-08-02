@@ -38,10 +38,10 @@ third_word = secret_message[2][5:15:2]
 fourth_word = secret_message[3][12:6:-1]
 fifth_word = secret_message[4][20:15:-1]
 
-print(first_word)
-print(second_word)
-print(third_word)
-print(fourth_word)
-print(fifth_word)
+print(first_word, end=' ')
+print(second_word, end=' ')
+print(third_word, end=' ')
+print(fourth_word, end=' ')
+print(fifth_word, end=' ')
 
-# TODO вывести всё отгаданное выражение в одну строку (а не на отдельных строчках)
+
