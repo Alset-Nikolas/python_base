@@ -53,7 +53,7 @@ time_On_Track = pocket_universe_songs['On Track']
 time_To_the_Sea = pocket_universe_songs['To the Sea']
 time_Beyond_Mirrors = pocket_universe_songs['Beyond Mirrors']
 sum_time_2 = time_On_Track + time_To_the_Sea + time_Beyond_Mirrors
-sum_time_2 = round(sum_time_2, 2) # 14.93 минуты —---> 15.33 минуты
+sum_time_2 = round(sum_time_2, 2)
 text_pocket_universe_songs = 'А другие три песни звучат приблизительно ' + str(int(sum_time_2)) + ' минут.'
 print(text_pocket_universe_songs)
 

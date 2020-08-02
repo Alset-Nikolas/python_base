@@ -8,9 +8,9 @@ zoo = ['lion', 'kangaroo', 'elephant', 'monkey']
 # посадите медведя (bear) между львом и кенгуру
 # и выведите список на консоль
 
-print(zoo)
-zoo.insert(1, 'bear')
 
+zoo.insert(1, 'bear')
+print(zoo)
 # добавьте птиц из списка birds в последние клетки зоопарка
 birds = ['rooster', 'ostrich', 'lark']
 # и выведите список на консоль
