@@ -58,29 +58,43 @@ print('Лампа -', lamps_quantity, 'шт, стоимость', lamps_cost, '�
 #----------------------------------Стол---------------------------------------------------------
 
 stol_code = goods['Стол']
-stol_item_0 = store[stol_code][0]; stol_item_0_quantity = stol_item_0['quantity']; stol_item_0_price = stol_item_0['price'] * stol_item_0_quantity
-stol_item_1 = store[stol_code][1]; stol_item_1_quantity = stol_item_1['quantity']; stol_item_1_price = stol_item_1['price'] * stol_item_1_quantity
+stol_item_0 = store[stol_code][0]
+stol_item_0_quantity = stol_item_0['quantity']
+stol_item_0_price = stol_item_0['price'] * stol_item_0_quantity
+stol_item_1 = store[stol_code][1]
+stol_item_1_quantity = stol_item_1['quantity']
+stol_item_1_price = stol_item_1['price'] * stol_item_1_quantity
 stol_quantity = stol_item_0_quantity + stol_item_1_quantity
 stol_cost = stol_item_0_price + stol_item_1_price
 print('Стол -', stol_quantity, 'шт, стоимость', stol_cost, 'руб')
 
 #----------------------------------Диван---------------------------------------------------------
 divan_code = goods['Диван']
-divan_item_0 = store[divan_code][0]; divan_item_0_quantity = divan_item_0['quantity']; divan_item_0_price = divan_item_0['price'] * divan_item_0_quantity
-divan_item_1 = store[divan_code][1]; divan_item_1_quantity = divan_item_1['quantity']; divan_item_1_price = divan_item_1['price'] * divan_item_1_quantity
+divan_item_0 = store[divan_code][0]
+divan_item_0_quantity = divan_item_0['quantity']
+divan_item_0_price = divan_item_0['price'] * divan_item_0_quantity
+divan_item_1 = store[divan_code][1]
+divan_item_1_quantity = divan_item_1['quantity']
+divan_item_1_price = divan_item_1['price'] * divan_item_1_quantity
 divan_quantity = divan_item_0_quantity + divan_item_1_quantity
 divan_cost = divan_item_0_price + divan_item_1_price
 print('Диван -', divan_quantity, 'шт, стоимость', divan_cost, 'руб')
 #----------------------------------Стул---------------------------------------------------------
 stul_code = goods['Стул']
-stul_item_0 = store[stul_code][0]; stul_item_0_quantity = stul_item_0['quantity']; stul_item_0_price = stul_item_0['price'] * stul_item_0_quantity
-stul_item_1 = store[stul_code][1]; stul_item_1_quantity = stul_item_1['quantity']; stul_item_1_price = stul_item_1['price'] * stul_item_1_quantity
-stul_item_2 = store[stul_code][2]; stul_item_2_quantity = stul_item_2['quantity']; stul_item_2_price = stul_item_2['price'] * stul_item_2_quantity
+stul_item_0 = store[stul_code][0]
+stul_item_0_quantity = stul_item_0['quantity']
+stul_item_0_price = stul_item_0['price'] * stul_item_0_quantity
+stul_item_1 = store[stul_code][1]
+stul_item_1_quantity = stul_item_1['quantity']
+stul_item_1_price = stul_item_1['price'] * stul_item_1_quantity
+stul_item_2 = store[stul_code][2]
+stul_item_2_quantity = stul_item_2['quantity']
+stul_item_2_price = stul_item_2['price'] * stul_item_2_quantity
 stul_quantity = stul_item_0_quantity + stul_item_1_quantity + stul_item_2_quantity
 stul_cost = stul_item_0_price + stul_item_1_price + stul_item_2_price
 print('Стул -', stul_quantity, 'шт, стоимость', stul_cost, 'руб')
 
-# TODO если строка кода длиннее 79 символов (выходит за границы), она должна быть разбита на несколько строк
+
 
 # --------------------------ВОПРОСИК---------------------------
 
