@@ -44,4 +44,4 @@ print(third_word, end=' ')
 print(fourth_word, end=' ')
 print(fifth_word, end=' ')
 
-
+# TODO здесь нужно перечислить все слова в одном print()

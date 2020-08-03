@@ -51,9 +51,13 @@ time_To_the_Sea = pocket_universe_songs['To the Sea']
 time_Beyond_Mirrors = pocket_universe_songs['Beyond Mirrors']
 sum_time_2 = time_On_Track + time_To_the_Sea + time_Beyond_Mirrors
 sum_time_2 = int(sum_time_2)
+# TODO для целочисленного округления настоятельно рекомендую использовать функцию round(). Сравните:
+#  print(int(1.95))  # просто отбрасывает дробную часть
+#  print(round(1.95))  # округляет с математическим подходом
 text_pocket_universe_songs = 'А другие три песни звучат приблизительно ' + str(int(sum_time_2)) + ' минут.'
-
+# TODO отдельную переменную для вывода результата заводить не нужно
 print(text_pocket_universe_songs)
 
 # Обратите внимание, что делать много вычислений внутри print() - плохой стиль.
 # Лучше заранее вычислить необходимое, а затем в print(xxx, yyy, zzz)
+
