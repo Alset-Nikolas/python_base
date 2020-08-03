@@ -15,9 +15,9 @@ radius = 42
 # точность указывается в функции round()
 
 
-S = round(math.pi * radius ** 2, 4)
-# TODO округление результата лучше перенести в print()
-print(S)
+S = math.pi * radius ** 2
+
+print(round(S,4))
 
 # Далее, пусть есть координаты точки
 point_1 = (23, 34)
