@@ -17,7 +17,7 @@ radius = 42
 
 S = math.pi * radius ** 2
 
-print(round(S,4))
+print(round(S, 4))
 
 # Далее, пусть есть координаты точки
 point_1 = (23, 34)
@@ -46,3 +46,5 @@ print(vector_point_2 <= radius)
 # 77777.7777
 # False
 # False
+
+# зачёт! 🚀
