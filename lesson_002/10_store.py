@@ -94,7 +94,7 @@ stul_quantity = stul_item_0_quantity + stul_item_1_quantity + stul_item_2_quanti
 stul_cost = stul_item_0_price + stul_item_1_price + stul_item_2_price
 print('Стул -', stul_quantity, 'шт, стоимость', stul_cost, 'руб')
 
-
+# зачёт! 🚀
 
 # --------------------------ВОПРОСИК---------------------------
 

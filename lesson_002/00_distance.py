@@ -54,7 +54,7 @@ distances = {
 }
 
 pprint(distances)
-#print(distances['Moscow']['Paris'])
-#print(distances['Paris']['Moscow'])
+# print(distances['Moscow']['Paris'])
+# print(distances['Paris']['Moscow'])
 
-
+# зачёт! 🚀
