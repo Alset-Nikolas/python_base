@@ -11,4 +11,15 @@
 
 educational_grant, expenses = 10000, 12000
 
-# TODO здесь ваш код
+n_procent = 3 / 100
+kol_vo_mecazev = 10
+
+summa = expenses - educational_grant
+
+while kol_vo_mecazev != 0:
+    kol_vo_mecazev -= 1
+    dif = expenses * (1 + n_procent) - educational_grant
+    summa += dif
+else:
+    print('Студенту надо попросить', round(summa, 2), 'рублей')
+
