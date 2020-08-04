@@ -10,5 +10,13 @@
 #   Целочисленное деление ХХХ на YYY дает ZZZ
 
 a, b = 179, 37
+A_const, B_const = a, b
 
-# TODO здесь ваш код
+celochislenoe_delenie = 0
+while a > 0:
+    a -= b
+    if a > 0:
+        celochislenoe_delenie += 1
+    else:
+        print('Целочисленное деление ', A_const, ' на ', B_const, ' дает ', celochislenoe_delenie)
+        print('Проверка:', A_const // B_const)
