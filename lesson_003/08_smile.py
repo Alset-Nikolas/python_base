@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# (определение функций)
 import random
 
 import simple_draw as sd
 
+# (определение функций)
 
 # Написать функцию отрисовки смайлика по заданным координатам
 # Форма рожицы-смайлика на ваше усмотрение
@@ -39,7 +39,6 @@ def eye_right(point, radius, color=sd.COLOR_DARK_PURPLE):
 
 
 def grin(point, radius, color=sd.COLOR_DARK_PURPLE):
-    pass
     x_smile = point.x
     y_smile = point.y
     x_point_1 = x_smile - radius / 3
@@ -65,3 +64,5 @@ for _ in range(10):
     y = random.randint(50, 600)
     smile(x, y, color=sd.COLOR_DARK_PURPLE)
 sd.pause()
+
+# зачёт! 🚀
