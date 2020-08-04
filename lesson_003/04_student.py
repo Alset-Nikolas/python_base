@@ -11,8 +11,8 @@
 
 educational_grant, expenses = 10000, 12000
 
-n_procent = 3 / 100
-kol_vo_mecazev = 10
+n_procent = 3 / 100  # TODO нейминг! n_procent -> percents_change
+kol_vo_mecazev = 10  # TODO нейминг! kol_vo_mecazev -> months
 
 summa = expenses - educational_grant
 
