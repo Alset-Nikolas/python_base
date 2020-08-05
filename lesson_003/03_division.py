@@ -9,14 +9,15 @@
 # Формат вывода:
 #   Целочисленное деление ХХХ на YYY дает ZZZ
 
-a, b = 179, 37  # TODO что будет, если a = 370 и b = 37?
+a, b = 179, 37
+a, b = max(a, b), min(a, b) # TODO даны целые положительные числа a и b (a > b)
 A_const, B_const = a, b
 
-celochislenoe_delenie = 0  # TODO задайте имя на английском языке
+integer_division = 0
 while a > 0:
     a -= b
     if a > 0:
-        celochislenoe_delenie += 1
+        integer_division += 1
     else:
-        print('Целочисленное деление ', A_const, ' на ', B_const, ' дает ', celochislenoe_delenie)
+        print('Целочисленное деление ', A_const, ' на ', B_const, ' дает ', integer_division)
         print('Проверка:', A_const // B_const)
