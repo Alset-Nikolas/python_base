@@ -26,11 +26,11 @@ def draw_bubble(point, step, color):
 
 # Нарисовать 10 пузырьков в ряд
 
-'''
+
 for x in range(100, 1100, 100):
     point = sd.Point(x=x, y=100)
-    bubbles(point=point, step=5)
-'''
+    bubbles(point=point, step=5)  # TODO эту часть задания нужно тоже доработать по принципу остальных уже исправленных
+
 
 
 # Нарисовать три ряда по 10 пузырьков
