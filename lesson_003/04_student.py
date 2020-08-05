@@ -17,14 +17,10 @@ months = 9
 summa = expenses - educational_grant
 
 while months != 0:
-    dif = expenses * (1 + percents_change) - educational_grant
-    # TODO лучше обойтись без переменной dif
-    # TODO рост цен применён неверно. Он тоже должен накапливаться от месяца к месяцу
-    summa += dif
+    summa += expenses * (1 + percents_change) - educational_grant
+    percents_change += 3 / 100
     months -= 1
-
-
 else:
     print('Студенту надо попросить', round(summa, 2), 'рублей')
 
-# TODO студенту нужно попросить больше, чтобы прожить учебный год
+
