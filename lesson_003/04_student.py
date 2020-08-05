@@ -11,16 +11,17 @@
 
 educational_grant, expenses = 10000, 12000
 
-n_procent = 3 / 100  # TODO нейминг! n_procent -> percents_change
-kol_vo_mecazev = 10  # TODO нейминг! kol_vo_mecazev -> months
+percents_change = 3 / 100
+months = 9
 
 summa = expenses - educational_grant
 
-while kol_vo_mecazev != 0:
-    kol_vo_mecazev -= 1
-    dif = expenses * (1 + n_procent) - educational_grant
+while months != 0:
+    dif = expenses * (1 + percents_change) - educational_grant
     summa += dif
+    months -= 1
+
+
 else:
     print('Студенту надо попросить', round(summa, 2), 'рублей')
 
-# TODO ответ неверный. Подсчёт расходов реализован с ошибкой
