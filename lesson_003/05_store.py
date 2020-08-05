@@ -54,9 +54,9 @@ store = {
 #         подсчет стоимости товара
 #     вывод на консоль количества и стоимости товара на складе
 
-for tovar, code in goods.items():  # TODO задавать имена переменных принято на английском языке. Поэтому tovar -> item
-    tovar_cost, tovar_quantity = 0, 0
+for item, code in goods.items():
+    item_cost, item_quantity = 0, 0
     for element in store[code]:  # так тоже можно
-        tovar_cost += element['quantity'] * element['price']
-        tovar_quantity += element['quantity']
-    print(tovar, '-', tovar_quantity, ' шт, стоимость ', tovar_cost, 'руб')
+        item_cost += element['quantity'] * element['price']
+        item_quantity += element['quantity']
+    print(item, '-', item_quantity, ' шт, стоимость ', item_cost, 'руб')
