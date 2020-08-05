@@ -10,16 +10,12 @@
 #   Целочисленное деление ХХХ на YYY дает ZZZ
 
 a, b = 370, 37
-# TODO при таких условиях всё равно не верно:
-#  Целочисленное деление  370  на  37  дает  9
-#  Проверка: 10
-a, b = max(a, b), min(a, b)  # TODO это лишнее действие, по заданию не требуется
 A_const, B_const = a, b
 
 integer_division = 0
-while a > 0:  # TODO обратите внимание здесь на условие
+while a >= 0:
     a -= b
-    if a > 0:  # TODO и здесь тоже
+    if a >= 0:
         integer_division += 1
     else:
         print('Целочисленное деление ', A_const, ' на ', B_const, ' дает ', integer_division)
