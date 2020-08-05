@@ -10,7 +10,6 @@ rainbow_colors = (sd.COLOR_RED, sd.COLOR_ORANGE, sd.COLOR_YELLOW, sd.COLOR_GREEN
 # Нарисовать радугу: 7 линий разного цвета толщиной 4 с шагом 5 из точки (50, 50) в точку (350, 450)
 
 
-
 start_x, start_y = 50, 50
 finish_x, finish_y = 350, 450
 for color in rainbow_colors:
@@ -20,9 +19,6 @@ for color in rainbow_colors:
     sd.lines(point_list, color=color, closed=False, width=4)
     start_x += 5
     finish_x += 5
-
-
-
 
 # Подсказка: цикл нужно делать сразу по тьюплу с цветами радуги.
 
@@ -34,9 +30,8 @@ for color in rainbow_colors:
 radius = 550
 center_position = sd.Point(600, 0)
 
-for color in rainbow_colors:  # TODO радуга-дуга получилась вывернутой (порядок цветов неверный)
+for color in rainbow_colors[::-1]:
     sd.circle(center_position, radius=radius, color=color, width=10)
-    radius +=10
+    radius += 10
 sd.pause()
 
-# TODO рекомендую пользоваться пунктом меню Code → Reformat code, это отформатирует код по правилам записи PEP8
