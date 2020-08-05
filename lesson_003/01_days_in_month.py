@@ -26,12 +26,12 @@ while not user_input:
     print('Вы ничего не ввели! ', end=' ')
     user_input = input('Введите, пожалуйста, номер месяца: ')
 else:
-    month_probe = float(user_input)
+    month_probe = float(user_input)  # TODO такая проверка не нужна
     if month_probe % 10 != 0:
         print('Вы ввели', month_probe)
         print('Предполагалось натуральное число!')
     else:
-        month = int(user_input)
+        month = int(user_input)  # TODO что произойдёт, если пользователь введёт что-либо кроме числа?
         print('Вы ввели', month)
         if 0 < month < 13:
             print('В', months[month][0], ' всего ', months[month][1], ' дней')

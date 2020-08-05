@@ -9,10 +9,10 @@
 # Формат вывода:
 #   Целочисленное деление ХХХ на YYY дает ZZZ
 
-a, b = 179, 37
+a, b = 179, 37  # TODO что будет, если a = 370 и b = 37?
 A_const, B_const = a, b
 
-celochislenoe_delenie = 0
+celochislenoe_delenie = 0  # TODO задайте имя на английском языке
 while a > 0:
     a -= b
     if a > 0:

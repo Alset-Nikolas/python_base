@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import simple_draw as sd
 
 # (цикл for)
 
-import simple_draw as sd
 
 rainbow_colors = (sd.COLOR_RED, sd.COLOR_ORANGE, sd.COLOR_YELLOW, sd.COLOR_GREEN,
                   sd.COLOR_CYAN, sd.COLOR_BLUE, sd.COLOR_PURPLE)
@@ -34,9 +34,9 @@ for color in rainbow_colors:
 radius = 550
 center_position = sd.Point(600, 0)
 
-for color in rainbow_colors:
+for color in rainbow_colors:  # TODO радуга-дуга получилась вывернутой (порядок цветов неверный)
     sd.circle(center_position, radius=radius, color=color, width=10)
     radius +=10
 sd.pause()
 
-
+# TODO рекомендую пользоваться пунктом меню Code → Reformat code, это отформатирует код по правилам записи PEP8

@@ -26,6 +26,9 @@ if (envelop_x >= paper_x and envelop_y >= paper_y) or (envelop_x >= paper_y and 
     print('Да')
 else:
     print('Нет')
+
+# зачёт! 🚀
+
 # Усложненное задание, решать по желанию.
 # Заданы размеры hole_x, hole_y прямоугольного отверстия и размеры brick_х, brick_у, brick_z кирпича (все размеры
 # могут быть в диапазоне от 1 до 1000)
@@ -67,3 +70,5 @@ elif hole_x >= brick_y and hole_y >= brick_z:
     print('Да')
 else:
     print('Нет')
+
+# зачёт! 🚀
