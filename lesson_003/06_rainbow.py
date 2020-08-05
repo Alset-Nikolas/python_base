@@ -35,3 +35,4 @@ for color in rainbow_colors[::-1]:
     radius += 10
 sd.pause()
 
+# зачёт! 🚀

@@ -60,3 +60,5 @@ for item, code in goods.items():
         item_cost += element['quantity'] * element['price']
         item_quantity += element['quantity']
     print(item, '-', item_quantity, ' шт, стоимость ', item_cost, 'руб')
+
+# зачёт! 🚀
