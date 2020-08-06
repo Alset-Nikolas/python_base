@@ -20,3 +20,5 @@ while a >= 0:
     else:
         print('Целочисленное деление ', A_const, ' на ', B_const, ' дает ', integer_division)
         print('Проверка:', A_const // B_const)
+
+# зачёт! 🚀

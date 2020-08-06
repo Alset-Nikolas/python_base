@@ -3,7 +3,6 @@ import random
 
 import simple_draw as sd
 
-
 # Нарисовать пузырек - три вложенных окружностей с шагом 5 пикселей
 
 sd.resolution = (1200, 600)
@@ -14,6 +13,8 @@ for _ in range(3):
     sd.circle(center_position=point, radius=radius, width=2)
     radius += 5
 '''
+
+
 # Написать функцию рисования пузырька, принммающую 3 (или более) параметра: точка рисования, шаг и цвет
 
 def draw_bubble(point, step, color):
@@ -23,14 +24,10 @@ def draw_bubble(point, step, color):
         radius += step
 
 
-
 # Нарисовать 10 пузырьков в ряд
-
-
 for x in range(100, 1100, 100):
     point = sd.Point(x=x, y=100)
     draw_bubble(point=point, step=5, color=sd.COLOR_ORANGE)
-
 
 # Нарисовать три ряда по 10 пузырьков
 for y in range(100, 400, 100):
@@ -45,3 +42,5 @@ for _ in range(100):
     draw_bubble(point=point, step=step, color=sd.random_color())
 
 sd.pause()
+
+# зачёт! 🚀
