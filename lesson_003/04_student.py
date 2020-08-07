@@ -12,17 +12,28 @@
 educational_grant, expenses = 10000, 12000
 
 percents_change = 3 / 100
-months = 9
 
+scholarship_for_10_month = 10 * educational_grant
+expenses_for_i_month = 0
+for _ in range(9):
+    expenses_for_i_month += expenses
+    expenses *= 1 + percents_change
+else:
+    print('Студенту надо попросить', round(expenses_for_i_month - scholarship_for_10_month, 2), 'рублей')
+
+'''  
+educational_grant, expenses = 10000, 12000
+percents_change = 3 / 100
 summa = expenses - educational_grant
 
-while months != 0:
-    summa += expenses * (1 + percents_change) - educational_grant
-    percents_change += 3 / 100
-    months -= 1
+for _ in range(8):
+    expenses *= 1 + percents_change
+    summa += expenses - educational_grant
+
 else:
     print('Студенту надо попросить', round(summa, 2), 'рублей')
 
-# TODO теперь практически верно! Но накапливать нужно не сам процент (его значение, кстати, остаётся неизменным 0.03),
-#  а сумму расходов с учётом. Посчитали разницу расходов и гранта, потом расходы на этот месяц с учётом роста цен
-#  вывод: сумму денег, которую нужно попросить и сами расходы нужно считать отдельно
+Слегка запутался, не могу понять почему ответ другой...? 
+
+'''
+
