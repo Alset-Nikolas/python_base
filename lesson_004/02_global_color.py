@@ -17,7 +17,7 @@ from pprint import pprint
 # Результат решения см lesson_004/results/exercise_02_global_color.jpg
 
 def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=100, color=sd.COLOR_YELLOW):
-    length = 100 * 6 / number_of_sides
+    length = length * 6 / number_of_sides
     start_point_0 = start_point
     delta = round(360 / number_of_sides)
     for angle_alfa in range(angle, 360 + angle, delta):
