@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
+from pprint import pprint
+
 
 # Добавить цвет в функции рисования геом. фигур. из упр lesson_004/01_shapes.py
 # (код функций скопировать сюда и изменить)
@@ -14,6 +16,59 @@ import simple_draw as sd
 # и константы COLOR_RED, COLOR_ORANGE, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE
 # Результат решения см lesson_004/results/exercise_02_global_color.jpg
 
-# TODO здесь ваш код
+def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=100, color=sd.COLOR_YELLOW):
+    length = 100 * 6 / number_of_sides
+    start_point_0 = start_point
+    delta = round(360 / number_of_sides)
+    for angle_alfa in range(angle, 360 + angle, delta):
+        side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
+        side.draw(color=color)
+        start_point = side.end_point
+    else:
+        end_point = start_point
+        point_list = [start_point_0, end_point]
+        sd.lines(point_list, color=color, closed=False, width=3)
+
+
+color = {
+    0:
+        {'Красный': sd.COLOR_RED},
+    1:
+        {'Оранжевый': sd.COLOR_ORANGE},
+    2:
+        {'Желтый': sd.COLOR_YELLOW},
+    3:
+        {'Зеленый': sd.COLOR_GREEN},
+    4:
+        {'Голубой': sd.COLOR_CYAN},
+    5:
+        {'Синий': sd.COLOR_BLUE},
+    6:
+        {'Фиолетовый': sd.COLOR_PURPLE},
+}
+print('Возможные цвета:')
+len_str = len('Красный 	 0')
+
+for i in color:
+    key = list(color[i].keys())[0]
+    print('\t', key, ' ' * (len_str - len(key)), i)
+
+while True:
+    number_color = int(input('Введите желаемый цвет > '))
+    if isinstance(number_color, int):
+        if 0 < number_color < 6:
+            for n in range(3,7,1):
+                print('Я залагал тут! ')
+                n_corners(number_of_sides=n, start_point=sd.random_point(),color=list(color[number_color].values())[0])
+        else:
+            print('Вы ввели не корректный номер!')
 
 sd.pause()
+
+#TODO просто функция работает
+'''
+number_color=3
+n_corners(number_of_sides=12, start_point=sd.Point(350, 250),color=list(color[number_color].values())[0])
+sd.pause()
+'''
+#TODO http://joxi.ru/MAjnRYwixP9q8A Не понимаю, почему 'не отвечает' :(
