@@ -1,13 +1,26 @@
 # -*- coding: utf-8 -*-
 
 import simple_draw as sd
-
+sd.resolution=(1200, 800)
 # 1) Написать функцию draw_branches, которая должна рисовать две ветви дерева из начальной точки
 # Функция должна принимать параметры:
 # - точка начала рисования,
 # - угол рисования,
 # - длина ветвей,
 # Отклонение ветвей от угла рисования принять 30 градусов,
+'''
+def draw_branches(point_start, angle, length):
+    angle_alfa = 30
+    branches = sd.Vector(start_point=point_start, direction = angle, length=length)
+    left_branches = sd.Vector(start_point=branches.end_point, direction = angle+angle_alfa, length=length*0.75)
+    right_branches = sd.Vector(start_point=branches.end_point, direction = angle-angle_alfa, length=length*0.75)
+    branches.draw(width=3)
+    left_branches.draw(width=3)
+    right_branches.draw(width=3)
+
+start = sd.Point(300,50)
+
+draw_branches(start, 90, 100)'''
 
 # 2) Сделать draw_branches рекурсивной
 # - добавить проверку на длину ветвей, если длина меньше 10 - не рисовать
@@ -25,9 +38,17 @@ import simple_draw as sd
 # Возможный результат решения см lesson_004/results/exercise_04_fractal_01.jpg
 
 # можно поиграть -шрифтами- цветами и углами отклонения
-
-# TODO здесь ваш код
-
+'''
+start = sd.Point(300,50)
+def draw_branches(point_start, angle, length):
+    if length < 10:
+        return
+    angle_alfa = 30
+    branches = sd.Vector(start_point=point_start, direction = angle, length=length)
+    draw_branches(point_start=branches.end_point, angle=angle+angle_alfa, length=length*0.75)
+    draw_branches(point_start=branches.end_point, angle=angle-angle_alfa, length=length*0.75)
+    branches.draw(width=3)
+draw_branches(start, 90, 100)'''
 # 4) Усложненное задание (делать по желанию)
 # - сделать рандомное отклонение угла ветвей в пределах 40% от 30-ти градусов
 # - сделать рандомное отклонение длины ветвей в пределах 20% от коэффициента 0.75
@@ -35,5 +56,15 @@ import simple_draw as sd
 
 # Пригодятся функции
 # sd.random_number()
-
+start = sd.Point(600,50)
+def draw_branches(point_start, angle, length):
+    if length < 10:
+        return
+    angle_alfa = sd.random_number(0.6*30, 1.4*30)
+    sigma = sd.random_number(8, 12) / 10
+    branches = sd.Vector(start_point=point_start, direction = angle, length=length)
+    draw_branches(point_start=branches.end_point, angle=angle+angle_alfa, length=length*0.75*sigma)
+    draw_branches(point_start=branches.end_point, angle=angle-angle_alfa, length=length*0.75*sigma)
+    branches.draw(width=3)
+draw_branches(start, 90, 150)
 sd.pause()
