@@ -2,6 +2,9 @@
 
 import simple_draw as sd
 
+import math
+
+
 # Часть 1.
 # Написать функции рисования равносторонних геометрических фигур:
 # - треугольника
@@ -13,6 +16,61 @@ import simple_draw as sd
 # - угол наклона
 # - длина стороны
 #
+def draw_triangle(start_point=sd.Point(90, 90), angle=45, length=100):
+    start_point_0 = start_point
+    for angle_alfa in range(angle, 360 + angle, 120):
+        side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
+        side.draw()
+        start_point = side.end_point
+    else:
+        end_point = start_point
+        point_list = [start_point_0, end_point]
+        sd.lines(point_list, color=sd.COLOR_YELLOW, closed=False, width=3)
+
+
+def draw_square(start_point=sd.Point(500, 90), angle=45, length=100):
+    start_point_0 = start_point
+    for angle_alfa in range(angle, 360 + angle, 90):
+        side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
+        side.draw()
+        start_point = side.end_point
+    else:
+        end_point = start_point
+        point_list = [start_point_0, end_point]
+        sd.lines(point_list, color=sd.COLOR_YELLOW, closed=False, width=3)
+
+
+def draw_five_corners(start_point=sd.Point(120, 400), angle=45, length=100):
+    start_point_0 = start_point
+    for angle_alfa in range(angle, 360 + angle, 72):
+        side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
+        side.draw()
+        start_point = side.end_point
+    else:
+        end_point = start_point
+        point_list = [start_point_0, end_point]
+        sd.lines(point_list, color=sd.COLOR_YELLOW, closed=False, width=3)
+
+
+def draw_six_corners(start_point=sd.Point(500, 400), angle=45, length=100):
+    start_point_0 = start_point
+    for angle_alfa in range(angle, 360 + angle, 60):
+        side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
+        side.draw()
+        start_point = side.end_point
+    else:
+        end_point = start_point
+        point_list = [start_point_0, end_point]
+        sd.lines(point_list, color=sd.COLOR_YELLOW, closed=False, width=3)
+
+
+draw_triangle()
+draw_square()
+draw_five_corners()
+draw_six_corners()
+
+
+# draw_five_corners()
 # Примерный алгоритм внутри функции:
 #   # будем рисовать с помощью векторов, каждый следующий - из конечной точки предыдущего
 #   текущая_точка = начальная точка
@@ -36,7 +94,6 @@ import simple_draw as sd
 # sd.line()
 # Результат решения см lesson_004/results/exercise_01_shapes.jpg
 
-# TODO здесь ваш код
 
 # Часть 1-бис.
 # Попробуйте прикинуть обьем работы, если нужно будет внести изменения в этот код.
@@ -61,5 +118,21 @@ import simple_draw as sd
 # Поэтому среди программистов есть принцип D.R.Y. https://clck.ru/GEsA9
 # Будьте ленивыми, не используйте копи-пасту!
 
+
+def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=100):
+    length = 100 * 6 / number_of_sides
+    start_point_0 = start_point
+    delta = round(360 / number_of_sides)
+    for angle_alfa in range(angle, 360 + angle, delta):
+        side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
+        side.draw()
+        start_point = side.end_point
+    else:
+        end_point = start_point
+        point_list = [start_point_0, end_point]
+        sd.lines(point_list, color=sd.COLOR_YELLOW, closed=False, width=3)
+
+
+n_corners(number_of_sides=18)
 
 sd.pause()
