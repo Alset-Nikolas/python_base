@@ -16,7 +16,7 @@ from pprint import pprint
 # и константы COLOR_RED, COLOR_ORANGE, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE
 # Результат решения см lesson_004/results/exercise_02_global_color.jpg
 
-def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=100, color=sd.COLOR_YELLOW):
+def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=50, color=sd.COLOR_YELLOW):
     length = length * 6 / number_of_sides
     start_point_0 = start_point
     delta = round(360 / number_of_sides)
@@ -53,22 +53,19 @@ for i in color:
     key = list(color[i].keys())[0]
     print('\t', key, ' ' * (len_str - len(key)), i)
 
+
 while True:
-    number_color = int(input('Введите желаемый цвет > '))
-    if isinstance(number_color, int):
-        if 0 < number_color < 6:
-            for n in range(3,7,1):
-                print('Я залагал тут! ')
-                n_corners(number_of_sides=n, start_point=sd.random_point(),color=list(color[number_color].values())[0])
-        else:
-            print('Вы ввели не корректный номер!')
+    number_color = input('Введите желаемый цвет > ')
+    try:
+        number_color = int(number_color)
+    except:
+        print('Вы ввели не корректный номер!')
+    if isinstance(number_color, int) and 0 <= number_color <= 6:
+        for n in range(3, 7, 1):
+            print('Я залагал тут! Должен нарисовать правильный ', n,' угольник!')
+            n_corners(number_of_sides=n, start_point=sd.random_point(), color=list(color[number_color].values())[0])
+    else:
+        print('Вы ввели не корректный номер!')
 
 sd.pause()
 
-#TODO просто функция работает
-'''
-number_color=3
-n_corners(number_of_sides=12, start_point=sd.Point(350, 250),color=list(color[number_color].values())[0])
-sd.pause()
-'''
-#TODO http://joxi.ru/MAjnRYwixP9q8A Не понимаю, почему 'не отвечает' :(
