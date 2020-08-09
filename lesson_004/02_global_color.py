@@ -62,7 +62,7 @@ while True:
         print('Вы ввели не корректный номер!')
     if isinstance(number_color, int) and 0 <= number_color <= 6:
         for n in range(3, 7, 1):
-            print('Я залагал тут! Должен нарисовать правильный ', n,' угольник!')
+            #print('Я залагал тут! Должен нарисовать правильный ', n,' угольник!')
             n_corners(number_of_sides=n, start_point=sd.random_point(), color=list(color[number_color].values())[0])
     else:
         print('Вы ввели не корректный номер!')
