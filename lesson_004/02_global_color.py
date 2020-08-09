@@ -46,6 +46,8 @@ color = {
     6:
         {'Фиолетовый': sd.COLOR_PURPLE},
 }
+# TODO словарь с целыми числами по порядку в качестве ключей это же список!
+# TODO поэтому нужно отредактировать эту структуру данных и подобрать для неё более оправданный тип коллекции
 print('Возможные цвета:')
 len_str = len('Красный 	 0')
 
@@ -56,14 +58,15 @@ for i in color:
 
 while True:
     number_color = input('Введите желаемый цвет > ')
-    try:
-        number_color = int(number_color)
+    try:  # TODO от конструкции try-except нужно избавиться
+        number_color = int(number_color)  # TODO перед приведением к числу проверить на корректность
     except:
         print('Вы ввели не корректный номер!')
-    if isinstance(number_color, int) and 0 <= number_color <= 6:
+    if isinstance(number_color, int) and 0 <= number_color <= 6:  # TODO для проверки лучше использовать isdigit
         for n in range(3, 7, 1):
             #print('Я залагал тут! Должен нарисовать правильный ', n,' угольник!')
             n_corners(number_of_sides=n, start_point=sd.random_point(), color=list(color[number_color].values())[0])
+            # TODO вместо list(color[number_color].values())[0] значение цвета можно получить гораздо проще
     else:
         print('Вы ввели не корректный номер!')
 

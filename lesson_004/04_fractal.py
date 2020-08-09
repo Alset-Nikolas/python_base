@@ -68,3 +68,7 @@ def draw_branches(point_start, angle, length):
     branches.draw(width=3)
 draw_branches(start, 90, 150)
 sd.pause()
+
+# TODO начиная с 3го модуля нужно строго соблюдать PEP8
+#  воспользуйтесь пунктом меню Code → Reformat code, это отформатирует код по правилам записи
+#  дополнительно контролируйте строки импорта. Они должны оставаться в самом вначале кода

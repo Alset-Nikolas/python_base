@@ -24,9 +24,9 @@ color = {
         {'Синий': sd.COLOR_BLUE},
     6:
         {'Фиолетовый': sd.COLOR_PURPLE},
-}
+}  # TODO замечание аналогично как в задании 02
 
-figures = ['Трекульник', 'Квадрат', 'Пятиугольник', 'Шестиугольник']
+figures = ['Треугольник', 'Квадрат', 'Пятиугольник', 'Шестиугольник']
 
 
 def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=100, color=sd.COLOR_YELLOW):
@@ -58,7 +58,7 @@ def choose_color(color):
     while True:
         print()
         number_color = input('Введите желаемый цвет > ')
-        try:
+        try:  # TODO от конструкции try-except нужно избавиться
             number_color = int(number_color)
         except:
             print('Число!')
@@ -84,7 +84,7 @@ def choose_figure(figures):
     while True:
         print()
         number_figure = input('Введите желаемую фигуру > ')
-        try:
+        try:  # TODO от конструкции try-except нужно избавиться
             number_figure = int(number_figure)
         except:
             print('Число!')
@@ -102,6 +102,7 @@ number_color = choose_color(color)
 number_figure = choose_figure(figures)
 
 
+# TODO по правилам оформления кода все методы всегда должны находиться выше остального кода, их использующего
 def draw(number_color, number_figure, color):
     n_corners(number_of_sides=number_figure + 3, start_point=sd.Point(300, 300),
               color=list(color[number_color].values())[0])
