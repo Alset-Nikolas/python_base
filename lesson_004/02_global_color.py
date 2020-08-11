@@ -21,7 +21,6 @@ def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=
     start_point_0 = start_point
     delta = round(360 / number_of_sides)
 
-
     for angle_alfa in range(angle, 360 + angle, delta):
         side = sd.Vector(start_point=start_point, direction=angle_alfa, length=length, width=3)
         side.draw(color=color)
@@ -30,6 +29,7 @@ def n_corners(number_of_sides, start_point=sd.Point(350, 250), angle=45, length=
         end_point = start_point
         point_list = [start_point_0, end_point]
         sd.lines(point_list, color=color, closed=False, width=3)
+
 
 color = [('Красный', sd.COLOR_RED),
          ('Оранжевый', sd.COLOR_ORANGE),
@@ -56,12 +56,12 @@ while True:
 
     for n in range(3, 7, 1):
         n_corners(number_of_sides=n, start_point=sd.random_point(), color=list(color[number_color][1]))
+    print()
+    print('\t Хороший выбор!')
+    print()
+    break
 
-    # TODO Я изменил тип, но как лучше было обратиться к значению цвета (когда был словарь)? Как обычно, по ключу
 
 sd.pause()
 
-# TODO приложение зависает при работе:
-# Вы ввели не корректный номер!
-# Введите желаемый цвет > 1
-# Введите желаемый цвет >
+
