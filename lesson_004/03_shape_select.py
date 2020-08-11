@@ -101,3 +101,5 @@ number_figure = choose_figure(figures)
 draw(number_color, number_figure, color)
 
 sd.pause()
+
+# зачёт! 🚀
