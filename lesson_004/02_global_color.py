@@ -61,7 +61,6 @@ while True:
     print()
     break
 
-
 sd.pause()
 
-
+# зачёт! 🚀
