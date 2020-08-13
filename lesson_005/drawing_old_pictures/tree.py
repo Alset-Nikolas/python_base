@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-def tree_draw():
+def tree_draw(x_start, y_start, length):
     import simple_draw as sd
     sd.resolution = (1200, 800)
 
-    start = sd.Point(600, 50)
+    start = sd.Point(x_start, y_start)
 
     def draw_branches(point_start, angle, length):
         if length < 10:
@@ -15,9 +15,10 @@ def tree_draw():
         draw_branches(point_start=branches.end_point, angle=angle - angle_alfa, length=length * 0.75 * sigma)
         branches.draw(width=3)
 
-    draw_branches(start, 90, 150)
+    draw_branches(start, 90, length)
     sd.pause()
 
 
 if __name__ == '__main__':
-    tree_draw()
+    tree_draw(300, 10,100)
+
