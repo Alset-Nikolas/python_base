@@ -18,8 +18,19 @@
 # пример см. lesson_005/results/04_painting.jpg
 # Приправить своей фантазией по вкусу (коты? коровы? люди? трактор? что придумается)
 
-# TODO здесь ваш код
+from lesson_005.drawing_old_pictures.house import hose_draw
 
+from lesson_005.drawing_old_pictures.rainbow import rainbow_picture
+import simple_draw as sd
+
+X_SIZE = 1200
+Y_SIZE = 800
+sd.resolution = (X_SIZE, Y_SIZE)
+
+hose_draw(x_left_down=X_SIZE//2-200, y_left_down=200, x_size=400, y_size=300)
+
+
+sd.pause()
 # Усложненное задание (делать по желанию)
 # Анимировать картину.
 # Пусть слева идет снегопад, радуга переливается цветами, смайлик моргает, солнце крутит лучами, етс.
