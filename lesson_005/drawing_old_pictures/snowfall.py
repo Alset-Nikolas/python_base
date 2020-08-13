@@ -4,10 +4,6 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
                   N=20):
     import simple_draw as sd
 
-
-
-
-
     start_x = [0] * N
     start_y = [0] * N
     snowfall_length = [0] * N
@@ -45,9 +41,6 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
                 start_x[i] -= sd.random_number(-2, 2)
             start_point[i] = sd.Point(start_x[i], start_y[i])
 
-
-
-
             sd.snowflake(center=start_point[i], length=snowfall_length[i], color=sd.COLOR_WHITE)
 
         sd.sleep(0.1)
@@ -56,6 +49,8 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
             break
         sd.finish_drawing()
 
+
 if __name__ == '__main__':
     import simple_draw as sd
+
     snowfall_draw()

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import simple_draw as sd
 
-def smile_draw(x_strart, y_start):
+
+def smile_draw(x_strart, y_start, color=sd.COLOR_YELLOW):
     import simple_draw as sd
 
     def pupil(point_eye_left, radius_eye, color=sd.COLOR_DARK_PURPLE):
@@ -48,8 +50,7 @@ def smile_draw(x_strart, y_start):
     smile(x_strart, y_start, color=sd.COLOR_DARK_PURPLE)
 
 
-
 if __name__ == '__main__':
-    import simple_draw as sd
+
     smile_draw(100, 100)
     sd.pause()
