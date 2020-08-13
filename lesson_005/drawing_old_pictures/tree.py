@@ -6,7 +6,7 @@ def tree_draw(x_start, y_start, length):
     start = sd.Point(x_start, y_start)
 
     def draw_branches(point_start, angle, length):
-        if length < 10:
+        if length < 3:
             return
         angle_alfa = sd.random_number(0.6 * 30, 1.4 * 30)
         sigma = sd.random_number(8, 12) / 10
@@ -20,5 +20,5 @@ def tree_draw(x_start, y_start, length):
 
 
 if __name__ == '__main__':
-    tree_draw(300, 10,100)
+    tree_draw(500, 100, 100)
 
