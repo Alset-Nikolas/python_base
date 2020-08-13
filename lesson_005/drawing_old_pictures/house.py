@@ -6,6 +6,7 @@ def hose_draw(x_left_down = 300, x_size = 400, y_size = 300, y_left_down = 200):
 
     import simple_draw as sd
 
+    print('Я сейчас в ', __name__)
 
 
     def roof():
@@ -27,13 +28,13 @@ def hose_draw(x_left_down = 300, x_size = 400, y_size = 300, y_left_down = 200):
 
         smile_draw(x_strart=center_position.x-y_size//6, y_start=center_position.y)
 
-    sd.resolution = (1200, 800)
+
     wall_draw(x_coordinates_down=x_left_down, y_coordinates_down=y_left_down,
               x_coordinates_up=x_left_down+x_size, y_coordinates_up=y_left_down+y_size)
     roof()
     window()
 
-
+    print('Я все в', __name__)
 
 
 if __name__ == '__main__':

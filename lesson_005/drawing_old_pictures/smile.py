@@ -45,7 +45,6 @@ def smile_draw(x_strart, y_start):
         grin(point=point, radius=radius, color=color)
 
     smile(x_strart, y_start, color=sd.COLOR_DARK_PURPLE)
-    sd.pause()
 
 
 

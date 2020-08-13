@@ -4,10 +4,9 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
                   N=20):
     import simple_draw as sd
 
-    sd.resolution = (700, 700)
 
-    sd.start_drawing()
-    sd.finish_drawing()
+
+
 
     start_x = [0] * N
     start_y = [0] * N
@@ -28,7 +27,8 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
         start_point.append(sd.Point(start_x[i], start_y[i]))
         flag_add_new_snowfall.append(0)
 
-    while True:
+
+    while N<= 30:
         sd.start_drawing()
 
         for i in range(N):
@@ -52,6 +52,7 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
             break
         sd.finish_drawing()
 
-
+        print('Я работаю')
 if __name__ == '__main__':
-    snowfall_draw(10, 0, 200, 100, 10, 3)
+    import simple_draw as sd
+    snowfall_draw()

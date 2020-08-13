@@ -11,7 +11,7 @@
 
 # С помощью созданного пакета нарисовать эпохальное полотно "Утро в деревне".
 # На картине должны быть:
-#  - кирпичный дом, в окошке - смайлик.
+#  - кирпичный дом, в окошке - смайлик. +
 #  - слева от дома - сугроб (предположим что это ранняя весна)
 #  - справа от дома - дерево (можно несколько)
 #  - справа в небе - радуга, слева - солнце (весна же!)
@@ -19,17 +19,20 @@
 # Приправить своей фантазией по вкусу (коты? коровы? люди? трактор? что придумается)
 
 from lesson_005.drawing_old_pictures.house import hose_draw
+from lesson_005.drawing_old_pictures.snowfall import snowfall_draw
 
 from lesson_005.drawing_old_pictures.rainbow import rainbow_picture
 import simple_draw as sd
+
+from lesson_005.drawing_old_pictures.street import street
 
 X_SIZE = 1200
 Y_SIZE = 800
 sd.resolution = (X_SIZE, Y_SIZE)
 
-hose_draw(x_left_down=X_SIZE//2-200, y_left_down=200, x_size=400, y_size=300)
-
-
+hose_draw(x_left_down=X_SIZE // 2 - 200, y_left_down=200, x_size=400, y_size=300)
+rainbow_picture(x_center=420, y_center=150, radius=800)
+street(X_SIZE, 200)
 sd.pause()
 # Усложненное задание (делать по желанию)
 # Анимировать картину.
