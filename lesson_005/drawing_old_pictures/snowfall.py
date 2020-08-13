@@ -27,23 +27,25 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
         start_point.append(sd.Point(start_x[i], start_y[i]))
         flag_add_new_snowfall.append(0)
 
-
-    while N<= 30:
+    while True:
         sd.start_drawing()
 
         for i in range(N):
             sd.snowflake(center=start_point[i], length=snowfall_length[i], color=sd.background_color)
-            if start_y[i] - snowfall_length[i] <= 0 and flag_add_new_snowfall[i] == 0:
+
+            if start_y[i] - snowfall_length[i] <= y_coordinates_down and flag_add_new_snowfall[i] == 0:
                 add_snowfall()
                 N += 1
                 flag_add_new_snowfall[i] = 1
-            elif start_y[i] - snowfall_length[i] <= 0 and flag_add_new_snowfall[i] == 1:
+            elif start_y[i] - snowfall_length[i] <= y_coordinates_down and flag_add_new_snowfall[i] == 1:
                 start_y[i] -= 0
                 start_x[i] -= 0
             else:
                 start_y[i] -= sd.random_number(1, 5)
                 start_x[i] -= sd.random_number(-2, 2)
             start_point[i] = sd.Point(start_x[i], start_y[i])
+
+
             sd.snowflake(center=start_point[i], length=snowfall_length[i], color=sd.COLOR_WHITE)
 
         sd.sleep(0.1)
@@ -52,7 +54,6 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
             break
         sd.finish_drawing()
 
-        print('Я работаю')
 if __name__ == '__main__':
     import simple_draw as sd
     snowfall_draw()

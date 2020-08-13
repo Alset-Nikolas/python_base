@@ -6,7 +6,6 @@ def hose_draw(x_left_down = 300, x_size = 400, y_size = 300, y_left_down = 200):
 
     import simple_draw as sd
 
-    print('Я сейчас в ', __name__)
 
 
     def roof():
@@ -34,7 +33,6 @@ def hose_draw(x_left_down = 300, x_size = 400, y_size = 300, y_left_down = 200):
     roof()
     window()
 
-    print('Я все в', __name__)
 
 
 if __name__ == '__main__':
