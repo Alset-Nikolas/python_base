@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-def tree_draw(x_start, y_start, length):
+import simple_draw as sd
+def tree_draw(x_start, y_start, length, color=sd.COLOR_YELLOW):
     import simple_draw as sd
     sd.resolution = (1200, 800)
 
@@ -13,11 +14,13 @@ def tree_draw(x_start, y_start, length):
         branches = sd.Vector(start_point=point_start, direction=angle, length=length)
         draw_branches(point_start=branches.end_point, angle=angle + angle_alfa, length=length * 0.75 * sigma)
         draw_branches(point_start=branches.end_point, angle=angle - angle_alfa, length=length * 0.75 * sigma)
-        branches.draw(width=3)
+        branches.draw(width=3, color=color)
 
     draw_branches(start, 90, length)
 
 
 if __name__ == '__main__':
+    import simple_draw as sd
     tree_draw(500, 100, 100)
+    sd.pause()
 

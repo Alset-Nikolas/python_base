@@ -1,7 +1,7 @@
 import simple_draw as sd
 
 
-def street(X_SIZE, dy):
+def street_draw(X_SIZE, dy):
     point_list = [sd.Point(0, 0),
                   sd.Point(0, dy),
                   sd.Point(X_SIZE, dy),
@@ -15,5 +15,5 @@ if __name__ == '__main__':
 
     X_SIZE = 1200
 
-    street(X_SIZE, 200)
+    street_draw(X_SIZE, 200)
     sd.pause()

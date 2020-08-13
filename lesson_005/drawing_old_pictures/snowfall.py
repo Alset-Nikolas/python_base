@@ -46,6 +46,8 @@ def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=7
             start_point[i] = sd.Point(start_x[i], start_y[i])
 
 
+
+
             sd.snowflake(center=start_point[i], length=snowfall_length[i], color=sd.COLOR_WHITE)
 
         sd.sleep(0.1)
