@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-def snowfall_draw():
+def snowfall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=700, y_coordinates_up=700, max_length=20,
+                  N=20):
     import simple_draw as sd
 
     sd.resolution = (700, 700)
-    N = 20
 
     sd.start_drawing()
     sd.finish_drawing()
@@ -14,16 +14,17 @@ def snowfall_draw():
     snowfall_length = [0] * N
     start_point = [0] * N
     flag_add_new_snowfall = [0] * N
+
     for i in range(N):
-        start_x[i] = sd.random_number(100, 600)
-        start_y[i] = sd.random_number(100, 600)
-        snowfall_length[i] = sd.random_number(10, 30)
+        start_x[i] = sd.random_number(x_coordinates_down, x_coordinates_up)
+        start_y[i] = sd.random_number(y_coordinates_down, y_coordinates_up)
+        snowfall_length[i] = sd.random_number(5, max_length)
         start_point[i] = sd.Point(start_x[i], start_y[i])
 
     def add_snowfall():
-        start_x.append(sd.random_number(100, 600))
-        start_y.append(sd.random_number(100, 600))
-        snowfall_length.append(sd.random_number(10, 30))
+        start_x.append(sd.random_number(x_coordinates_down, x_coordinates_up))
+        start_y.append(sd.random_number(y_coordinates_down, y_coordinates_up))
+        snowfall_length.append(sd.random_number(5, max_length))
         start_point.append(sd.Point(start_x[i], start_y[i]))
         flag_add_new_snowfall.append(0)
 
@@ -53,4 +54,4 @@ def snowfall_draw():
 
 
 if __name__ == '__main__':
-    snowfall_draw()
+    snowfall_draw(10, 0, 200, 100, 10, 3)
