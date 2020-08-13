@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-def smile_draw():
-    import random
+def smile_draw(x_strart, y_start):
     import simple_draw as sd
 
     def pupil(point_eye_left, radius_eye, color=sd.COLOR_DARK_PURPLE):
@@ -45,12 +44,10 @@ def smile_draw():
         eye_right(point=point, radius=radius, color=color)
         grin(point=point, radius=radius, color=color)
 
-    for _ in range(10):
-        x = random.randint(50, 600)
-        y = random.randint(50, 600)
-        smile(x, y, color=sd.COLOR_DARK_PURPLE)
+    smile(x_strart, y_start, color=sd.COLOR_DARK_PURPLE)
     sd.pause()
 
 
+
 if __name__ == '__main__':
-    smile_draw()
+    smile_draw(100, 100)
