@@ -4,7 +4,7 @@
 def wall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=700, y_coordinates_up=700):
     import simple_draw as sd
 
-    sd.resolution = (1200, 800)
+
 
     def line_wall_draw(x_start, y_new, x_size, y_size):
         left_bottom = sd.Point(x_coordinates_down, y_coordinates_down)
@@ -25,7 +25,7 @@ def wall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=700, 
 
     x_size, y_size = (x_coordinates_up - x_coordinates_down) // 7, (y_coordinates_up - y_coordinates_down) // 14
 
-    for i, y_new in enumerate(range(y_coordinates_down, y_coordinates_up, y_size)):
+    for i, y_new in enumerate(range(y_coordinates_down, y_coordinates_up-y_size, y_size)):
         if i % 2 == 0:
             x_start = x_coordinates_down
             left_bottom = line_wall_draw(x_start, y_new, x_size, y_size)
@@ -39,7 +39,6 @@ def wall_draw(x_coordinates_down=0, y_coordinates_down=0, x_coordinates_up=700, 
         if x_coordinates_up - left_bottom.x - x_size // 2 >= dx_the_error_of_division:
             small_brick(left_bottom.x, left_bottom.y, x_size, y_size)
 
-    sd.pause()
 
 
 if __name__ == '__main__':
