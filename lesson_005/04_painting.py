@@ -72,11 +72,7 @@ while True:
     smile_draw(x_strart=x_start_for_kolobok, y_start=150)
     x_start_for_kolobok += 5
 
-    print(locals())
     sd.sleep(0.3)
     if sd.user_want_exit():
         break
 
-# TODO сейчас при запуске происходит ошибка ModuleNotFoundError: No module named 'lesson_005.drawing_old_pictures'
-# TODO проверить весь код импортируемых модулей с отрисовкой по пунктам, перечисленным в LMS в предыдущем сообщении
-#  так как некоторые замечания пропущены

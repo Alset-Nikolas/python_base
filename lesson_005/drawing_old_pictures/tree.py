@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
+
+
 def tree_draw(x_start, y_start, length, color=sd.COLOR_YELLOW):
     import simple_draw as sd
     sd.resolution = (1200, 800)
@@ -21,8 +23,6 @@ def tree_draw(x_start, y_start, length, color=sd.COLOR_YELLOW):
 
 if __name__ == '__main__':
     import simple_draw as sd
+
     tree_draw(500, 100, 100)
     sd.pause()
-
-# TODO оформить код по PEP8
-# TODO замечание пропущено
