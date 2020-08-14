@@ -22,3 +22,5 @@ people = people_central_street_house1_room1 + people_central_street_house1_room2
          + people_soviet_street_house2_room1 + people_soviet_street_house2_room2
 
 print('На районе живут: ', ', '.join(people))
+
+# зачёт! 🚀
