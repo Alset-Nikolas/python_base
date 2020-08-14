@@ -77,7 +77,17 @@ if flag == '1':
         me.game_over(number_user)
 
 elif flag =='0':
-    print('Играет бот')
+
+    from bot_playing import maybe_the_right_number
+
+    while True:
+        print('Бот ввел --->')
+        number_bot = maybe_the_right_number()
+
+        cprint('Ход {}'.format(number_of_moves), color='green')
+        if me.checking_number(number_bot):
+            number_of_moves += 1
+        me.game_over(number_bot)
 
 
 else:

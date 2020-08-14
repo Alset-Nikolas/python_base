@@ -63,7 +63,7 @@ def checking_number(number_user):
                 res['cows'] += 1
         game_over(number_user)
         bulls_cows_print(res)
-        return True
+        return res
     else:
         return False
 
