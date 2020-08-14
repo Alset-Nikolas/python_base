@@ -6,6 +6,7 @@ import simple_draw as sd
 # В текущем модуле реализовать главный цикл падения снежинок,
 # обращаясь ТОЛЬКО к функциям модуля snowfall
 import snowfall
+
 # создать_снежинки(N)
 snowfall.create_snowfall(20)
 
@@ -21,7 +22,7 @@ while True:
     if res:
         snowfall.del_snowfall(res)
 
-    #       удалить_снежинки(номера)
+        #       удалить_снежинки(номера)
         snowfall.create_snowfall(len(res))
     #       создать_снежинки(count)
     sd.sleep(0.1)

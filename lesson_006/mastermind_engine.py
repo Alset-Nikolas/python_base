@@ -1,5 +1,6 @@
 from random import randint
 from termcolor import cprint, colored
+
 NUMBER_WIN = [None] * 4
 
 

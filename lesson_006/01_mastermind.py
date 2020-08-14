@@ -48,7 +48,7 @@
 import mastermind_engine as me
 from termcolor import cprint, colored
 
-cprint('-----Игра «Быки и коровы»-------',color='yellow')
+cprint('-----Игра «Быки и коровы»-------', color='yellow')
 me.make_number()
 
 number_of_moves = 1
@@ -59,7 +59,7 @@ cprint('1)------------>Вы\n', color='yellow')
 
 while True:
     flag = input(colored('-------------->', color='magenta'))
-    if flag not in {'0','1'}:
+    if flag not in {'0', '1'}:
         cprint('0)------------>Бот', color='yellow')
         cprint('1------------->Вы', color='yellow')
     else:
@@ -69,14 +69,15 @@ while True:
 if flag == '1':
     while True:
         print()
-        number_user = input(colored('Введите четырехзначное число c неповторяющимися цифрами!\n\t\t---->', color='magenta'))
+        number_user = input(
+            colored('Введите четырехзначное число c неповторяющимися цифрами!\n\t\t---->', color='magenta'))
 
-        cprint('Ход {}'.format(number_of_moves),color='green')
+        cprint('Ход {}'.format(number_of_moves), color='green')
         if me.checking_number(number_user):
             number_of_moves += 1
         me.game_over(number_user)
 
-elif flag =='0':
+elif flag == '0':
 
     from bot_playing import maybe_the_right_number
 

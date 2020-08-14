@@ -17,10 +17,11 @@ start_y = []
 snowfall_length = []
 quantity_snowfall = 0
 
+
 def create_snowfall(N):
     global snowfall_length, quantity_snowfall
     global start_x, start_y
-    quantity_snowfall +=N
+    quantity_snowfall += N
     for _ in range(N):
         start_x += [sd.random_number(0, 800)]
         start_y += [sd.random_number(0, 800)]
@@ -46,7 +47,7 @@ def exit_border_snowfall():
     global snowfall_length
     res = []
     for i, y in enumerate(start_y):
-        if y-snowfall_length[i] <= 0:
+        if y - snowfall_length[i] <= 0:
             res.append(i)
     return sorted(res, reverse=True)
 
