@@ -8,3 +8,5 @@ from room_2 import folks as people_room_2
 
 print('В комнате room_1 живут:', ', '.join(people_room_1))
 print('В комнате room_2 живут:', ', '.join(people_room_2))
+
+# зачёт! 🚀
