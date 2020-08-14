@@ -1,5 +1,6 @@
 from lesson_005.drawing_old_pictures.wall import wall_draw
 from lesson_005.drawing_old_pictures.smile import smile_draw
+# TODO lesson_005. указывать не нужно
 
 
 def hose_draw(x_left_down=100, x_size=400, y_size=200, y_left_down=200):

@@ -25,7 +25,9 @@ from lesson_005.drawing_old_pictures.street import street_draw
 from lesson_005.drawing_old_pictures.tree import tree_draw
 from lesson_005.animation_painting.sun import sun_draw
 from lesson_005.animation_painting.smile import smile_draw
+# TODO lesson_005. указывать не нужно
 
+# TODO лишний закомментированный код перед сдачей нужно убирать
 '''
 X_SIZE = 1200
 Y_SIZE = 800

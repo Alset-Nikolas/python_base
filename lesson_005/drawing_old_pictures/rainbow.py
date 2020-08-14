@@ -17,3 +17,5 @@ if __name__ == '__main__':
 
     rainbow_picture(x_center=600, y_center=0, radius=500,first_color=2)
     sd.pause()
+
+# TODO оформить по PEP8

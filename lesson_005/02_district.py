@@ -5,10 +5,13 @@
 # подсказка: для вывода элементов списка через запятую можно использовать функцию строки .join()
 # https://docs.python.org/3/library/stdtypes.html#str.join
 
+# TODO рекомендации, почему не нужно вставлять lesson_005 приведены тут https://clck.ru/Ndwqz
 from lesson_005.district.central_street.house1.room1 import folks as people_central_street_house1_room1
 from lesson_005.district.central_street.house1.room2 import folks as people_central_street_house1_room2
 from lesson_005.district.soviet_street.house2.room1 import folks as people_central_street_house2_room1
 from lesson_005.district.soviet_street.house2.room2 import folks as people_central_street_house2_room2
+
+# TODO ещё не хватает жителей из двух домой обоих улиц
 
 people = people_central_street_house1_room1 + people_central_street_house1_room2 \
          + people_central_street_house2_room1+people_central_street_house2_room2

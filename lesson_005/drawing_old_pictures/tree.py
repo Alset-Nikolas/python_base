@@ -24,3 +24,4 @@ if __name__ == '__main__':
     tree_draw(500, 100, 100)
     sd.pause()
 
+# TODO оформить код по PEP8
