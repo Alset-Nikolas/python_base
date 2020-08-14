@@ -50,3 +50,5 @@ my_burger.add_onion()
 my_burger.add_mustard()
 my_burger.add_buns()
 print('\t----------------------------')
+
+# зачёт! 🚀
