@@ -1,12 +1,12 @@
 from random import randint
-
+from termcolor import cprint, colored
 NUMBER_WIN = [None] * 4
 
 
 def game_over(number_user=None):
     '''Конец игры!'''
     if number_user == NUMBER_WIN:
-        print('-------!!!WIN!!!-------------')
+        cprint('-------!!!WIN!!!-------------', color='red')
         exit()
     return False
 

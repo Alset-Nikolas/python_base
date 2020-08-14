@@ -46,18 +46,39 @@
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
 import mastermind_engine as me
+from termcolor import cprint, colored
 
-
-
-print('-----Игра «Быки и коровы»-------')
-print('------------START---------------')
+cprint('-----Игра «Быки и коровы»-------',color='yellow')
 me.make_number()
 
+number_of_moves = 1
+
+cprint('------------Кто играет?--------\n', color='yellow')
+cprint('0)------------>Бот', color='yellow')
+cprint('1)------------>Вы\n', color='yellow')
 
 while True:
-    number_user = input('Введите четырехзначное число c неповторяющимися цифрами!\n---->')
-    me.checking_number(number_user)
-    me.game_over(number_user)
+    flag = input(colored('-------------->', color='magenta'))
+    if flag not in {'0','1'}:
+        cprint('0)------------>Бот', color='yellow')
+        cprint('1------------->Вы', color='yellow')
+    else:
+        cprint('\n------------START---------------', color='yellow')
+        break
+
+if flag == '1':
+    while True:
+        print()
+        number_user = input(colored('Введите четырехзначное число c неповторяющимися цифрами!\n\t\t---->', color='magenta'))
+
+        cprint('Ход {}'.format(number_of_moves),color='green')
+        if me.checking_number(number_user):
+            number_of_moves += 1
+        me.game_over(number_user)
+
+elif flag =='0':
+    print('Играет бот')
 
 
-
+else:
+    print('Eror!! flag = ', flag)
