@@ -82,7 +82,6 @@ elif flag == '0':
     from bot_playing import maybe_the_right_number
 
     while True:
-        print('Бот ввел --->')
         number_bot = maybe_the_right_number()
 
         cprint('Ход {}'.format(number_of_moves), color='green')
@@ -93,3 +92,6 @@ elif flag == '0':
 
 else:
     print('Eror!! flag = ', flag)
+
+
+hasattr()

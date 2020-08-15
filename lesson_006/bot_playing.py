@@ -14,7 +14,6 @@ def maybe_the_right_number():
             variant = [randint(1, 9), randint(0, 9), randint(0, 9), randint(0, 9)]
 
         variant = str(variant[0]) + str(variant[1]) + str(variant[2]) + str(variant[3])
-        print(variant, variant in ALL_PROBE)
         ALL_PROBE.add(variant)
 
     return variant
