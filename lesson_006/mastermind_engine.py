@@ -72,3 +72,7 @@ def checking_number(number_user):
 if __name__ == '__main__':
     print(make_number())
     checking_number('1234')
+
+# TODO в mastermind_engine.py никаких сообщений пользователю выводить нельзя.
+#  Представьте, что движок работает в паре в веб сайтом - у вебсайта консоли нет!
+#  Все общение с пользователем должно быть в вызывающем движок коде (то есть 01_mastermind.py)

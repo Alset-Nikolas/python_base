@@ -92,6 +92,9 @@ elif flag == '0':
 
 
 else:
-    print('Eror!! flag = ', flag)
+    print('Error!! flag = ', flag)
 
-hasattr()
+hasattr()  # TODO ?
+
+# TODO в конце игры не сообщается сколько ходов в итоге было совершено
+# TODO в конце игры должно запрашиваться желание сыграть ещё раз

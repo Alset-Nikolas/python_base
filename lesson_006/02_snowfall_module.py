@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import simple_draw as sd
+import snowfall
 
 # На основе кода из lesson_004/05_snowfall.py
 # В текущем модуле реализовать главный цикл падения снежинок,
 # обращаясь ТОЛЬКО к функциям модуля snowfall
-import snowfall
 
 # создать_снежинки(N)
 snowfall.create_snowfall(20)
