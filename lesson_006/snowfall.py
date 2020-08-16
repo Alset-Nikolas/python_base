@@ -28,7 +28,7 @@ def create_snowfall(N):
 
 
 def draw_snowfall(color):
-    global SNOWFALL, start_x, start_y  # TODO если мы не присваиваем ничего этой переменной - то не нужно global
+    global SNOWFALL
     start_point = [sd.Point(start_x[i], start_y[i]) for i in range(quantity_snowfall)]
     SNOWFALL = [sd.snowflake(center=start_point[i],
                              length=snowfall_length[i], color=color) for i in range(quantity_snowfall)]
@@ -42,9 +42,6 @@ def dy_snowfall():
 
 
 def exit_border_snowfall():
-    global start_x, start_y
-    global snowfall_length
-    # TODO если переменная не изменяется, то global для неё в методе не нужен
     res = []
     for i, y in enumerate(start_y):
         if y - snowfall_length[i] <= 0:
