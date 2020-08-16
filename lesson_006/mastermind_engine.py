@@ -7,7 +7,7 @@ NUMBER_WIN = [None] * 4
 def game_over(number_user=None):
     '''Конец игры!'''
     if number_user == NUMBER_WIN:
-        #cprint('-------!!!WIN!!!-------------', color='red')
+        # cprint('-------!!!WIN!!!-------------', color='red')
         return True
     return False
 
@@ -31,8 +31,6 @@ def check_input(number_user):
     return False
 
 
-
-
 def checking_number(number_user):
     ''' Возвращает словарь {'bulls': N, 'cows': N}!'''
 
@@ -51,4 +49,3 @@ def checking_number(number_user):
 
 if __name__ == '__main__':
     print(make_number())
-
