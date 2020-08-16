@@ -85,6 +85,7 @@ elif flag == '0':
         number_bot = maybe_the_right_number()
 
         cprint('Ход {}'.format(number_of_moves), color='green')
+
         if me.checking_number(number_bot):
             number_of_moves += 1
         me.game_over(number_bot)
@@ -92,6 +93,5 @@ elif flag == '0':
 
 else:
     print('Eror!! flag = ', flag)
-
 
 hasattr()
