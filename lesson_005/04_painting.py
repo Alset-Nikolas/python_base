@@ -71,3 +71,5 @@ while True:
     sd.sleep(0.3)
     if sd.user_want_exit():
         break
+
+# зачёт! 🚀
