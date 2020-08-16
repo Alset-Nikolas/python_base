@@ -48,8 +48,8 @@ def smile_draw(x_strart, y_start):
     smile(x_strart, y_start, color=sd.COLOR_DARK_PURPLE)
 
 
-
 if __name__ == '__main__':
     import simple_draw as sd
+
     smile_draw(100, 100)
     sd.pause()

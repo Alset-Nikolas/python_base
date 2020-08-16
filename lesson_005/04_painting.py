@@ -26,9 +26,6 @@ from drawing_old_pictures.tree import tree_draw
 from animation_painting.sun import sun_draw
 from animation_painting.smile import smile_draw
 
-
-
-
 # Усложненное задание (делать по желанию)
 # Анимировать картину.
 # Пусть слева идет снегопад, радуга переливается цветами, смайлик моргает, солнце крутит лучами, етс.
@@ -54,7 +51,6 @@ while True:
     rainbow_picture(x_center=420, y_center=150, radius=800, first_color=first_color)
     first_color = (first_color + 1) % 7
 
-
     snowfall_x, snowfall_y, snowfall_length, flag_add_new_snowfall, N = \
         snowfall_draw(x_coordinates_down=0,
                       y_coordinates_down=200,
@@ -75,4 +71,3 @@ while True:
     sd.sleep(0.3)
     if sd.user_want_exit():
         break
-

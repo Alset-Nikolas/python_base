@@ -51,6 +51,5 @@ def smile_draw(x_strart, y_start, color=sd.COLOR_YELLOW):
 
 
 if __name__ == '__main__':
-
     smile_draw(100, 100)
     sd.pause()

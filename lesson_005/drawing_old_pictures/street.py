@@ -10,6 +10,7 @@ def street_draw(X_SIZE, dy):
 
     sd.polygon(point_list, color=sd.COLOR_BLACK, width=3)
 
+
 if __name__ == '__main__':
     import simple_draw as sd
 
