@@ -15,5 +15,8 @@ def maybe_the_right_number():
 
         variant = str(variant[0]) + str(variant[1]) + str(variant[2]) + str(variant[3])
         ALL_PROBE.add(variant)
-
     return variant
+
+def game_over_bot():
+    global ALL_PROBE
+    ALL_PROBE = set()

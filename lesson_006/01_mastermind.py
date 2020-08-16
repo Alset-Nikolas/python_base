@@ -47,54 +47,98 @@
 
 import mastermind_engine as me
 from termcolor import cprint, colored
+from bot_playing import maybe_the_right_number, game_over_bot
 
-cprint('-----Игра «Быки и коровы»-------', color='yellow')
-me.make_number()
 
-number_of_moves = 1
+def bulls_cows_print(res):
+    print('Быки --> {bulls}, Коровы --> {cows}'.format(bulls=res['bulls'], cows=res['cows']))
 
-cprint('------------Кто играет?--------\n', color='yellow')
-cprint('0)------------>Бот', color='yellow')
-cprint('1)------------>Вы\n', color='yellow')
 
-while True:
-    flag = input(colored('-------------->', color='magenta'))
-    if flag not in {'0', '1'}:
-        cprint('0)------------>Бот', color='yellow')
-        cprint('1------------->Вы', color='yellow')
+exit = False
+
+while not exit:
+    cprint('-----Игра «Быки и коровы»-------', color='yellow')
+    NUMBER_WIN = me.make_number()
+    print('\tМашина загадала число!\n'
+          '\t         |\n'
+          '\t         |\n'
+          '\t         |\n'
+          '\t         v\n'
+          '\t        ****')
+    print('\t\t', NUMBER_WIN)
+    number_of_moves = 0
+
+    cprint('------------Кто играет?--------\n', color='yellow')
+    cprint('0)------------>Бот', color='yellow')
+    cprint('1)------------>Вы\n', color='yellow')
+    while True:
+        flag = input(colored('-------------->', color='magenta'))
+        if flag not in {'0', '1'}:
+            cprint('0)------------>Бот', color='yellow')
+            cprint('1------------->Вы', color='yellow')
+        else:
+            cprint('\n------------START---------------', color='yellow')
+            break
+
+    if flag == '1':
+        while True:
+
+            print()
+            number_user = input(
+                colored('Введите четырехзначное число c неповторяющимися цифрами!\n\t\t---->', color='magenta'))
+
+            cprint('Ход {}'.format(number_of_moves + 1), color='green')
+            number_user = me.check_input(number_user)
+            if number_user:
+                print('------------------------------')
+                print('Ввод: ', number_user)
+                print('------------------------------')
+                me.checking_number(number_user)
+
+                res = me.checking_number(number_user)
+
+                if res:
+                    bulls_cows_print(res)
+                    number_of_moves += 1
+                    if me.game_over(number_user):
+                        cprint('-------!!!WIN!!!-------------', color='red')
+                        break
+            else:
+                print('Некорректный ввод!')
+
+        cprint('Всего на {} ход'.format(number_of_moves), color='green')
+
+
+    elif flag == '0':
+
+        while True:
+            number_bot = maybe_the_right_number()
+
+            cprint('Ход {}'.format(number_of_moves + 1), color='green')
+            number_bot = me.check_input(number_bot)
+            if number_bot:
+                print('------------------------------')
+                print('Ввод: ', number_bot)
+                print('------------------------------')
+                me.checking_number(number_bot)
+
+                res = me.checking_number(number_bot)
+
+                if res:
+                    bulls_cows_print(res)
+                    number_of_moves += 1
+                    if me.game_over(number_bot):
+                        cprint('-------!!!WIN!!!-------------', color='red')
+                        game_over_bot()
+                        break
+
+            else:
+                print('Некорректный ввод!')
+        cprint('\tВсего на {} ход'.format(number_of_moves), color='red')
     else:
-        cprint('\n------------START---------------', color='yellow')
-        break
+        print('Error!! flag = ', flag)
 
-if flag == '1':
-    while True:
-        print()
-        number_user = input(
-            colored('Введите четырехзначное число c неповторяющимися цифрами!\n\t\t---->', color='magenta'))
-
-        cprint('Ход {}'.format(number_of_moves), color='green')
-        if me.checking_number(number_user):
-            number_of_moves += 1
-        me.game_over(number_user)
-
-elif flag == '0':
-
-    from bot_playing import maybe_the_right_number
-
-    while True:
-        number_bot = maybe_the_right_number()
-
-        cprint('Ход {}'.format(number_of_moves), color='green')
-
-        if me.checking_number(number_bot):
-            number_of_moves += 1
-        me.game_over(number_bot)
-
-
-else:
-    print('Error!! flag = ', flag)
-
-hasattr()  # TODO ?
-
-# TODO в конце игры не сообщается сколько ходов в итоге было совершено
-# TODO в конце игры должно запрашиваться желание сыграть ещё раз
+    cprint('\n------------Еще раз?--------\n', color='yellow')
+    cprint('Ввод(Enter)--->Да', color='yellow')
+    cprint('Любая)-------->Нет\n', color='yellow')
+    exit = input()
