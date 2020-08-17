@@ -142,3 +142,5 @@ while not exit:
     cprint('Ввод(Enter)--->Да', color='yellow')
     cprint('Любая)-------->Нет\n', color='yellow')
     exit = input()
+
+# TODO при повторной партии загаданное число остаётся прежним и не генерируется заново
