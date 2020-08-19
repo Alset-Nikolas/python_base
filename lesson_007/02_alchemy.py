@@ -22,9 +22,12 @@
 class Glass:
     def __str__(self):
         return 'Стекло'
+
+
 class Sand:
     def __str__(self):
         return 'Песок'
+
 
 class Water:
     def __str__(self):
@@ -145,7 +148,6 @@ print(Air(), '+', Fire(), '=', Air() + Fire())
 print(Air(), '+', Earth(), '=', Air() + Earth())
 print(Fire(), '+', Earth(), '=', Fire() + Earth())
 print(Fire(), '+', Sand(), '=', Fire() + Sand())
-
 
 # Усложненное задание (делать по желанию)
 # Добавить еще элемент в игру.

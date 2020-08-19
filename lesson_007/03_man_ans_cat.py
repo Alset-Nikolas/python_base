@@ -29,6 +29,7 @@ from random import randint
 from random import randint
 from termcolor import cprint
 
+
 class Man:
 
     def __init__(self, name):
@@ -36,7 +37,6 @@ class Man:
         self.fullness = 50
         self.house = None
         self.cat = None
-
 
     def __str__(self):
         return 'Я - {}, сытость {}'.format(
@@ -90,8 +90,8 @@ class Man:
         '''степень грязи в доме уменьшается на 100, сытость у человека уменьшается на 20.'''
 
         self.house.degree_of_dirt -= 100
-        self.house.food -=20
-        if self.house.degree_of_dirt< 0 :
+        self.house.food -= 20
+        if self.house.degree_of_dirt < 0:
             self.house.degree_of_dirt = 0
         cprint('{} убрался'.format(self.name), color='magenta')
 
@@ -105,9 +105,9 @@ class Man:
             self.shopping()
         elif self.house.cat_food < 10:
             self.buy_cat_food()
-        elif self.house.money < 50 or self.house.cat_food<50 or self.house.food<20:
+        elif self.house.money < 50 or self.house.cat_food < 50 or self.house.food < 20:
             self.work()
-        elif self.house.degree_of_dirt>30:
+        elif self.house.degree_of_dirt > 30:
             self.clean_the_house()
         else:
             self.watch_MTV()
@@ -124,9 +124,8 @@ class House:
 
     def __str__(self):
         return 'В доме еды осталось {}, денег осталось {}, степень грязи {}, кол-во еды у кота {}'.format(
-            self.food, self.money,self.degree_of_dirt,self.cat_food
+            self.food, self.money, self.degree_of_dirt, self.cat_food
         )
-
 
 
 class Cat:
@@ -140,22 +139,21 @@ class Cat:
         return 'Я кот {}, сытость {}'.format(self.name, self.satiety)
 
     def eat(self):
-        if self.house.cat_food>=10:
-            self.satiety +=20
+        if self.house.cat_food >= 10:
+            self.satiety += 20
             self.house.cat_food -= 10
             cprint('Кот кушает!', color='yellow')
         else:
-            cprint('Кот мяучит, что хочет есть!! Но нет еды!',color='yellow')
+            cprint('Кот мяучит, что хочет есть!! Но нет еды!', color='yellow')
 
     def sleep(self):
         self.satiety -= 10
-        cprint('Кот спит!',color='yellow')
-
+        cprint('Кот спит!', color='yellow')
 
     def tear_Wallpaper(self):
         self.satiety -= 10
-        self.house.degree_of_dirt +=5
-        cprint('Кот грязнит!',color='yellow')
+        self.house.degree_of_dirt += 5
+        cprint('Кот грязнит!', color='yellow')
 
     def act(self):
         if self.satiety <= 0:
@@ -172,18 +170,19 @@ class Cat:
             self.tear_Wallpaper()
 
 
-
 citizen = Man(name='Бивис')
 home = House()
 cats = [Cat(name='Барсик', house=home), Cat(name='Дима', house=home), Cat(name='Витя', house=home)]
 
 citizen.go_to_the_house(house=home)
-for cat in cats:
+for cat in cats: #TODO почему тут не надо было создавать метод __iter__ и __next__ ?
     citizen.pick_up_cat(cat=cat)
 
 print(citizen)
 for cat in cats:
     print(cat)
+
+
 
 print(home)
 

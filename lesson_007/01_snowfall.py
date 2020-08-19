@@ -40,6 +40,7 @@ class Snowflake:
             return False
         return True
 
+
 class Snowflakes():
     def __init__(self):
         self.snowflakes = []
@@ -53,7 +54,7 @@ class Snowflakes():
     def __next__(self):
         if self.index < self.len:
             self.index += 1
-            return self.snowflakes[self.index-1]
+            return self.snowflakes[self.index - 1]
         else:
             self.index = 0
             raise StopIteration
@@ -77,22 +78,20 @@ class Snowflakes():
         self.len += count
 
 
-
-
-N=10
+N = 10
 # шаг 2: создать снегопад - список объектов Снежинка в отдельном списке, обработку примерно так:
 flakes = Snowflakes()  # создать список снежинок
 flakes.get_flakes(N)
 while True:
-     for flake in flakes:
-         flake.clear_previous_picture()
-         flake.move()
-         flake.draw()
-     fallen_flakes = flakes.get_fallen_flakes()  # подчитать сколько снежинок уже упало
-     if fallen_flakes:
-         flakes.append_flakes(count=fallen_flakes)  # добавить еще сверху
-     sd.sleep(0.1)
-     if sd.user_want_exit():
-         break
+    for flake in flakes:
+        flake.clear_previous_picture()
+        flake.move()
+        flake.draw()
+    fallen_flakes = flakes.get_fallen_flakes()  # подчитать сколько снежинок уже упало
+    if fallen_flakes:
+        flakes.append_flakes(count=fallen_flakes)  # добавить еще сверху
+    sd.sleep(0.1)
+    if sd.user_want_exit():
+        break
 
 sd.pause()
