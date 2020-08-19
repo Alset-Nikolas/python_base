@@ -17,6 +17,7 @@ def make_number():
     global NUMBER_WIN
 
     while len(NUMBER_WIN) != len(set(NUMBER_WIN)):
+        # NUMBER_WIN = [randint(1, 9) for _ in range(4)]  #  Возможно это немного упростит код? =)
         NUMBER_WIN = [randint(1, 9), randint(0, 9), randint(0, 9), randint(0, 9)]
     return NUMBER_WIN
 
@@ -24,6 +25,7 @@ def make_number():
 def check_input(number_user):
     '''Проверка числа,которое ввел пользователь!'''
     if number_user.isdigit() and len(number_user) == len(set(number_user)) == 4 and number_user[0] != '0':
+        # number_user = [int(num) for num in number_user]  #  Возможно это немного упростит код? =)
         number_user = [int(number_user[0]), int(number_user[1]), int(number_user[2]), int(number_user[3])]
         return number_user
     return False
