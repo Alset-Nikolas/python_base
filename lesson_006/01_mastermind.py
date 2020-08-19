@@ -56,16 +56,17 @@ def bulls_cows_print(res):
 
 exit = False
 
+cprint('-----Игра «Быки и коровы»-------', color='yellow')
+NUMBER_WIN = me.make_number()
+print('\tМашина загадала число!\n'
+      '\t         |\n'
+      '\t         |\n'
+      '\t         |\n'
+      '\t         v\n'
+      '\t        ****')
+print('\t\t', NUMBER_WIN)
+
 while not exit:
-    cprint('-----Игра «Быки и коровы»-------', color='yellow')
-    NUMBER_WIN = me.make_number()
-    print('\tМашина загадала число!\n'
-          '\t         |\n'
-          '\t         |\n'
-          '\t         |\n'
-          '\t         v\n'
-          '\t        ****')
-    print('\t\t', NUMBER_WIN)
     number_of_moves = 0
 
     cprint('------------Кто играет?--------\n', color='yellow')
@@ -143,4 +144,3 @@ while not exit:
     cprint('Любая)-------->Нет\n', color='yellow')
     exit = input()
 
-# TODO при повторной партии загаданное число остаётся прежним и не генерируется заново
