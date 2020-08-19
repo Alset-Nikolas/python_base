@@ -7,7 +7,6 @@ NUMBER_WIN = [None] * 4
 def game_over(number_user=None):
     '''Конец игры!'''
     if number_user == NUMBER_WIN:
-        # cprint('-------!!!WIN!!!-------------', color='red')
         return True
     return False
 
@@ -19,7 +18,6 @@ def make_number():
 
     while len(NUMBER_WIN) != len(set(NUMBER_WIN)):
         NUMBER_WIN = [randint(1, 9), randint(0, 9), randint(0, 9), randint(0, 9)]
-
     return NUMBER_WIN
 
 

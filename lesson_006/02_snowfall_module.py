@@ -21,7 +21,6 @@ while True:
     res = snowfall.exit_border_snowfall()
     if res:
         snowfall.del_snowfall(res)
-
         #       удалить_снежинки(номера)
         snowfall.create_snowfall(len(res))
     #       создать_снежинки(count)
@@ -30,3 +29,5 @@ while True:
         break
 
 sd.pause()
+
+# зачёт! 🚀
