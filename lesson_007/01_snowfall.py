@@ -41,14 +41,14 @@ class Snowflake:
         return True
 
 
-# TODO, в этом месте итерация лишняя. Обычно она используется для НЕсоздания списка.
+# , в этом месте итерация лишняя. Обычно она используется для НЕсоздания списка.
 #  В памяти только 1 элемент, способ получения второго и условие окончания итераций.
 #  Получается список мы всё равно используем. Значит инетатор только усложнил код.
 #  У Вас без итераций не получилось? - да, если же итератор убрать возникает ошибка TypeError: 'Snowflakes' object is not iterable
 #  88 строчка - for flake in flakes. У меня же список обьектов..... для этого нужен __iter__
 
 
-# TODO Я не очень понимаю методы __iter__ и __next__ как я понял они нужны ОБА для перебора в цикле for
+#  Я не очень понимаю методы __iter__ и __next__ как я понял они нужны ОБА для перебора в цикле for
 # но что конкретно делает __iter__?
 class Snowflakes():
     def __init__(self):
@@ -93,6 +93,7 @@ N = 10
 flakes = Snowflakes()  # создать список снежинок
 flakes.get_flakes(N)
 while True:
+    sd.start_drawing()  # Добавили и отрисовка кода ускорилась
     for flake in flakes:
         flake.clear_previous_picture()
         flake.move()
@@ -100,8 +101,11 @@ while True:
     fallen_flakes = flakes.get_fallen_flakes()  # подчитать сколько снежинок уже упало
     if fallen_flakes:
         flakes.append_flakes(count=fallen_flakes)  # добавить еще сверху
+    sd.finish_drawing()  # Добавили и отрисовка кода ускорилась
     sd.sleep(0.1)
     if sd.user_want_exit():
         break
 
 sd.pause()
+
+# зачёт!
