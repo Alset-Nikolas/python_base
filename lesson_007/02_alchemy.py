@@ -23,54 +23,91 @@ class Glass:
 
     # TODO, Николай, всё правильно. Но предлагаю создать дополнительный метод для классов init.
     #  Указать в нём название элемента и в __str__ выводить название элемента из __init__.
+    def __init__(self):
+        self.name = 'Стекло'
+
     def __str__(self):
-        return 'Стекло'
+        return self.name
 
 
 class Sand:
+
+    def __init__(self):
+        self.name = 'Песок'
+
     def __str__(self):
-        return 'Песок'
+        return self.name
 
 
 class Water:
+
+    def __init__(self):
+        self.name = 'Вода'
+
     def __str__(self):
-        return 'Вода'
+        return self.name
 
 
 class Mud:
+
+    def __init__(self):
+        self.name = 'Грязь'
+
     def __str__(self):
-        return 'Грязь'
+        return self.name
 
 
 class Lightning:
+
+    def __init__(self):
+        self.name = 'Молния'
+
     def __str__(self):
-        return 'Молния'
+        return self.name
 
 
 class Dust:
+
+    def __init__(self):
+        self.name = 'Пыль'
+
     def __str__(self):
-        return 'Пыль'
+        return self.name
 
 
 class Lava:
+
+    def __init__(self):
+        self.name = 'Лава'
+
     def __str__(self):
-        return 'Лава'
+        return self.name
 
 
 class Storm:
+
+    def __init__(self):
+        self.name = 'Шторм'
+
     def __str__(self):
-        return 'Шторм'
+        return self.name
 
 
 class Steam:
+
+    def __init__(self):
+        self.name = 'Пар'
+
     def __str__(self):
-        return 'Пар'
+        return self.name
 
 
 class Earth:
+    def __init__(self):
+        self.name = 'Земля'
 
     def __str__(self):
-        return 'Земля'
+        return self.name
 
     def __add__(self, other):
         '''Вода + Земля = Грязь'''
@@ -85,8 +122,11 @@ class Earth:
 
 
 class Air:
+    def __init__(self):
+        self.name = 'Воздух'
+
     def __str__(self):
-        return 'Воздух'
+        return self.name
 
     def __add__(self, other):
         ''' Воздух + Огонь = Молния
@@ -111,9 +151,11 @@ class Air:
 
 
 class Fire:
+    def __init__(self):
+        self.name = 'Огонь'
 
     def __str__(self):
-        return 'Огонь'
+        return self.name
 
     def __add__(self, other):
         '''Огонь + Земля = Лава'''

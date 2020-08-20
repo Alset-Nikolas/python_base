@@ -105,7 +105,8 @@ class Man:
             self.shopping()
         elif self.house.cat_food < 10:
             self.buy_cat_food()
-        elif self.house.money < 50 or self.house.cat_food < 50 or self.house.food < 20:
+        elif (self.house.money < 50 or self.house.cat_food < 50 or self.house.food < 20 \
+                ) and not self.house.degree_of_dirt > 100:
             self.work()
         elif self.house.degree_of_dirt > 30:
             self.clean_the_house()
@@ -170,15 +171,12 @@ class Cat:
             self.tear_Wallpaper()
 
 
-# TODO, Николай, пожалуйста, обратите внимание.
-#  Степень грязи в доме 900 +. Денег 14500. Может лучше уборка, чем рабта? =)
-
 citizen = Man(name='Бивис')
 home = House()
 cats = [Cat(name='Барсик', house=home), Cat(name='Дима', house=home), Cat(name='Витя', house=home)]
 
 citizen.go_to_the_house(house=home)
-for cat in cats: # почему тут не надо было создавать метод __iter__ и __next__ ?
+for cat in cats:  # почему тут не надо было создавать метод __iter__ и __next__ ?
     # т.к. итерируемый объект обычно что-то отдаёт, служит заменой длинным спискам.
     # Он не хранит в памяти свои элементы. Только текущий и способ получения следующего.
     # А Кот по сути это не список, следующие элементы в себе не вычисляет. По нему мы в цикле не идём.
@@ -187,8 +185,6 @@ for cat in cats: # почему тут не надо было создавать
 print(citizen)
 for cat in cats:
     print(cat)
-
-
 
 print(home)
 
