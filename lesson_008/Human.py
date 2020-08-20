@@ -33,7 +33,7 @@ class Human:
     def go_to_house(self, house):
         self.house = house
         print('{} вьехал в дом!'.format(self.name))
-
+    # TODO Как правильно будет уборка на английском? =)
     def claen_house(self):
         if self.house.dirt>90:
             self.happiness -=10

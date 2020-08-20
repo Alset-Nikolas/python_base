@@ -2,6 +2,7 @@ from Human import Human
 from House import House
 from random import randint
 
+
 class Wife(Human):
 
     def __init__(self, name):
@@ -9,11 +10,16 @@ class Wife(Human):
         self.number_fur_coats = 0
 
     def __str__(self):
+        # TODO, Как правильно вызывать супер метод?)
+        #  Если метод не меняется, то в этом необходимости нет.
         return '{} {}'.format(self.__class__.__name__, super().__str__())
 
     def act(self):
         monet = randint(1, 10)
         self.claen_house()
+        # TODO, у класса Мужа и Жены есть сходие действия. Проверка на жизнеспособность.
+        #  Голод или Грязь приводят к смерти. Предлагаю перенести общие действия классов в гланый класс Human.
+        #  А в этом классе вызывать супер метод. С муже тоже самое.
         if self.richness <= 0:
             print('{} умер'.format(self.name))
             exit()
@@ -28,7 +34,7 @@ class Wife(Human):
 
     def shopping(self):
         self.richness -= 10
-        if self.house.money >=30:
+        if self.house.money >= 30:
             self.house.money -= 30
             self.house.food += 30
             print('{} купила 30 еды!'.format(self.name))
@@ -45,7 +51,7 @@ class Wife(Human):
                 print('{} купила {} еды!'.format(self.name, piece))
 
     def buy_fur_coat(self):
-        if self.house.money >=150:
+        if self.house.money >= 150:
             self.richness -= 10
             self.happiness += 60
             self.number_fur_coats += 1
@@ -57,12 +63,11 @@ class Wife(Human):
     def clean_house(self):
 
         self.richness -= 10
-        self.house.dirt -= randint(10,100)
-        if self.house.dirt <0:
+        self.house.dirt -= randint(10, 100)
+        if self.house.dirt < 0:
             self.house.dirt = 0
-        print('{} убралась!'.format(self.name) if self.richness >0 else
-        '{} умерла убираясь!' )
-
+        print('{} убралась!'.format(self.name) if self.richness > 0 else
+              '{} умерла убираясь!')
 
 
 if __name__ == '__main__':

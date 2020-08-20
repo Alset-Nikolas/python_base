@@ -46,6 +46,11 @@ from Husband import Husband
 from Wife import Wife
 from House import House
 
+
+# TODO, Николай, пожалуйста перенесите сюда все наши классы. А созданные модули удалите =)
+#  В этом задании нам крайне важно, чтобы всё было в одном месте.
+
+
 def result():
     cprint('================== Итоги ==================', color='red')
     cprint(home, color='yellow')
