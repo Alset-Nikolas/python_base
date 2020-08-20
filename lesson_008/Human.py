@@ -37,9 +37,9 @@ class Human:
     def claen_house(self):
         if self.house.dirt>90:
             self.happiness -=10
-            print('{} раздражает вонь!'.format(self.name))
+            print('{} живет в грязи!'.format(self.name))
         else:
-            print('{} рад, что чисто!'.format(self.name))
+            print('{} рад(аа), что чисто!'.format(self.name))
 
 
 home = House()

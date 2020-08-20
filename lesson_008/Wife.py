@@ -13,6 +13,7 @@ class Wife(Human):
 
     def act(self):
         monet = randint(1, 10)
+        self.claen_house()
         if self.richness <= 0:
             print('{} умер'.format(self.name))
             exit()
