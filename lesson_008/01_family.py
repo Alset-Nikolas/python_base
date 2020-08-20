@@ -11,23 +11,23 @@ from random import randint
 # Все вместе они должны прожить год и не умереть.
 #
 # Муж может:
-#   есть,
-#   играть в WoT,
+#   есть,+
+#   играть в WoT,+
 #   ходить на работу,
 # Жена может:
-#   есть,
+#   есть,+
 #   покупать продукты,
 #   покупать шубу,
 #   убираться в доме,
 
-# Все они живут в одном доме, дом характеризуется:
-#   кол-во денег в тумбочке (в начале - 100)
-#   кол-во еды в холодильнике (в начале - 50)
-#   кол-во грязи (в начале - 0)
+# Все они живут в одном доме, дом характеризуется:+
+#   кол-во денег в тумбочке (в начале - 100)+
+#   кол-во еды в холодильнике (в начале - 50)+
+#   кол-во грязи (в начале - 0)+
 #
-# У людей есть имя, степень сытости (в начале - 30) и степень счастья (в начале - 100).
+# У людей есть имя, степень сытости (в начале - 30) и степень счастья (в начале - 100).+
 #
-# Любое действие, кроме "есть", приводит к уменьшению степени сытости на 10 пунктов
+# Любое действие, кроме "есть", приводит к уменьшению степени сытости на 10 пунктов+
 # Кушают взрослые максимум по 30 единиц еды, степень сытости растет на 1 пункт за 1 пункт еды.
 # Степень сытости не должна падать ниже 0, иначе чел умрет от голода.
 #
@@ -41,70 +41,34 @@ from random import randint
 #
 # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
 
+from Human import Human
+from Husband import Husband
+from Wife import Wife
+from House import House
 
-class House:
-
-    def __init__(self):
-        pass
-
-
-class Husband:
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return super().__str__()
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def work(self):
-        pass
-
-    def gaming(self):
-        pass
-
-
-class Wife:
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return super().__str__()
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def shopping(self):
-        pass
-
-    def buy_fur_coat(self):
-        pass
-
-    def clean_house(self):
-        pass
-
+def result():
+    cprint('================== Итоги ==================', color='red')
+    cprint(home, color='yellow')
+    cprint(serge, color='yellow')
+    cprint(masha, color='yellow')
+    cprint('\t\t\t\t Всего {} шуб!'.format(masha.number_fur_coats), color='yellow')
+    cprint('===========================================', color='red')
 
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
-
+serge.go_to_house(home)
+masha.go_to_house(home)
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
+    home.dirt += 5
     serge.act()
     masha.act()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     cprint(home, color='cyan')
 
+result()
 # TODO после реализации первой части - отдать на проверку учителю
 
 ######################################################## Часть вторая
@@ -131,7 +95,7 @@ for day in range(365):
 #
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
 
-
+'''
 class Cat:
 
     def __init__(self):
@@ -228,3 +192,4 @@ for day in range(365):
 #       for salary in range(50, 401, 50):
 #           max_cats = life.experiment(salary)
 #           print(f'При зарплате {salary} максимально можно прокормить {max_cats} котов')
+'''
