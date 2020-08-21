@@ -401,9 +401,10 @@ def life(N_day, K_day):
         if all([serge.act(), masha.act(), dima.act(), cats[0].act(), cats[1].act(), cats[2].act()]):
             print('Все живы!')
         else:
-            cprint('\n\n C 3 котами!', color='red')
-            cprint('{}макс раз в год вдруг пропало половина еды\n'
-                   '{}макс раз в год пропало половина денег '.format(len(N_day), len(K_day)), color='red')
+            cprint('\n\n\t Исследование показало:', color='red')
+            cprint('\n\t\t C 3 котами!\n\t Значение зарплаты 150', color='red')
+            cprint('N={}макс раз в год вдруг пропало половина еды\n'
+                   'K={}макс раз в год вдруг пропало половина денег '.format(len(N_day), len(K_day)), color='red')
             return False
 
         cprint(serge, color='cyan')
@@ -428,7 +429,7 @@ for N in range(0, 6):
     if not flag:
         break
 if flag:
-    cprint('\n\n C 3 котами!', color='red')
+    cprint('\n\n\t\t C 3 котами!\n\t Значение зарплаты 150', color='red')
     cprint('>{}макс раз в год вдруг пропало половина еды\n'
            '>{}макс раз в год пропало половина денег '.format(len(N_day), len(K_day)), color='red')
 
