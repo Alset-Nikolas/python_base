@@ -131,7 +131,7 @@ class Air:
     def __add__(self, other):
         ''' Воздух + Огонь = Молния
             Воздух + Земля = Пыль'''
-        if type(other) == Water:
+        if type(other) == Water:    # TODO для сравнений нужно использовать метод isinstance
             return Storm()
         elif type(other) == Fire:
             return Lightning()
