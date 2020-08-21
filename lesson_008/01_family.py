@@ -56,6 +56,8 @@ class House:
             self.__class__.__name__, self.money, self.food, self.dirt, self.cat_food)
 
 
+
+
 class Human:
 
     def __init__(self, name=None, richness=30, happiness=100):
@@ -83,6 +85,7 @@ class Human:
                 self.richness += piece
                 self.house.food -= piece
                 print('{} поел {} еды!'.format(self.name, piece))
+
 
     def go_to_house(self, house):
         self.house = house
@@ -146,6 +149,7 @@ class Wife(Human):
     def __init__(self, name):
         super().__init__(name=name)
         self.number_fur_coats = 0
+
 
     def act(self):
         monet = randint(1, 10)
@@ -314,6 +318,7 @@ for day in range(365):
 # Степень сытости не должна падать ниже 0, иначе кот умрет от голода.
 #
 # Если кот дерет обои, то грязи становится больше на 5 пунктов+
+
 
 
 ######################################################## Часть вторая бис
