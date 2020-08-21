@@ -6,9 +6,7 @@ NUMBER_WIN = [None] * 4
 
 def game_over(number_user=None):
     '''Конец игры!'''
-    if number_user == NUMBER_WIN:
-        return True
-    return False
+    return number_user == NUMBER_WIN  # так тоже можно
 
 
 def make_number():
@@ -45,7 +43,3 @@ def checking_number(number_user):
         return res
     else:
         return False
-
-
-if __name__ == '__main__':
-    print(make_number())

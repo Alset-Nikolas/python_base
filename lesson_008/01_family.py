@@ -341,7 +341,6 @@ class Child(Human):
             return False
 
     def eat(self):
-
         self.richness += 10
         self.house.food -= 10
         print('{} поел {} еды!'.format(self.name, 10))
@@ -433,6 +432,8 @@ if flag:
     cprint('\n\n\t\t C 3 котами!\n\t Значение зарплаты 150', color='red')
     cprint('>{} раз в год вдруг пропало половина еды\n'
            '>{} раз в год пропало половина денег '.format(len(N_day), len(K_day)), color='red')
+
+# зачёт! 🚀
 
 # Усложненное задание (делать по желанию)
 #
