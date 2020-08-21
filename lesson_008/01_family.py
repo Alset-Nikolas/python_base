@@ -198,24 +198,12 @@ def result():
     cprint(home, color='yellow')
     cprint(serge, color='yellow')
     cprint(masha, color='yellow')
+    cprint(dima, color='yellow')
+
     cprint('\t\t\t\t Всего {} шуб!'.format(masha.number_fur_coats), color='yellow')
     cprint('===========================================', color='red')
 
-home = House()
-serge = Husband(name='Сережа')
-masha = Wife(name='Маша')
-serge.go_to_house(home)
-masha.go_to_house(home)
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    home.dirt += 5
-    serge.act()
-    masha.act()
-    cprint(serge, color='cyan')
-    cprint(masha, color='cyan')
-    cprint(home, color='cyan')
 
-result()
 
 ######################################################## Часть вторая
 #
@@ -241,24 +229,6 @@ result()
 #
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
 
-'''
-class Cat:
-
-    def __init__(self):
-        pass
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-    def soil(self):
-        pass
-
 
 ######################################################## Часть вторая бис
 #
@@ -268,30 +238,49 @@ class Cat:
 #   есть,
 #   спать,
 #
-# отличия от взрослых - кушает максимум 10 единиц еды,
-# степень счастья  - не меняется, всегда ==100 ;)
+# отличия от взрослых - кушает максимум 10 единиц еды,+
+# степень счастья  - не меняется, всегда ==100 ;)+
 
-class Child:
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return super().__str__()
-
+class Child(Human):
+    def __init__(self, name):
+        super().__init__(name)
+        self.happiness = 100
     def act(self):
-        pass
+
+        super().alive()
+        if self.richness <= 20:
+            self.eat()
+        else:
+            self.sleep()
 
     def eat(self):
-        pass
+        self.richness += 10
+        self.house.food -= 10
+        print('{} поел {} еды!'.format(self.name, 10))
 
     def sleep(self):
-        pass
+        print('{} уснул!'.format(self.name))
 
 
-# TODO после реализации второй части - отдать на проверку учителем две ветки
+home = House()
+serge = Husband(name='Сережа')
+masha = Wife(name='Маша')
+dima = Child(name='Дима')
+dima.go_to_house(home)
+serge.go_to_house(home)
+masha.go_to_house(home)
+for day in range(365):
+    cprint('================== День {} =================='.format(day), color='red')
+    home.dirt += 5
+    serge.act()
+    masha.act()
+    cprint(serge, color='cyan')
+    cprint(masha, color='cyan')
+    cprint(home, color='cyan')
 
+result()
 
+'''
 ######################################################## Часть третья
 #
 # после подтверждения учителем второй части (обоих веток)
