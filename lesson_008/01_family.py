@@ -321,7 +321,7 @@ for day in range(365):
 #
 # Если кот дерет обои, то грязи становится больше на 5 пунктов+
 
-'''
+
 
 ######################################################## Часть вторая бис
 #
@@ -373,31 +373,6 @@ for day in range(365):
 
 result()
 
-'''
-######################################################## Часть третья
-#
-# после подтверждения учителем второй части (обоих веток)
-# влить в мастер все коммиты из ветки develop и разрешить все конфликты
-# отправить на проверку учителем.
-
-
-home = House()
-serge = Husband(name='Сережа')
-masha = Wife(name='Маша')
-kolya = Child(name='Коля')
-murzik = Cat(name='Мурзик')
-
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    serge.act()
-    masha.act()
-    kolya.act()
-    murzik.act()
-    cprint(serge, color='cyan')
-    cprint(masha, color='cyan')
-    cprint(kolya, color='cyan')
-    cprint(murzik, color='cyan')
-
 
 # Усложненное задание (делать по желанию)
 #
@@ -420,4 +395,3 @@ for day in range(365):
 #       for salary in range(50, 401, 50):
 #           max_cats = life.experiment(salary)
 #           print(f'При зарплате {salary} максимально можно прокормить {max_cats} котов')
-'''
