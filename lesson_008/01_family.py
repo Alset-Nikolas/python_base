@@ -332,7 +332,6 @@ class Child(Human):
     def act(self):
 
         if not super().alive():
-            print(self.name)
             if self.richness <= 10:
                 self.eat()
             else:
@@ -363,13 +362,15 @@ def chaos_of_days(quantity_food_day, quantity_money_day):
     return N_day, K_day
 
 
-def life(N_day, K_day):
+def life(N_day, K_day, salary=150):
     def result():
         cprint('================== Итоги ==================', color='red')
         cprint(home, color='yellow')
         cprint(serge, color='yellow')
         cprint(masha, color='yellow')
-        cprint(cat, color='yellow')
+        cprint(cats[0], color='yellow')
+        cprint(cats[1], color='yellow')
+        cprint(cats[2], color='yellow')
         cprint(dima, color='yellow')
 
         cprint('\t\t\t\t Всего {} шуб!'.format(masha.number_fur_coats), color='yellow')
@@ -377,7 +378,7 @@ def life(N_day, K_day):
 
     cprint('================Strat!==================', color='red')
     home = House()
-    serge = Husband(name='Сережа')
+    serge = Husband(name='Сережа', salary=salary)
     masha = Wife(name='Маша')
     dima = Child(name='Дима')
     cats = [Cat(name='Барсик', house=home), Cat(name='Даша', house=home), Cat(name='Витя', house=home)]
@@ -403,8 +404,8 @@ def life(N_day, K_day):
         else:
             cprint('\n\n\t Исследование показало:', color='red')
             cprint('\n\t\t C 3 котами!\n\t Значение зарплаты 150', color='red')
-            cprint('N={}макс раз в год вдруг пропало половина еды\n'
-                   'K={}макс раз в год вдруг пропало половина денег '.format(len(N_day), len(K_day)), color='red')
+            cprint('Nмакс={} раз в год вдруг пропало половина еды\n'
+                   'Kмакс={} раз в год вдруг пропало половина денег '.format(len(N_day), len(K_day)), color='red')
             return False
 
         cprint(serge, color='cyan')
@@ -419,10 +420,10 @@ def life(N_day, K_day):
 
 
 flag = True
-for N in range(0, 6):
-    for K in range(0, 6):
+for food_incidents in range(0, 6):
+    for money_incidents in range(0, 6):
+        N_day, K_day = chaos_of_days(food_incidents, money_incidents)
 
-        N_day, K_day = chaos_of_days(N, K)
         flag = life(N_day, K_day)
         if not flag:
             break
@@ -430,8 +431,8 @@ for N in range(0, 6):
         break
 if flag:
     cprint('\n\n\t\t C 3 котами!\n\t Значение зарплаты 150', color='red')
-    cprint('>{}макс раз в год вдруг пропало половина еды\n'
-           '>{}макс раз в год пропало половина денег '.format(len(N_day), len(K_day)), color='red')
+    cprint('>{} раз в год вдруг пропало половина еды\n'
+           '>{} раз в год пропало половина денег '.format(len(N_day), len(K_day)), color='red')
 
 # Усложненное задание (делать по желанию)
 #
