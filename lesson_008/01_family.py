@@ -41,14 +41,156 @@ from random import randint
 #
 # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
 
-from Human import Human
-from Husband import Husband
-from Wife import Wife
-from House import House
 
 
-# TODO, Николай, пожалуйста перенесите сюда все наши классы. А созданные модули удалите =)
-#  В этом задании нам крайне важно, чтобы всё было в одном месте.
+
+class House:
+
+    def __init__(self, money=100, food=50, dirt=0):
+        self.money = money
+        self.food = food
+        self.dirt = dirt
+
+    def __str__(self):
+        return '{}: денег {}, еды {}, грязи {}'.format(
+            self.__class__.__name__, self.money, self.food, self.dirt)
+
+
+
+
+class Human:
+
+    def __init__(self, name=None, richness=30, happiness=100):
+        self.name = name
+        self.richness = richness
+        self.happiness = happiness
+        self.house = None
+
+    def __str__(self):
+        return '{}: степень сытости {}, cтепень счастья {}'.format(self.name, self.richness, self.happiness)
+
+    def eat(self):
+        if self.house.food >= 30:
+            self.richness += 30
+            self.house.food -= 30
+            print('{} поел 30 еды!'.format(self.name))
+        else:
+            if self.house.food >= 10:
+                piece = randint(10, self.house.food)
+                self.richness += piece
+                self.house.food -= piece
+                print('{} поел {} еды!'.format(self.name, piece))
+            else:
+                piece = self.house.food
+                self.richness += piece
+                self.house.food -= piece
+                print('{} поел {} еды!'.format(self.name, piece))
+
+
+    def go_to_house(self, house):
+        self.house = house
+        print('{} вьехал в дом!'.format(self.name))
+
+    def cleaning_house(self):
+        if self.house.dirt>90:
+            self.happiness -=10
+            print('{} живет в грязи!'.format(self.name))
+        else:
+            print('{} рад(а), что чисто!'.format(self.name))
+
+    def alive(self):
+        if self.richness <= 0 and self.happiness > 0:
+            print('{} умер'.format(self.name))
+            exit()
+
+
+
+class Husband(Human):
+
+    def act(self):
+        monet = randint(1, 10)
+        super().cleaning_house()
+        super().alive()
+        if self.richness <= 20:
+            self.eat()
+        elif self.house.money <= 200:
+            self.work()
+        elif monet < 8:
+            self.gaming()
+        elif monet >= 8:
+            self.work()
+        else:
+            print('EROR!')
+
+    def work(self):
+        self.richness -= 10
+        self.house.money += 150
+        print('{} сходил на работу!'.format(self.name) if self.richness > 0
+              else '{} умер на работе!'.format(self.name))
+
+    def gaming(self):
+        self.richness -= 10
+        self.happiness += 20
+        print('{} победил в WoT!'.format(self.name) if self.richness > 0
+              else '{} умер, но победил в WoT !'.format(self.name))
+
+
+class Wife(Human):
+
+    def __init__(self, name):
+        super().__init__(name=name)
+        self.number_fur_coats = 0
+
+
+    def act(self):
+        monet = randint(1, 10)
+        super().cleaning_house()
+        super().alive()
+        if self.house.food <= 30:
+            self.shopping()
+        elif self.richness <= 20:
+            self.eat()
+        elif 50 < self.house.dirt < 100:
+            self.clean_house()
+        elif monet >= 7:
+            self.buy_fur_coat()
+
+    def shopping(self):
+        self.richness -= 10
+        if self.house.money >= 30:
+            self.house.money -= 30
+            self.house.food += 30
+            print('{} купила 30 еды!'.format(self.name))
+        else:
+            if self.house.money >= 10:
+                piece = randint(10, self.house.money)
+                self.house.food += piece
+                self.house.money -= piece
+                print('{} купила {} еды!'.format(self.name, piece))
+            else:
+                piece = self.house.money
+                self.house.food += piece
+                self.house.money -= piece
+                print('{} купила {} еды!'.format(self.name, piece))
+
+    def buy_fur_coat(self):
+        if self.house.money >= 150:
+            self.richness -= 10
+            self.happiness += 60
+            self.number_fur_coats += 1
+            self.house.money -= 150
+            print('{} купила шубу!'.format(self.name))
+        else:
+            print('{} хотела купить шубу, но денег в доме нет!'.format(self.name))
+
+    def clean_house(self):
+
+        self.richness -= 10
+        self.house.dirt -= randint(10, 100)
+        if self.house.dirt < 0:
+            self.house.dirt = 0
+        print('{} убралась!'.format(self.name) if self.richness > 0 else
+              '{} умерла убираясь!')
 
 
 def result():
@@ -74,7 +216,6 @@ for day in range(365):
     cprint(home, color='cyan')
 
 result()
-# TODO после реализации первой части - отдать на проверку учителю
 
 ######################################################## Часть вторая
 #
