@@ -111,12 +111,12 @@ class Earth:
 
     def __add__(self, other):
         '''Вода + Земля = Грязь'''
-        if type(other) == Water:
+        if isinstance(other, Water):
             return Mud()
         return None
 
     def __radd__(self, other):
-        if type(other) == Water:
+        if isinstance(other, Water):
             return Mud()
         return None
 
@@ -131,21 +131,21 @@ class Air:
     def __add__(self, other):
         ''' Воздух + Огонь = Молния
             Воздух + Земля = Пыль'''
-        if type(other) == Water:    # TODO для сравнений нужно использовать метод isinstance
+        if isinstance(other, Water):
             return Storm()
-        elif type(other) == Fire:
+        elif isinstance(other, Fire):
             return Lightning()
-        elif type(other) == Earth:
+        elif isinstance(other, Earth):
             return Dust()
         return None
 
     def __radd__(self, other):
         '''Вода + Воздух = Шторм'''
-        if type(other) == Water:
+        if isinstance(other, Water):
             return Storm()
-        elif type(other) == Fire:
+        elif isinstance(other, Fire):
             return Lightning()
-        elif type(other) == Earth:
+        elif isinstance(other, Earth):
             return Dust()
         return None
 
@@ -159,21 +159,21 @@ class Fire:
 
     def __add__(self, other):
         '''Огонь + Земля = Лава'''
-        if type(other) == Water:
+        if isinstance(other, Water):
             return Steam()
-        if type(other) == Earth:
+        if isinstance(other, Earth):
             return Lava()
-        if type(other) == Sand:
+        if isinstance(other, Sand):
             return Glass()
         return None
 
     def __radd__(self, other):
         '''Вода + Огонь = Пар'''
-        if type(other) == Water:
+        if isinstance(other, Water):
             return Steam()
-        if type(other) == Earth:
+        if isinstance(other, Earth):
             return Lava()
-        if type(other) == Sand:
+        if isinstance(other, Sand):
             return Glass()
         return None
 
