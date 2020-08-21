@@ -153,7 +153,7 @@ class Wife(Human):
     def act(self):
         super().cleaning_house()
         if not super().alive():
-            if self.richness <= 10:
+            if self.richness <= 10 and self.house.food>0:
                 self.eat()
             elif self.happiness <= 10 and self.house.dirt >= 70:
                 self.clean_house()
