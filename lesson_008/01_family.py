@@ -3,6 +3,7 @@
 from termcolor import cprint
 from random import randint
 
+
 ######################################################## Часть первая
 #
 # Создать модель жизни небольшой семьи.
@@ -42,8 +43,6 @@ from random import randint
 # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
 
 
-
-
 class House:
 
     def __init__(self, money=100, food=50, dirt=0, food_cat=30):
@@ -55,8 +54,6 @@ class House:
     def __str__(self):
         return '{}: денег {}, еды {}, грязи {}, еды у кота {}'.format(
             self.__class__.__name__, self.money, self.food, self.dirt, self.cat_food)
-
-
 
 
 class Human:
@@ -87,14 +84,13 @@ class Human:
                 self.house.food -= piece
                 print('{} поел {} еды!'.format(self.name, piece))
 
-
     def go_to_house(self, house):
         self.house = house
         print('{} вьехал в дом!'.format(self.name))
 
     def cleaning_house(self):
-        if self.house.dirt>90:
-            self.happiness -=10
+        if self.house.dirt > 90:
+            self.happiness -= 10
             print('{} живет в грязи!'.format(self.name))
         else:
             print('{} рад(а), что чисто!'.format(self.name))
@@ -109,8 +105,6 @@ class Human:
         print('{} погладил(а) кота!'.format(self.name))
 
 
-
-
 class Husband(Human):
 
     def act(self):
@@ -123,9 +117,9 @@ class Husband(Human):
             self.work()
         elif monet < 6:
             self.gaming()
-        elif 7>=monet >= 6:
+        elif 7 >= monet >= 6:
             self.work()
-        elif monet>8:
+        elif monet > 8:
             self.pet_the_cat()
         else:
             print('EROR!')
@@ -148,7 +142,6 @@ class Wife(Human):
     def __init__(self, name):
         super().__init__(name=name)
         self.number_fur_coats = 0
-
 
     def act(self):
         monet = randint(1, 10)
@@ -213,8 +206,6 @@ class Wife(Human):
             print('{} купила {} еды для кота!'.format(self.name, piece))
 
 
-
-
 def result():
     cprint('================== Итоги ==================', color='red')
     cprint(home, color='yellow')
@@ -225,7 +216,6 @@ def result():
 
     cprint('\t\t\t\t Всего {} шуб!'.format(masha.number_fur_coats), color='yellow')
     cprint('===========================================', color='red')
-
 
 
 ######################################################## Часть вторая
@@ -278,11 +268,6 @@ class Cat:
         print('{} вьехал в дом!'.format(self.name))
 
 
-
-
-
-
-
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
@@ -322,7 +307,6 @@ for day in range(365):
 # Если кот дерет обои, то грязи становится больше на 5 пунктов+
 
 
-
 ######################################################## Часть вторая бис
 #
 # После реализации первой части надо в ветке мастер продолжить работу над семьей - добавить ребенка
@@ -338,6 +322,7 @@ class Child(Human):
     def __init__(self, name):
         super().__init__(name)
         self.happiness = 100
+
     def act(self):
 
         super().alive()
@@ -372,7 +357,6 @@ for day in range(365):
     cprint(home, color='cyan')
 
 result()
-
 
 # Усложненное задание (делать по желанию)
 #
