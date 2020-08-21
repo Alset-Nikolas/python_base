@@ -46,14 +46,15 @@ from random import randint
 
 class House:
 
-    def __init__(self, money=100, food=50, dirt=0):
+    def __init__(self, money=100, food=50, dirt=0, food_cat=30):
         self.money = money
         self.food = food
         self.dirt = dirt
+        self.cat_food = food_cat
 
     def __str__(self):
-        return '{}: денег {}, еды {}, грязи {}'.format(
-            self.__class__.__name__, self.money, self.food, self.dirt)
+        return '{}: денег {}, еды {}, грязи {}, еды у кота {}'.format(
+            self.__class__.__name__, self.money, self.food, self.dirt, self.cat_food)
 
 
 
@@ -103,6 +104,11 @@ class Human:
             print('{} умер'.format(self.name))
             exit()
 
+    def pet_the_cat(self):
+        self.happiness += 5
+        print('{} погладил(а) кота!'.format(self.name))
+
+
 
 
 class Husband(Human):
@@ -115,10 +121,12 @@ class Husband(Human):
             self.eat()
         elif self.house.money <= 200:
             self.work()
-        elif monet < 8:
+        elif monet < 6:
             self.gaming()
-        elif monet >= 8:
+        elif 7>=monet >= 6:
             self.work()
+        elif monet>8:
+            self.pet_the_cat()
         else:
             print('EROR!')
 
@@ -150,10 +158,14 @@ class Wife(Human):
             self.shopping()
         elif self.richness <= 20:
             self.eat()
+        elif self.house.cat_food <30:
+            self.buy_food_cat()
         elif 50 < self.house.dirt < 100:
             self.clean_house()
         elif monet >= 7:
             self.buy_fur_coat()
+        else:
+            self.pet_the_cat()
 
     def shopping(self):
         self.richness -= 10
@@ -192,73 +204,127 @@ class Wife(Human):
         print('{} убралась!'.format(self.name) if self.richness > 0 else
               '{} умерла убираясь!')
 
+    def buy_food_cat(self):
+        if self.house.money >= 30:
+            piece = 30
+            self.house.cat_food += piece
+            self.house.money -= piece
+            print('{} купила {} еды для кота!'.format(self.name, piece))
+        else:
+            piece = self.house.money
+            self.house.cat_food += piece
+            self.house.money -= piece
+            print('{} купила {} еды для кота!'.format(self.name, piece))
+
+
+
 
 def result():
     cprint('================== Итоги ==================', color='red')
     cprint(home, color='yellow')
     cprint(serge, color='yellow')
     cprint(masha, color='yellow')
+    cprint(cat, color='yellow')
     cprint('\t\t\t\t Всего {} шуб!'.format(masha.number_fur_coats), color='yellow')
     cprint('===========================================', color='red')
 
-home = House()
-serge = Husband(name='Сережа')
-masha = Wife(name='Маша')
-serge.go_to_house(home)
-masha.go_to_house(home)
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    home.dirt += 5
-    serge.act()
-    masha.act()
-    cprint(serge, color='cyan')
-    cprint(masha, color='cyan')
-    cprint(home, color='cyan')
 
-result()
 
 ######################################################## Часть вторая
 #
 # После подтверждения учителем первой части надо
 # отщепить ветку develop и в ней начать добавлять котов в модель семьи
-#
+
+class Cat:
+
+    def __init__(self, name=None, satiety=30, house=None):
+        self.name = name
+        self.satiety = satiety
+        self.house = house
+
+    def __str__(self):
+        return 'Кот {}, сытость {}'.format(self.name, self.satiety)
+
+    def eat(self):
+        if self.house.cat_food >= 10:
+            self.satiety += 20
+            self.house.cat_food -= 10
+            print('Кот кушает!')
+        else:
+            print('Кот мяучит, что хочет есть!! Но нет еды!')
+
+    def sleep(self):
+        self.satiety -= 10
+        print('Кот спит!')
+
+    def tear_Wallpaper(self):
+        self.satiety -= 10
+        self.house.dirt += 5
+        print('Кот грязнит!')
+
+    def act(self):
+        if self.satiety <= 0:
+            print('{} умер...'.format(self.name))
+            exit()
+        dice = randint(1, 3)
+        if self.satiety <= 10:
+            self.eat()
+        elif dice == 1:
+            self.sleep()
+        else:
+            self.tear_Wallpaper()
+
+    def go_to_house(self, house):
+        self.satiety -= 10
+        self.house = house
+        print('{} вьехал в дом!'.format(self.name))
+
+
+
+
+
+
+
+home = House()
+serge = Husband(name='Сережа')
+masha = Wife(name='Маша')
+cat = Cat(name='Мурзик')
+serge.go_to_house(home)
+masha.go_to_house(home)
+cat.go_to_house(home)
+for day in range(365):
+    cprint('================== День {} =================='.format(day), color='red')
+    home.dirt += 5
+    serge.act()
+    masha.act()
+    cat.act()
+    cprint(serge, color='cyan')
+    cprint(masha, color='cyan')
+    cprint(cat, color='cyan')
+    cprint(home, color='cyan')
+
+result()
+
 # Кот может:
-#   есть,
-#   спать,
-#   драть обои
+#   есть,+
+#   спать,+
+#   драть обои+
 #
 # Люди могут:
-#   гладить кота (растет степень счастья на 5 пунктов)
+#   гладить кота (растет степень счастья на 5 пунктов)+
 #
 # В доме добавляется:
 #   еда для кота (в начале - 30)
 #
-# У кота есть имя и степень сытости (в начале - 30)
-# Любое действие кота, кроме "есть", приводит к уменьшению степени сытости на 10 пунктов
+# У кота есть имя и степень сытости (в начале - 30)+
+# Любое действие кота, кроме "есть", приводит к уменьшению степени сытости на 10 пунктов+
 # Еда для кота покупается за деньги: за 10 денег 10 еды.
-# Кушает кот максимум по 10 единиц еды, степень сытости растет на 2 пункта за 1 пункт еды.
+# Кушает кот максимум по 10 единиц еды, степень сытости растет на 2 пункта за 1 пункт еды.+
 # Степень сытости не должна падать ниже 0, иначе кот умрет от голода.
 #
-# Если кот дерет обои, то грязи становится больше на 5 пунктов
+# Если кот дерет обои, то грязи становится больше на 5 пунктов+
 
 '''
-class Cat:
-
-    def __init__(self):
-        pass
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-    def soil(self):
-        pass
-
 
 ######################################################## Часть вторая бис
 #
