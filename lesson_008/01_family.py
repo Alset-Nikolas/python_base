@@ -153,9 +153,9 @@ class Wife(Human):
         if not super().alive():
             if self.house.food <= 30:
                 self.shopping()
-            elif self.richness <= 20:
+            elif self.richness <= 30:
                 self.eat()
-            elif 50 < self.house.dirt < 100:
+            elif 50 < self.house.dirt:
                 self.clean_house()
             elif monet >= 7:
                 self.buy_fur_coat()
