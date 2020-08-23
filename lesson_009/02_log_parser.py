@@ -74,7 +74,6 @@ class pars_txt_file_hour(pars_txt_file):
         month = int(line[6:8])
         day = int(line[9:11])
         hour = int(line[12:14])
-        minute = int(line[15:17])
         value = line[-4:-1]
         return [year, month, day, hour], value
 
@@ -83,8 +82,6 @@ class pars_txt_file_day(pars_txt_file):
         year = int(line[1:5])
         month = int(line[6:8])
         day = int(line[9:11])
-        hour = int(line[12:14])
-        minute = int(line[15:17])
         value = line[-4:-1]
         return [year, month, day], value
     
@@ -92,19 +89,12 @@ class pars_txt_file_month(pars_txt_file):
     def parsing_line(self, line):
         year = int(line[1:5])
         month = int(line[6:8])
-        day = int(line[9:11])
-        hour = int(line[12:14])
-        minute = int(line[15:17])
         value = line[-4:-1]
         return [year, month], value
     
 class pars_txt_file_year(pars_txt_file):
     def parsing_line(self, line):
         year = int(line[1:5])
-        month = int(line[6:8])
-        day = int(line[9:11])
-        hour = int(line[12:14])
-        minute = int(line[15:17])
         value = line[-4:-1]
         return year, value
 # После зачета первого этапа нужно сделать группировку событий
