@@ -26,63 +26,127 @@
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
 import zipfile
-from pprint import pprint
 
 
-def unpacking_zip_file(zip_name):
-    ''' voina-i-mur.zip ---> voina-i-mur.txt'''
+class statistics:
 
-    zfile = zipfile.ZipFile(zip_name, 'r')
-    txt_name_file = zfile.namelist()[0]
-    for filename in zfile.namelist():
-        zfile.extract(filename)
-    print(f'Распаковка файла завершена! Появился файл "{txt_name_file}"')
-    return txt_name_file
+    def __init__(self, zip_name):
+        self.zip_name = zip_name
+        self.alfavit = {}
+        self.stat = []
+        self.txt_name_file = None
+
+    def unpacking_zip_file(self):
+        ''' voina-i-mur.zip ---> voina-i-mur.txt'''
+        self.zfile = zipfile.ZipFile(self.zip_name, 'r')
+        self.txt_name_file = self.zfile.namelist()[0]
+        for filename in self.zfile.namelist():
+            self.zfile.extract(filename)
+        print(f'Распаковка файла завершена! Появился файл "{self.txt_name_file}"')
+
+    def stat_alfavit(self):
+        '''Статичтика алфавита!'''
+        self.creation_alphabet()
+        with open(self.txt_name_file, 'r', encoding='cp1251') as file:
+            for line in file:
+                for symbol in line:
+                    if 'а' <= symbol <= 'я' or 'А' <= symbol <= 'Я':
+                        self.alfavit[symbol] += 1
+
+    def creation_alphabet(self):
+        '''Создать алфавит'''
+        for x in range(ord('А'), ord('Я') + 1):
+            self.alfavit[chr(x)] = 0
+        for x in range(ord('а'), ord('я') + 1):
+            self.alfavit[chr(x)] = 0
+
+    def sort_stat(self):
+        '''Сортировка статистики'''
+        for key, value in self.alfavit.items():
+            self.stat.append((key, value))
+
+        for _ in range(len(self.stat)):
+            for x in range(len(self.stat) - 1):
+                if self.stat[x][1] < self.stat[x + 1][1]:
+                    self.stat[x + 1], self.stat[x] = self.stat[x], self.stat[x + 1]
+
+    def p_print(self):
+        '''Вывод на экран'''
+        for letter, number in self.stat:
+            print('\t+---------+----------+')
+            print('\t|{:^9}'.format(letter), '|{:^10}|'.format(number), sep='')
+        else:
+            print('\t+---------+----------+')
 
 
 zip_name = 'C:\\Users\\User\\PycharmProjects\\python_base\\lesson_009\\python_snippets\\voyna-i-mir.txt.zip'
-txt_name_file = unpacking_zip_file(zip_name=zip_name)
 
-def stat_alfavit():
-    alfavit = {}
-
-    for x in range(ord('А'), ord('Я') + 1):
-        alfavit[chr(x)] = 0
-    for x in range(ord('а'), ord('я') + 1):
-        alfavit[chr(x)] = 0
+A = statistics(zip_name=zip_name)
+A.unpacking_zip_file()
+A.stat_alfavit()
+A.sort_stat()
+A.p_print()
 
 
-    with open(txt_name_file, 'r', encoding='cp1251') as file:
-        for line in file:
-            for symbol in line:
-                if 'а' <= symbol <= 'я' or 'А' <= symbol <= 'Я':
-                    alfavit[symbol] += 1
+class statistics_frequency_increases(statistics):
+    def sort_stat(self):
+        '''Сортировка статистики по частоте по возрастанию'''
+        for key, value in self.alfavit.items():
+            self.stat.append((key, value))
 
-    return alfavit
-
-alfavit = stat_alfavit()
-
-def sort_stat(alfavit):
-    stat = []
-    for key, value in alfavit.items():
-        stat.append((key, value))
-
-    for _ in range(len(stat)):
-        for x in range(len(stat)-1):
-            if stat[x][1] < stat[x+1][1]:
-                stat[x+1], stat[x] = stat[x], stat[x+1]
-    return stat
-stat = sort_stat(alfavit)
+        for _ in range(len(self.stat)):
+            for x in range(len(self.stat) - 1):
+                if self.stat[x][1] > self.stat[x + 1][1]:
+                    self.stat[x + 1], self.stat[x] = self.stat[x], self.stat[x + 1]
 
 
-def p_print(stat):
-    for letter, number in stat:
-        print('+---------+----------+')
-        print('|{:^9}'.format(letter), '|{:^10}|'.format(number), sep='')
-    else:
-        print('+---------+----------+')
-p_print(stat)
+A = statistics_frequency_increases(zip_name=zip_name)
+A.unpacking_zip_file()
+A.stat_alfavit()
+A.sort_stat()
+A.p_print()
+
+
+class statistics_ABC(statistics):
+
+    def sort_stat(self):
+        '''Сортировка статистики по алфавиту по убыванию'''
+        for key, value in self.alfavit.items():
+            self.stat.append((key, value))
+
+        for _ in range(len(self.stat)):
+            for x in range(len(self.stat) - 1):
+                if self.stat[x][0] > self.stat[x + 1][0]:
+                    self.stat[x + 1], self.stat[x] = self.stat[x], self.stat[x + 1]
+
+
+A = statistics_ABC(zip_name=zip_name)
+A.unpacking_zip_file()
+A.stat_alfavit()
+A.sort_stat()
+A.p_print()
+
+
+class statistics_ABC_increases(statistics):
+
+    def sort_stat(self):
+        '''Сортировка статистики по алфавиту по возрастанию'''
+        for key, value in self.alfavit.items():
+            self.stat.append((key, value))
+
+        for _ in range(len(self.stat)):
+            for x in range(len(self.stat) - 1):
+                if self.stat[x][0] < self.stat[x + 1][0]:
+                    self.stat[x + 1], self.stat[x] = self.stat[x], self.stat[x + 1]
+
+
+A = statistics_ABC_increases(zip_name=zip_name)
+A.unpacking_zip_file()
+A.stat_alfavit()
+A.sort_stat()
+A.p_print()
+
 # После зачета первого этапа нужно сделать упорядочивание статистики
-#  - по частоте по возрастанию
-#  - по алфавиту по возрастанию
-#  - по алфавиту по убыванию
+#  - по частоте по возрастанию+
+#  - по алфавиту по возрастанию+
+#  - по алфавиту по убыванию+
