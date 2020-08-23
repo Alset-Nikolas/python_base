@@ -22,10 +22,93 @@
 # Для этого пригодится шаблон проектирование "Шаблонный метод"
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
+from pprint import pprint
 
-# TODO здесь ваш код
+class pars_txt_file:
 
+    def __init__(self):
+        self.txt_name_file = 'events.txt'
+        self.data = []
+
+    def parsing_line(self, line):
+        year = int(line[1:5])
+        month = int(line[6:8])
+        day = int(line[9:11])
+        hour = int(line[12:14])
+        minute = int(line[15:17])
+        value = line[-4:-1]
+        return [year, month, day, hour, minute], value
+
+
+
+
+
+    def read_the_file(self):
+
+        with open(self.txt_name_file, 'r', encoding='cp1251') as file:
+            count = 0
+            for line in file:
+                pars, value = self.parsing_line(line)
+                if value == ' OK':
+                    continue
+                else:
+                    self.data.append(pars)
+
+
+    def write_file(self):
+
+        with open('out_parses.tx.', 'w') as file:
+            x=0
+            while x != len(self.data):
+                file.write('{} {}\n'.format(self.data[x], self.data.count(self.data[x])))
+                x +=self.data.count(self.data[x])
+
+
+A = pars_txt_file()
+A.read_the_file()
+A.write_file()
+'''
+class pars_txt_file_hour(pars_txt_file):
+    def parsing_line(self, line):
+        year = int(line[1:5])
+        month = int(line[6:8])
+        day = int(line[9:11])
+        hour = int(line[12:14])
+        minute = int(line[15:17])
+        value = line[-4:-1]
+        return [year, month, day, hour], value
+
+class pars_txt_file_day(pars_txt_file):
+    def parsing_line(self, line):
+        year = int(line[1:5])
+        month = int(line[6:8])
+        day = int(line[9:11])
+        hour = int(line[12:14])
+        minute = int(line[15:17])
+        value = line[-4:-1]
+        return [year, month, day], value
+    
+class pars_txt_file_month(pars_txt_file):
+    def parsing_line(self, line):
+        year = int(line[1:5])
+        month = int(line[6:8])
+        day = int(line[9:11])
+        hour = int(line[12:14])
+        minute = int(line[15:17])
+        value = line[-4:-1]
+        return [year, month], value
+    
+class pars_txt_file_year(pars_txt_file):
+    def parsing_line(self, line):
+        year = int(line[1:5])
+        month = int(line[6:8])
+        day = int(line[9:11])
+        hour = int(line[12:14])
+        minute = int(line[15:17])
+        value = line[-4:-1]
+        return year, value
 # После зачета первого этапа нужно сделать группировку событий
 #  - по часам
 #  - по месяцу
 #  - по году
+'''
