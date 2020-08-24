@@ -24,11 +24,11 @@
 # Для этого пригодится шаблон проектирование "Шаблонный метод"
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
-
+import os
 import zipfile
 
 
-class statistics:  # TODO названия классов должны быть с заглавной буквы (и в CamelCase)
+class Statistics:
 
     def __init__(self, zip_name):
         self.zip_name = zip_name
@@ -38,6 +38,7 @@ class statistics:  # TODO названия классов должны быть 
 
     def unpacking_zip_file(self):
         ''' voina-i-mur.zip ---> voina-i-mur.txt'''
+        os.path.normpath(self.zip_name)
         self.zfile = zipfile.ZipFile(self.zip_name, 'r')
         self.txt_name_file = self.zfile.namelist()[0]
         for filename in self.zfile.namelist():
@@ -79,17 +80,16 @@ class statistics:  # TODO названия классов должны быть 
             print('\t+---------+----------+')
 
 
-zip_name = 'C:\\Users\\User\\PycharmProjects\\python_base\\lesson_009\\python_snippets\\voyna-i-mir.txt.zip'
-# TODO путь должен быть относительным и поддерживаемым на любых платформах (а не только на Вашем ПК и в Windows)
+zip_name = 'python_snippets\\voyna-i-mir.txt.zip'
 
-A = statistics(zip_name=zip_name)
+A = Statistics(zip_name=zip_name)
 A.unpacking_zip_file()
 A.stat_alfavit()
 A.sort_stat()
 A.p_print()
 
 
-class statistics_frequency_increases(statistics):
+class statistics_frequency_increases(Statistics):
     def sort_stat(self):
         '''Сортировка статистики по частоте по возрастанию'''
         for key, value in self.alfavit.items():
@@ -108,7 +108,7 @@ A.sort_stat()
 A.p_print()
 
 
-class statistics_ABC(statistics):
+class statistics_ABC(Statistics):
 
     def sort_stat(self):
         '''Сортировка статистики по алфавиту по убыванию'''
@@ -128,7 +128,7 @@ A.sort_stat()
 A.p_print()
 
 
-class statistics_ABC_increases(statistics):
+class statistics_ABC_increases(Statistics):
 
     def sort_stat(self):
         '''Сортировка статистики по алфавиту по возрастанию'''
