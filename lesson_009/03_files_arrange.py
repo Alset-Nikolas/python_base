@@ -46,11 +46,9 @@ import os.path
 
 
 class files_arrange:
-    def __init__(self, zip_name):
+    def __init__(self, zip_name, path):
         self.zip_name = zip_name
-        # TODO значение path должно приходить из аргумента в конструкторе класса
-        self.path = 'C:\\Users\\User\\PycharmProjects\\python_base\\lesson_009\\icons'
-        # TODO путь должен быть относительным и поддерживаемым на любых платформах (а не только на Вашем ПК и в Windows)
+        self.path = path
         self.data = []
 
     def unpacking_zip_file(self):
@@ -80,22 +78,21 @@ class files_arrange:
         if not os.path.isdir("icons_by_year"):
             os.mkdir("icons_by_year")
 
-    def move(self):
+    def move(self, new_path):
         # заменить (переместить) этот файл в другой каталог
         for path in self.data:
             print(path[0])
-            text = os.path.join('C:\\Users\\User\\PycharmProjects\\python_base\\lesson_009\\icons_by_year', path[2])
-            # TODO путь до выходной директории тоже должен задаваться через аргумент и быть относительным
+            text = os.path.join(new_path, path[2])
             os.replace(path[0], text)
 
 
-zip_name = 'C:\\Users\\User\\PycharmProjects\\python_base\\lesson_009\\icons.zip'  # TODO путь должен быть относительным
-A = files_arrange(zip_name=zip_name)
+zip_name = 'icons.zip'
+A = files_arrange(zip_name=zip_name, path='icons')
 A.unpacking_zip_file()
 A.normpath()
 A.walk_in_file()
 A.create()
-A.move()
+A.move(new_path='icons_by_year')
 
 '''
 
