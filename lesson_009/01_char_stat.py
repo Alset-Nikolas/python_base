@@ -28,7 +28,7 @@
 import zipfile
 
 
-class statistics:
+class statistics:  # TODO названия классов должны быть с заглавной буквы (и в CamelCase)
 
     def __init__(self, zip_name):
         self.zip_name = zip_name
@@ -45,7 +45,7 @@ class statistics:
         print(f'Распаковка файла завершена! Появился файл "{self.txt_name_file}"')
 
     def stat_alfavit(self):
-        '''Статичтика алфавита!'''
+        '''Статиcтика алфавита!'''
         self.creation_alphabet()
         with open(self.txt_name_file, 'r', encoding='cp1251') as file:
             for line in file:
@@ -80,6 +80,7 @@ class statistics:
 
 
 zip_name = 'C:\\Users\\User\\PycharmProjects\\python_base\\lesson_009\\python_snippets\\voyna-i-mir.txt.zip'
+# TODO путь должен быть относительным и поддерживаемым на любых платформах (а не только на Вашем ПК и в Windows)
 
 A = statistics(zip_name=zip_name)
 A.unpacking_zip_file()

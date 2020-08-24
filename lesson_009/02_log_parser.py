@@ -23,11 +23,13 @@
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 from pprint import pprint
+# TODO нужен ли этот импорт?
 
-class pars_txt_file:
+# TODO оформить код по PEP8
+class pars_txt_file:  # TODO названия классов должны быть с заглавной буквы (и в CamelCase)
 
     def __init__(self):
-        self.txt_name_file = 'events.txt'
+        self.txt_name_file = 'events.txt'  # TODO это значение должно приходить из аргумента в конструкторе класса
         self.data = []
 
     def parsing_line(self, line):
@@ -57,7 +59,8 @@ class pars_txt_file:
 
     def write_file(self):
 
-        with open('out_parses.tx.', 'w') as file:
+        with open('out_parses.tx.', 'w') as file:  # TODO имя выходного файла тоже должно задаваться через аргумент
+            # TODO в формате файла допущена ошибка
             x=0
             while x != len(self.data):
                 file.write('{} {}\n'.format(self.data[x], self.data.count(self.data[x])))
@@ -67,7 +70,8 @@ class pars_txt_file:
 A = pars_txt_file()
 A.read_the_file()
 A.write_file()
-'''
+
+# TODO названия классов должны быть с заглавной буквы (и в CamelCase)
 class pars_txt_file_hour(pars_txt_file):
     def parsing_line(self, line):
         year = int(line[1:5])
@@ -97,8 +101,10 @@ class pars_txt_file_year(pars_txt_file):
         year = int(line[1:5])
         value = line[-4:-1]
         return year, value
+
+# TODO реализовать вызовы шаблонных методов для демонстрации их работы
+
 # После зачета первого этапа нужно сделать группировку событий
 #  - по часам
 #  - по месяцу
 #  - по году
-'''
