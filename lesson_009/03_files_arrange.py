@@ -52,7 +52,7 @@ class files_arrange:
         self.data = []
 
     def unpacking_zip_file(self):
-        if not os.path.exists("icons"):
+        if not os.path.exists(self.path):
             self.zfile = zipfile.ZipFile(zip_name, 'r')
             self.txt_name_file = self.zfile.namelist()[0]
             for filename in self.zfile.namelist():
@@ -73,16 +73,18 @@ class files_arrange:
         sorted(self.data, key=lambda date_: date_[1][1])
         sorted(self.data, key=lambda date_: date_[1][0])
 
-    def create(self):
+    def create(self, new_path):
+        self.new_path = new_path
         # создать пустой каталог (папку)
-        if not os.path.isdir("icons_by_year"):
-            os.mkdir("icons_by_year")
+        if not os.path.isdir(self.new_path):
+            os.mkdir(self.new_path)
 
-    def move(self, new_path):
+    def move(self):
         # заменить (переместить) этот файл в другой каталог
+
         for path in self.data:
             print(path[0])
-            text = os.path.join(new_path, path[2])
+            text = os.path.join(self.new_path, path[2])
             os.replace(path[0], text)
 
 
@@ -91,8 +93,8 @@ A = files_arrange(zip_name=zip_name, path='icons')
 A.unpacking_zip_file()
 A.normpath()
 A.walk_in_file()
-A.create()
-A.move(new_path='icons_by_year')
+A.create(new_path='icons_by_year')
+A.move()
 
 '''
 
