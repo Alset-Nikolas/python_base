@@ -88,6 +88,7 @@ class FilesArrange:
             text = os.path.join(self.new_path, path[2])
             os.replace(path[0], text)
 
+
 '''
 zip_name = 'icons.zip'
 A = FilesArrange(zip_name=zip_name, path='icons')
@@ -97,6 +98,8 @@ A.walk_in_file()
 A.create(new_path='icons_by_year')
 A.move()
 '''
+
+
 class FilesArrangeHard(FilesArrange):
     def walk_in_file(self):
         last_name = None
@@ -104,7 +107,7 @@ class FilesArrangeHard(FilesArrange):
 
             if filenames and not filenames.endswith('/'):
                 foto = filenames[len(last_name):]
-                self.data.append([filenames, list(time.gmtime(os.path.getmtime(filenames))[0:6]),foto])
+                self.data.append([filenames, list(time.gmtime(os.path.getmtime(filenames))[0:6]), foto])
             else:
                 last_name = filenames
 
@@ -120,10 +123,8 @@ A.walk_in_file()
 A.create(new_path='icons_by_year')
 A.move()
 
-
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
-    # Это относится только к чтению файлов в архиве. В случае паттерна "Шаблонный метод" изменяется способ
+# Это относится только к чтению файлов в архиве. В случае паттерна "Шаблонный метод" изменяется способ
 # получения данных (читаем os.walk() или zip.namelist и т.д.)
 # Документация по zipfile: API https://docs.python.org/3/library/zipfile.html
-

@@ -65,7 +65,7 @@ class ParsTxtFileHour(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:-1]
-                if early_line==None:
+                if early_line == None:
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1
@@ -74,8 +74,6 @@ class ParsTxtFileHour(ParsTxtFile):
                         '{}-{:02d}-{:02d} {:02d} {}\n'.format(*_line, count_line))
                     count_line = 1
                     early_line = _line
-
-
 
 
 class ParsTxtFileMonth(ParsTxtFile):
@@ -95,10 +93,9 @@ class ParsTxtFileMonth(ParsTxtFile):
                         '{}-{:02d} {}\n'.format(*_line, count_line))
                     count_line = 1
                     early_line = _line
-                if count_line == len(self.data)-1:
+                if count_line == len(self.data) - 1:
                     file.write(
                         '{}-{:02d} {}\n'.format(*_line, count_line))
-
 
 
 class ParsTxtFileYear(ParsTxtFile):

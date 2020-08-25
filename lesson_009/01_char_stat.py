@@ -83,6 +83,7 @@ class Statistics:
             print('\t|{:^9}'.format('Итого'), '|{:^10}|'.format(all_number), sep='')
             print('\t+---------+----------+')
 
+
 zip_name = 'python_snippets/voyna-i-mir.txt.zip'
 
 A = Statistics(zip_name=zip_name)
@@ -154,4 +155,3 @@ A.p_print()
 #  - по частоте по возрастанию+
 #  - по алфавиту по возрастанию+
 #  - по алфавиту по убыванию+
-
