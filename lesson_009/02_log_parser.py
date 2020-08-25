@@ -23,7 +23,7 @@
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
-class Pars_Txt_File:
+class Pars_Txt_File:  # TODO имена классов принято задавать в CamelCase. То есть Pars_Txt_File -> ParsTxtFile
 
     def __init__(self, txt_name_file):
         self.txt_name_file = txt_name_file
@@ -58,7 +58,8 @@ class Pars_Txt_File:
                 x += self.data.count(self.data[x])
 
 
-class Pars_Txt_File_Hour(Pars_Txt_File):
+# TODO убрать дублирующийся код метода из классов-наследников
+class Pars_Txt_File_Hour(Pars_Txt_File):  # TODO см. замечание выше
     def parsing_line(self, line):
         year = int(line[1:5])
         month = int(line[6:8])

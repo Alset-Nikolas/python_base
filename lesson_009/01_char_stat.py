@@ -80,7 +80,7 @@ class Statistics:
             print('\t+---------+----------+')
 
 
-zip_name = 'python_snippets\\voyna-i-mir.txt.zip'
+zip_name = 'python_snippets/voyna-i-mir.txt.zip'
 
 A = Statistics(zip_name=zip_name)
 A.unpacking_zip_file()
@@ -108,7 +108,7 @@ A.sort_stat()
 A.p_print()
 
 
-class statistics_ABC(Statistics):
+class statistics_ABC(Statistics):  # TODO названия классов должны быть с заглавной буквы (и в CamelCase)
 
     def sort_stat(self):
         '''Сортировка статистики по алфавиту по убыванию'''
@@ -151,3 +151,5 @@ A.p_print()
 #  - по частоте по возрастанию+
 #  - по алфавиту по возрастанию+
 #  - по алфавиту по убыванию+
+
+# TODO не отображается общее количество символов, подсчитанных в статистике

@@ -2,7 +2,6 @@
 
 import os
 import time
-import shutil
 
 # Нужно написать скрипт для упорядочивания фотографий (вообще любых файлов)
 # Скрипт должен разложить файлы из одной папки по годам и месяцам в другую.
@@ -104,3 +103,4 @@ A.move()
 # получения данных (читаем os.walk() или zip.namelist и т.д.)
 # Документация по zipfile: API https://docs.python.org/3/library/zipfile.html
 '''
+# TODO см. комментарий в LMS
