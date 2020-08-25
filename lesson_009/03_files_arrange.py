@@ -103,4 +103,3 @@ A.move()
 # получения данных (читаем os.walk() или zip.namelist и т.д.)
 # Документация по zipfile: API https://docs.python.org/3/library/zipfile.html
 '''
-# TODO см. комментарий в LMS

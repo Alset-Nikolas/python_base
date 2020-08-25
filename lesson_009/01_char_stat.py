@@ -73,12 +73,15 @@ class Statistics:
 
     def p_print(self):
         '''Вывод на экран'''
+        all_number = 0
         for letter, number in self.stat:
             print('\t+---------+----------+')
             print('\t|{:^9}'.format(letter), '|{:^10}|'.format(number), sep='')
+            all_number += number
         else:
             print('\t+---------+----------+')
-
+            print('\t|{:^9}'.format('Итого'), '|{:^10}|'.format(all_number), sep='')
+            print('\t+---------+----------+')
 
 zip_name = 'python_snippets/voyna-i-mir.txt.zip'
 
@@ -108,7 +111,7 @@ A.sort_stat()
 A.p_print()
 
 
-class statistics_ABC(Statistics):  # TODO названия классов должны быть с заглавной буквы (и в CamelCase)
+class StatisticsABC(Statistics):
 
     def sort_stat(self):
         '''Сортировка статистики по алфавиту по убыванию'''
@@ -121,14 +124,14 @@ class statistics_ABC(Statistics):  # TODO названия классов дол
                     self.stat[x + 1], self.stat[x] = self.stat[x], self.stat[x + 1]
 
 
-A = statistics_ABC(zip_name=zip_name)
+A = StatisticsABC(zip_name=zip_name)
 A.unpacking_zip_file()
 A.stat_alfavit()
 A.sort_stat()
 A.p_print()
 
 
-class statistics_ABC_increases(Statistics):
+class StatisticsABCIncreases(Statistics):
 
     def sort_stat(self):
         '''Сортировка статистики по алфавиту по возрастанию'''
@@ -141,7 +144,7 @@ class statistics_ABC_increases(Statistics):
                     self.stat[x + 1], self.stat[x] = self.stat[x], self.stat[x + 1]
 
 
-A = statistics_ABC_increases(zip_name=zip_name)
+A = StatisticsABCIncreases(zip_name=zip_name)
 A.unpacking_zip_file()
 A.stat_alfavit()
 A.sort_stat()
@@ -152,4 +155,3 @@ A.p_print()
 #  - по алфавиту по возрастанию+
 #  - по алфавиту по убыванию+
 
-# TODO не отображается общее количество символов, подсчитанных в статистике

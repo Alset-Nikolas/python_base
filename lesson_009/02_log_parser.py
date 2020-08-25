@@ -23,7 +23,7 @@
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
-class Pars_Txt_File:  # TODO имена классов принято задавать в CamelCase. То есть Pars_Txt_File -> ParsTxtFile
+class ParsTxtFile:  #
 
     def __init__(self, txt_name_file):
         self.txt_name_file = txt_name_file
@@ -58,51 +58,69 @@ class Pars_Txt_File:  # TODO имена классов принято задав
                 x += self.data.count(self.data[x])
 
 
-# TODO убрать дублирующийся код метода из классов-наследников
-class Pars_Txt_File_Hour(Pars_Txt_File):  # TODO см. замечание выше
-    def parsing_line(self, line):
-        year = int(line[1:5])
-        month = int(line[6:8])
-        day = int(line[9:11])
-        hour = int(line[12:14])
-        value = line[-4:-1]
-        return [year, month, day, hour], value
+class ParsTxtFileHour(ParsTxtFile):
+    def write_file(self, out_txt_file):
+        with open(out_txt_file, 'w') as file:
+            early_line = None
+            count_line = 0
+            for line in self.data:
+                _line = line[:-1]
+                if early_line==None:
+                    early_line = _line
+                elif early_line == _line:
+                    count_line += 1
+                elif early_line != _line:
+                    file.write(
+                        '{}-{:02d}-{:02d} {:02d} {}\n'.format(*_line, count_line))
+                    count_line = 1
+                    early_line = _line
+
+
+
+
+class ParsTxtFileMonth(ParsTxtFile):
 
     def write_file(self, out_txt_file):
         with open(out_txt_file, 'w') as file:
-            x = 0
-            while x != len(self.data):
-                file.write('{}-{:02d}-{:02d} {:02d} {}\n'.format(*self.data[x], self.data.count(self.data[x])))
-                x += self.data.count(self.data[x])
+            early_line = None
+            count_line = 0
+            for line in self.data:
+                _line = line[:2]
+                if early_line == None:
+                    early_line = _line
+                elif early_line == _line:
+                    count_line += 1
+                elif early_line != _line:
+                    file.write(
+                        '{}-{:02d} {}\n'.format(*_line, count_line))
+                    count_line = 1
+                    early_line = _line
+                if count_line == len(self.data)-1:
+                    file.write(
+                        '{}-{:02d} {}\n'.format(*_line, count_line))
 
 
-class Pars_Txt_File_Month(Pars_Txt_File):
-    def parsing_line(self, line):
-        year = int(line[1:5])
-        month = int(line[6:8])
-        value = line[-4:-1]
-        return [year, month], value
 
-    def write_file(self, out_txt_file):
-        with open(out_txt_file, 'w') as file:
-            x = 0
-            while x != len(self.data):
-                file.write('{}-{:02d} {}\n'.format(*self.data[x], self.data.count(self.data[x])))
-                x += self.data.count(self.data[x])
-
-
-class Pars_Txt_File_Year(Pars_Txt_File):
-    def parsing_line(self, line):
-        year = int(line[1:5])
-        value = line[-4:-1]
-        return [year], value
+class ParsTxtFileYear(ParsTxtFile):
 
     def write_file(self, out_txt_file):
         with open(out_txt_file, 'w') as file:
-            x = 0
-            while x != len(self.data):
-                file.write('{} {}\n'.format(*self.data[x], self.data.count(self.data[x])))
-                x += self.data.count(self.data[x])
+            early_line = None
+            count_line = 0
+            for line in self.data:
+                _line = line[:1]
+                if early_line == None:
+                    early_line = _line
+                elif early_line == _line:
+                    count_line += 1
+                elif early_line != _line:
+                    file.write(
+                        '{} {}\n'.format(*_line, count_line))
+                    count_line = 1
+                    early_line = _line
+                if count_line == len(self.data) - 1:
+                    file.write(
+                        '{} {}\n'.format(*_line, count_line))
 
 
 while True:
@@ -118,19 +136,19 @@ while True:
         print('Всего 4 варианта!')
 
 if N == '1':
-    A = Pars_Txt_File(txt_name_file='events.txt')
+    A = ParsTxtFile(txt_name_file='events.txt')
     A.read_the_file()
     A.write_file(out_txt_file='out_parses.txt')
 elif N == '2':
-    A = Pars_Txt_File_Hour(txt_name_file='events.txt')
+    A = ParsTxtFileHour(txt_name_file='events.txt')
     A.read_the_file()
     A.write_file(out_txt_file='out_parses.txt')
 elif N == '3':
-    A = Pars_Txt_File_Month(txt_name_file='events.txt')
+    A = ParsTxtFileMonth(txt_name_file='events.txt')
     A.read_the_file()
     A.write_file(out_txt_file='out_parses.txt')
 elif N == '4':
-    A = Pars_Txt_File_Year(txt_name_file='events.txt')
+    A = ParsTxtFileYear(txt_name_file='events.txt')
     A.read_the_file()
     A.write_file(out_txt_file='out_parses.txt')
 print('Все!')
