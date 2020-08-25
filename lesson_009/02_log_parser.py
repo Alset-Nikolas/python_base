@@ -65,7 +65,7 @@ class ParsTxtFileHour(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:-1]
-                if early_line == None:  # TODO вместо == в таком случае используется is
+                if early_line is None:
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1
@@ -84,7 +84,7 @@ class ParsTxtFileMonth(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:2]
-                if early_line == None:  # TODO аналогично замечанию выше
+                if early_line is None:
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1
@@ -106,7 +106,7 @@ class ParsTxtFileYear(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:1]
-                if early_line == None:  # TODO аналогично замечанию выше
+                if early_line is None:
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1
