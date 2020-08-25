@@ -52,7 +52,7 @@ class files_arrange:
 
     def unpacking_zip_file(self):
         if not os.path.exists(self.path):
-            self.zfile = zipfile.ZipFile(zip_name, 'r')
+            self.zfile = zipfile.ZipFile(self.zip_name, 'r')
             self.txt_name_file = self.zfile.namelist()[0]
             for filename in self.zfile.namelist():
                 self.zfile.extract(filename)
