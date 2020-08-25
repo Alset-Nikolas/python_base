@@ -89,15 +89,13 @@ class FilesArrange:
             os.replace(path[0], text)
 
 
-'''
 zip_name = 'icons.zip'
 A = FilesArrange(zip_name=zip_name, path='icons')
 A.unpacking_zip_file()
 A.normpath()
 A.walk_in_file()
-A.create(new_path='icons_by_year')
+A.create(new_path='icons_by_year_1')
 A.move()
-'''
 
 
 class FilesArrangeHard(FilesArrange):
@@ -122,6 +120,9 @@ A.normpath()
 A.walk_in_file()
 A.create(new_path='icons_by_year')
 A.move()
+
+# TODO в обоих случаях работы сортировки изображений по подпапкам по годам не произошло -
+#  всё сохранилось в общей директории icons_by_year
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.

@@ -23,7 +23,7 @@
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
-class ParsTxtFile:  #
+class ParsTxtFile:
 
     def __init__(self, txt_name_file):
         self.txt_name_file = txt_name_file
@@ -65,7 +65,7 @@ class ParsTxtFileHour(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:-1]
-                if early_line == None:
+                if early_line == None:  # TODO вместо == в таком случае используется is
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1
@@ -84,7 +84,7 @@ class ParsTxtFileMonth(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:2]
-                if early_line == None:
+                if early_line == None:  # TODO аналогично замечанию выше
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1
@@ -106,7 +106,7 @@ class ParsTxtFileYear(ParsTxtFile):
             count_line = 0
             for line in self.data:
                 _line = line[:1]
-                if early_line == None:
+                if early_line == None:  # TODO аналогично замечанию выше
                     early_line = _line
                 elif early_line == _line:
                     count_line += 1

@@ -93,7 +93,7 @@ A.sort_stat()
 A.p_print()
 
 
-class statistics_frequency_increases(Statistics):
+class statistics_frequency_increases(Statistics):  # TODO названия классов должны быть с заглавной буквы и CamelCase
     def sort_stat(self):
         '''Сортировка статистики по частоте по возрастанию'''
         for key, value in self.alfavit.items():
