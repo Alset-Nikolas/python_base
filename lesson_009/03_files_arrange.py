@@ -57,6 +57,8 @@ class FilesArrange:
             for filename in self.zfile.namelist():
                 self.zfile.extract(filename)
             print(f'Распаковка файла завершена! Появился файл "{self.txt_name_file}"')
+        else:
+            self.zfile = zipfile.ZipFile(self.zip_name, 'r')
 
     def normpath(self):
         os.path.normpath(self.path)
@@ -66,8 +68,10 @@ class FilesArrange:
             if filenames:
                 for foto in filenames:
                     all_dir_path = os.path.join(dirpath, foto)
-                    date = time.gmtime(os.path.getmtime(self.path))
-                    self.data.append([all_dir_path, list(date[:6]), foto])
+                    date = time.gmtime(os.path.getmtime(all_dir_path))
+                    time_ = list(date[:6])
+                    self.data.append([all_dir_path, time_, foto])
+        print(self.data)
 
         sorted(self.data, key=lambda date_: date_[1][1])
         sorted(self.data, key=lambda date_: date_[1][0])
@@ -80,13 +84,11 @@ class FilesArrange:
 
     def move(self):
         # заменить (переместить) этот файл в другой каталог
-
         for path in self.data:
-            print(path[0])
             text = os.path.join(self.new_path, path[2])
             os.replace(path[0], text)
 
-
+'''
 zip_name = 'icons.zip'
 A = FilesArrange(zip_name=zip_name, path='icons')
 A.unpacking_zip_file()
@@ -94,14 +96,34 @@ A.normpath()
 A.walk_in_file()
 A.create(new_path='icons_by_year')
 A.move()
-
-
-
 '''
+class FilesArrangeHard(FilesArrange):
+    def walk_in_file(self):
+        last_name = None
+        for filenames in self.zfile.namelist():
+
+            if filenames and not filenames.endswith('/'):
+                foto = filenames[len(last_name):]
+                self.data.append([filenames, list(time.gmtime(os.path.getmtime(filenames))[0:6]),foto])
+            else:
+                last_name = filenames
+
+        sorted(self.data, key=lambda date_: date_[1][1])
+        sorted(self.data, key=lambda date_: date_[1][0])
+
+
+zip_name = 'icons.zip'
+A = FilesArrangeHard(zip_name=zip_name, path='icons')
+A.unpacking_zip_file()
+A.normpath()
+A.walk_in_file()
+A.create(new_path='icons_by_year')
+A.move()
+
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
     # Это относится только к чтению файлов в архиве. В случае паттерна "Шаблонный метод" изменяется способ
 # получения данных (читаем os.walk() или zip.namelist и т.д.)
 # Документация по zipfile: API https://docs.python.org/3/library/zipfile.html
-'''
+
