@@ -44,7 +44,7 @@ import zipfile
 import os.path
 
 
-class files_arrange:
+class FilesArrange:
     def __init__(self, zip_name, path):
         self.zip_name = zip_name
         self.path = path
@@ -88,12 +88,14 @@ class files_arrange:
 
 
 zip_name = 'icons.zip'
-A = files_arrange(zip_name=zip_name, path='icons')
+A = FilesArrange(zip_name=zip_name, path='icons')
 A.unpacking_zip_file()
 A.normpath()
 A.walk_in_file()
 A.create(new_path='icons_by_year')
 A.move()
+
+
 
 '''
 
