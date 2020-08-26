@@ -140,3 +140,5 @@ A.create(new_path='icons_by_year')
 # Документация по zipfile: API https://docs.python.org/3/library/zipfile.html
 
 '''
+
+# зачёт! 🚀
