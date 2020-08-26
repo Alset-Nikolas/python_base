@@ -66,7 +66,6 @@ class FilesArrange:
 
     def pars_files_add_data(self):
         for all_path_filenames in self.zfile.namelist():
-            print(all_path_filenames)
             if all_path_filenames and not all_path_filenames.endswith('/'):
                 path_foto_png = all_path_filenames[len(last_name):]
                 time_ = self.zfile.getinfo(all_path_filenames).date_time[0:2]
