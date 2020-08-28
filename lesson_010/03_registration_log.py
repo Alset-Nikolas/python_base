@@ -37,13 +37,17 @@ class ParsRegistrationLog:
 
     def check_email(self,email):
         if '@' in email and '.' in email:
+            # TODO Подобная проверка проверит только наличие точки в email
+            # TODO А '@' будет отдельной проверкой, которая всегда равна True
             return True
         return False
 
-    def check_old(self,old):
+    def check_old(self,old):  # TODO должно быть не check_old, а check_age
+        # TODO выражение можно упростить до return 9 < int(old) < 100
         if 9 < int(old) < 100:
             return True
         return False
+
 
 
     def pars_line(self,line):
@@ -60,7 +64,7 @@ class ParsRegistrationLog:
                 raise ValueError('поле возраст НЕ является числом от 10 до 99')
 
         else:
-            raise ValueError('НЕ присутсвуют все три поля')
+            raise ValueError('НЕ присутствуют все три поля')
 
     def main(self):
         with open(self.name_file, encoding='utf-8') as file:
@@ -86,3 +90,5 @@ A = ParsRegistrationLog(name_file='registrations.txt',
                         name_registration_good_file='registrations_good.log')
 
 A.main()
+
+# TODO оформить код по PEP8
