@@ -2,7 +2,6 @@
 
 import simple_draw as sd
 
-
 # На основе вашего кода из решения lesson_004/01_shapes.py сделать функцию-фабрику,
 # которая возвращает функции рисования треугольника, четырехугольника, пятиугольника и т.д.
 #
@@ -15,7 +14,8 @@ import simple_draw as sd
 
 
 def get_polygon(n):
-    def n_corners(point=sd.Point(350, 250), angle=45, length=100):
+
+    def n_corners(point=sd.Point(350, 250), angle=45, length=100):  # TODO параметр length не используется
         length = 100 * 6 / n
         start_point_0 = point
         delta = round(360 / n)
@@ -27,11 +27,12 @@ def get_polygon(n):
             end_point = point
             point_list = [start_point_0, end_point]
             sd.lines(point_list, color=sd.COLOR_YELLOW, closed=False, width=3)
-
     return n_corners
-
 
 draw_triangle = get_polygon(n=3)
 draw_triangle(point=sd.get_point(200, 200), angle=13, length=100)
 
+
 sd.pause()
+
+# TODO продемонстрировать работу метода на примере других возможных фигур (четырехугольника, пятиугольника и т.д.)

@@ -15,7 +15,7 @@
 # [2018-05-17 01:57] 1234
 
 
-class ParsTxtFileGenerate:
+class ParsTxtFile:
 
     def __init__(self, txt_name_file):
         self.txt_name_file = txt_name_file
@@ -41,7 +41,7 @@ class ParsTxtFileGenerate:
                 else:
                     self.data.append(pars)
 
-    def generate(self):
+    def write_file(self):
         x = 0
         while x != len(self.data):
             yield ('{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*self.data[x], self.data.count(self.data[x])))
@@ -58,33 +58,9 @@ class ParsTxtFileGenerate:
         while 1:
             if self.i < len(self.data):
                 line = self.data[self.i]
+    # TODO класс не является итератором, так как не реализованы методы __iter__ и __next__
 
-                if self.early_line is None:
-                    self.early_line = line
-                elif self.early_line == line:
-                    self.count_line += 1
-                elif self.early_line != line:
-                    return(
-                        '{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*line, self.count_line))
-                    self.count_line = 1
-                    self.early_line = line
-                if self.count_line == len(self.data) - 1:
-                    return (
-                        '{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*line, self.count_line))
-                self.i += 1
-        else:
-            raise StopIteration
-
-
-A = ParsTxtFileGenerate(txt_name_file='events.txt')
+A = ParsTxtFile(txt_name_file='events.txt')
 A.read_the_file()
-print('----Генератор--------')
-for line in A.generate():
-    print(line, end='')
-
-
-A = ParsTxtFileGenerate(txt_name_file='events.txt')
-A.read_the_file()
-print('------Итератор-------')
-for line in A:
+for line in A.write_file():
     print(line, end='')

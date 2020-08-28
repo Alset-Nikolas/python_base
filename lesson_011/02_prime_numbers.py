@@ -32,7 +32,7 @@ class PrimeNumbers:
         self.i = -1
         self.prime_numbers = []
 
-        for number in range(2, self.n + 1):
+        for number in range(2, self.n + 1):  # TODO цикла здесь быть не должно
             for prime in self.prime_numbers:
                 if number % prime == 0:
                     break
@@ -40,6 +40,7 @@ class PrimeNumbers:
                 self.prime_numbers.append(number)
 
     # TODO я не хотел в __init__ ставить цикл, пытался в enter, но не работает! Почему?
+    # TODO потому, что цикл должен быть в __next__
     # def __enter__(self):
     #    for number in range(2, self.n + 1):
     #        for prime in self.prime_numbers:
@@ -53,17 +54,17 @@ class PrimeNumbers:
         self.i = -1
         return self
 
-    def __next__(self):
+    def __next__(self):  # TODO цикл должен быть здесь
         self.i += 1
-        if self.i < len(self.prime_numbers):
+        if self.i < len(self.prime_numbers):  # TODO ограничение должно быть по кол-ву запрашиваемых чисел n
             return self.prime_numbers[self.i]
         else:
             raise StopIteration
 
 
-prime_number_iterator = PrimeNumbers(n=100)
-for number in prime_number_iterator:
-    print(number)
+prime_number_iterator = PrimeNumbers(n=100)  # TODO по заданию требуется до 10000
+# for number in prime_number_iterator:
+#     print(number)
 
 # Часть 2
 # Теперь нужно создать генератор, который выдает последовательность простых чисел до n
@@ -87,8 +88,9 @@ def prime_numbers_generator(n):
 
 prime_numbers_generator(n=100)
 
-for number in prime_numbers_generator(n=10000):
-    print(number)
+# for number in prime_numbers_generator(n=10000):
+#     print(number)
+
 print('-----------------------------------------------Часть 3_1---------------------------------------------')
 
 
@@ -107,7 +109,7 @@ print('-----------------------------------------------Часть 3_1------------
 # простых счастливых палиндромных чисел и так далее. Придумать не менее 2х способов.
 #
 # Подсказка: возможно, нужно будет добавить параметр в итератор/генератор.
-class PrimeNumbersAndHappy(PrimeNumbers):
+class PrimeNumbersAndHappy(PrimeNumbers):  # TODO подход к решению через класс здесь не нужен
 
     def __init__(self, n):
         super().__init__(n)
@@ -135,6 +137,10 @@ class PrimeNumbersAndHappy(PrimeNumbers):
             if self.function_filter_happy(number):
                 self.prime_happy_numbers.append(number)
 
+    # TODO концепция функции-фильтра применена не верна
+    #  свою писать не нужно, нужно использовать готовую из builtins.py
+    #  Пример: for number in filter(is_palindrome_number, prime_numbers_generator(n=20000)):
+
     def __iter__(self):
         super().__iter__()
         self.filter()
@@ -148,11 +154,11 @@ class PrimeNumbersAndHappy(PrimeNumbers):
 
 
 A = PrimeNumbersAndHappy(n=1000)
-for number in A:
-    print(number)
+# for number in A:
+#     print(number)
 
 
-
+# TODO оформить код по PEP8
 
 
 print('-----------------------------------------------Часть 3_2---------------------------------------------')

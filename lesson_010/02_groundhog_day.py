@@ -81,4 +81,7 @@ while carma < ENLIGHTENMENT_CARMA_LEVEL:
 else:
     with open('groundhog.log', 'a', encoding='utf-8') as file:
         file.write(f'Все! carma = {carma}')
+
 # https://goo.gl/JnsDqu
+
+# зачёт! 🚀
