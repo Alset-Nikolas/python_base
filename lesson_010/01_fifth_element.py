@@ -9,10 +9,10 @@ try:
     result = BRUCE_WILLIS * leeloo
     print(f'- Leeloo Dallas! Multi-pass № {result}!')
 
-except ValueError as eror:
+except ValueError as eror:  # TODO ошибка в eror -> error
     print(f'Невозможно преобразовать к числу! {eror}')
-    pass
-except IndexError as eror:
+    pass  # TODO эта строка не нужна
+except IndexError as eror:  # TODO аналогично
     print(f'Выход за границы списка! {eror}')
 except:
     print(f'Остальные исключения!')
