@@ -15,7 +15,7 @@
 # [2018-05-17 01:57] 1234
 
 
-class ParsTxtFile:
+class ParsTxtFileGenerate:
 
     def __init__(self, txt_name_file):
         self.txt_name_file = txt_name_file
@@ -41,14 +41,50 @@ class ParsTxtFile:
                 else:
                     self.data.append(pars)
 
-    def write_file(self):
+    def generate(self):
         x = 0
         while x != len(self.data):
             yield ('{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*self.data[x], self.data.count(self.data[x])))
             x += self.data.count(self.data[x])
 
+    def __iter__(self):
+        self.i = -1
+        self.count_line = 0
+        self.early_line = None
+        return self
 
-A = ParsTxtFile(txt_name_file='events.txt')
+    def __next__(self):
+        self.i += 1
+        while 1:
+            if self.i < len(self.data):
+                line = self.data[self.i]
+
+                if self.early_line is None:
+                    self.early_line = line
+                elif self.early_line == line:
+                    self.count_line += 1
+                elif self.early_line != line:
+                    return(
+                        '{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*line, self.count_line))
+                    self.count_line = 1
+                    self.early_line = line
+                if self.count_line == len(self.data) - 1:
+                    return (
+                        '{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*line, self.count_line))
+                self.i += 1
+        else:
+            raise StopIteration
+
+
+A = ParsTxtFileGenerate(txt_name_file='events.txt')
 A.read_the_file()
-for line in A.write_file():
+print('----Генератор--------')
+for line in A.generate():
+    print(line, end='')
+
+
+A = ParsTxtFileGenerate(txt_name_file='events.txt')
+A.read_the_file()
+print('------Итератор-------')
+for line in A:
     print(line, end='')
