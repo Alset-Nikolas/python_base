@@ -58,7 +58,7 @@ class ParsTxtFile:
         while 1:
             if self.i < len(self.data):
                 line = self.data[self.i]
-    # TODO класс не является итератором, так как не реализованы методы __iter__ и __next__
+
 
 A = ParsTxtFile(txt_name_file='events.txt')
 A.read_the_file()
