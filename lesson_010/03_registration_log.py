@@ -37,9 +37,7 @@ class ParsRegistrationLog:
         self.name_registration_good_file = name_registration_good_file
 
     def check_email(self, email):
-        if ('@' in email) and ('.' in email):
-            return True
-        return False
+        return ('@' in email) and ('.' in email)
 
     def check_age(self, old):
         return 9 < int(old) < 100
@@ -84,3 +82,5 @@ A = ParsRegistrationLog(name_file='registrations.txt',
                         name_registration_good_file='registrations_good.log')
 
 A.main()
+
+# зачёт! 🚀
