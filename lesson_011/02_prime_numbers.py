@@ -2,8 +2,9 @@
 
 
 # Есть функция генерации списка простых чисел
+print('---------------------------------------------Часть 1-----------------------------------------------')
 
-
+'''
 def get_prime_numbers(n):
     prime_numbers = []
     for number in range(2, n + 1):
@@ -14,6 +15,9 @@ def get_prime_numbers(n):
             prime_numbers.append(number)
     return prime_numbers
 
+'''
+
+
 # Часть 1
 # На основе алгоритма get_prime_numbers создать класс итерируемых обьектов,
 # который выдает последовательность простых чисел до n
@@ -22,28 +26,70 @@ def get_prime_numbers(n):
 
 
 class PrimeNumbers:
-    pass
-    # TODO здесь ваш код
+
+    def __init__(self, n):
+        self.n = n
+        self.i = -1
+        self.prime_numbers = []
+
+        for number in range(2, self.n + 1):
+            for prime in self.prime_numbers:
+                if number % prime == 0:
+                    break
+            else:
+                self.prime_numbers.append(number)
+
+    # TODO я не хотел в __init__ ставить цикл, пытался в enter, но не работает! Почему?
+    # def __enter__(self):
+    #    for number in range(2, self.n + 1):
+    #        for prime in self.prime_numbers:
+    #            if number % prime == 0:
+    #                break
+    #        else:
+    #            self.prime_numbers.append(number)
+    #
+
+    def __iter__(self):
+        self.i = -1
+        return self
+
+    def __next__(self):
+        self.i += 1
+        if self.i < len(self.prime_numbers):
+            return self.prime_numbers[self.i]
+        else:
+            raise StopIteration
 
 
-prime_number_iterator = PrimeNumbers(n=10000)
+prime_number_iterator = PrimeNumbers(n=100)
 for number in prime_number_iterator:
     print(number)
 
-
-# TODO после подтверждения части 1 преподователем, можно делать
 # Часть 2
 # Теперь нужно создать генератор, который выдает последовательность простых чисел до n
 # Распечатать все простые числа до 10000 в столбик
+print('-------------------------------------------Часть 2-------------------------------------------------')
 
 
 def prime_numbers_generator(n):
-    pass
-    # TODO здесь ваш код
+    sito = [0] * n
+    for i in range(n):
+        if i == 0 or i == 1:
+            sito[i] = -1
+        elif sito[i] == 0:
+            sito[i] = 1
+            yield i
+            k = 2
+            while i * k < n:
+                sito[i * k] = -1
+                k += 1
 
+
+prime_numbers_generator(n=100)
 
 for number in prime_numbers_generator(n=10000):
     print(number)
+print('-----------------------------------------------Часть 3_1---------------------------------------------')
 
 
 # Часть 3
@@ -61,3 +107,76 @@ for number in prime_numbers_generator(n=10000):
 # простых счастливых палиндромных чисел и так далее. Придумать не менее 2х способов.
 #
 # Подсказка: возможно, нужно будет добавить параметр в итератор/генератор.
+class PrimeNumbersAndHappy(PrimeNumbers):
+
+    def __init__(self, n):
+        super().__init__(n)
+        self.prime_happy_numbers = []
+
+    def function_filter_happy(self, number):
+        number_str = str(number)
+        if len(number_str) % 2 == 0:
+            left = number_str[:len(number_str) // 2]
+            right = number_str[len(number_str) // 2:]
+        else:
+            left = number_str[:len(number_str) // 2]
+            right = number_str[len(number_str) // 2 + 1:]
+        a = 0
+        b = 0
+        for iter in left:
+            a += int(iter)
+        for iter in right:
+            b += int(iter)
+        if a == b:
+            return True
+        return False
+    def filter(self):
+        for number in self.prime_numbers:
+            if self.function_filter_happy(number):
+                self.prime_happy_numbers.append(number)
+
+    def __iter__(self):
+        super().__iter__()
+        self.filter()
+
+    def __next__(self):
+        self.i += 1
+        if self.i < len(self.prime_happy_numbers):
+            return self.prime_happy_numbers[self.i]
+        else:
+            raise StopIteration
+
+
+A = PrimeNumbersAndHappy(n=1000)
+for number in A:
+    print(number)
+
+
+
+
+
+print('-----------------------------------------------Часть 3_2---------------------------------------------')
+class PrimeNumbersAndPolindrom(PrimeNumbers):
+
+    def polindrom(self, number):
+        number_str = str(number)
+        flag = True
+        for i in range(len(number_str)):
+            if number_str[i] != number_str[-(i + 1)]:
+                return False
+            return True
+
+    def __next__(self):
+        self.i += 1
+        if self.i < len(self.prime_numbers):
+            if self.polindrom(self.prime_numbers[self.i]):
+                return self.prime_numbers[self.i]
+            else:
+                self.__next__()
+        else:
+            raise StopIteration
+
+
+A = PrimeNumbersAndPolindrom(n=1000)
+for number in A:
+    print(number)
