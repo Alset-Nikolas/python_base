@@ -47,6 +47,7 @@ class ParsTxtFile:
             yield ('{}-{:02d}-{:02d} {:02d}:{:02d} {}\n'.format(*self.data[x], self.data.count(self.data[x])))
             x += self.data.count(self.data[x])
 
+    # TODO класс не является итератором, так как не реализованы методы __iter__ и __next__
 
 A = ParsTxtFile(txt_name_file='events.txt')
 A.read_the_file()

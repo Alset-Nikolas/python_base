@@ -15,7 +15,7 @@ import simple_draw as sd
 
 def get_polygon(n):
 
-    def n_corners(point=sd.Point(350, 250), angle=45, length=100):
+    def n_corners(point=sd.Point(350, 250), angle=45, length=100):  # TODO параметр length не используется
         length = 100 * 6 / n
         start_point_0 = point
         delta = round(360 / n)
@@ -34,3 +34,5 @@ draw_triangle(point=sd.get_point(200, 200), angle=13, length=100)
 
 
 sd.pause()
+
+# TODO продемонстрировать работу метода на примере других возможных фигур (четырехугольника, пятиугольника и т.д.)
