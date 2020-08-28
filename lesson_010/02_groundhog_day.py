@@ -22,7 +22,7 @@ ENLIGHTENMENT_CARMA_LEVEL = 777
 
 
 class ErrorDay(Exception):
-    def __init__(self, day , message=None):
+    def __init__(self, day, message=None):
         self.message = message
         self.day = day
 
@@ -60,8 +60,8 @@ def one_day():
     if probability == 13:
         day += 1
         Errors = [IamGodError(day, 'Я БОГ'), DrunkError(day, 'Напился'), CarCrashError(day, 'Разбился'),
-                 GluttonyError(day, 'Обожрался'), DepressionError(day, 'Депрессия'),
-                 SuicideError(day, 'Самоубийство')]
+                  GluttonyError(day, 'Обожрался'), DepressionError(day, 'Депрессия'),
+                  SuicideError(day, 'Самоубийство')]
 
         raise Errors[randint(0, 5)]
     day += 1
@@ -75,10 +75,10 @@ while carma < ENLIGHTENMENT_CARMA_LEVEL:
     try:
         carma += one_day()
     except (IamGodError, DrunkError, CarCrashError, GluttonyError, DepressionError, SuicideError) as arg:
-        print(arg)
+        with open('groundhog.log', 'a', encoding='utf-8') as file:
+            file.write(str(arg) + '\n')
+
 else:
-    print(f'Все! carma = {carma}')
-
+    with open('groundhog.log', 'a', encoding='utf-8') as file:
+        file.write(f'Все! carma = {carma}')
 # https://goo.gl/JnsDqu
-
-# TODO по условию задания сообщения нужно выводить не в консоль, а писать в лог-файл

@@ -24,6 +24,7 @@
 class NotNameError(Exception):
     pass
 
+
 class NotEmailError(Exception):
     pass
 
@@ -35,22 +36,15 @@ class ParsRegistrationLog:
         self.name_registration_bad_file = name_registration_bad_file
         self.name_registration_good_file = name_registration_good_file
 
-    def check_email(self,email):
-        if '@' in email and '.' in email:
-            # TODO Подобная проверка проверит только наличие точки в email
-            # TODO А '@' будет отдельной проверкой, которая всегда равна True
+    def check_email(self, email):
+        if ('@' in email) and ('.' in email):
             return True
         return False
 
-    def check_old(self,old):  # TODO должно быть не check_old, а check_age
-        # TODO выражение можно упростить до return 9 < int(old) < 100
-        if 9 < int(old) < 100:
-            return True
-        return False
+    def check_age(self, old):
+        return 9 < int(old) < 100
 
-
-
-    def pars_line(self,line):
+    def pars_line(self, line):
         line_mass = line.split()
         if len(line_mass) == 3:
             [name_user, email_user, old_user] = line_mass
@@ -60,7 +54,7 @@ class ParsRegistrationLog:
             if not self.check_email(email_user):
                 raise NotEmailError('поле емейл НЕ содержит @ или .(точку)')
 
-            if not (old_user.isdigit() and self.check_old(old_user)):
+            if not (old_user.isdigit() and self.check_age(old_user)):
                 raise ValueError('поле возраст НЕ является числом от 10 до 99')
 
         else:
@@ -73,7 +67,7 @@ class ParsRegistrationLog:
                 try:
                     self.pars_line(line)
                     with open(self.name_registration_good_file, mode='a', encoding='utf-8') as file:
-                        file.write(line+'\n')
+                        file.write(line + '\n')
                     continue
                 except ValueError as arg:
                     print(line, arg)
@@ -90,5 +84,3 @@ A = ParsRegistrationLog(name_file='registrations.txt',
                         name_registration_good_file='registrations_good.log')
 
 A.main()
-
-# TODO оформить код по PEP8
