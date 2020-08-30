@@ -73,4 +73,71 @@
 #     def run(self):
 #         <обработка данных>
 
-# TODO написать код в однопоточном/однопроцессорном стиле
+import csv
+import math
+import zipfile
+
+
+class ParsTiker:
+
+    def __init__(self, file_zip_path_downloaded):
+        self.file_zip_path_downloaded = file_zip_path_downloaded
+        self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
+        self.date = []
+        self.date_volatility_tiker_0 = []
+
+    def extract_zip_file(self):
+        for name_file in self.zip.namelist():
+            self.zip.extract(member=name_file)
+
+            self.open_csv_file(name_file)
+
+    def open_csv_file(self, name_file):
+        if name_file[-4:] == '.csv':
+            with open(name_file) as File:
+                reader = csv.reader(File)
+                name_tiker, max_price_tiker, min_price_tiker = self.search_max_min_tiker(reader)
+            half_sum_tiker = (max_price_tiker + min_price_tiker) / 2
+            volatility_tiker = ((max_price_tiker - min_price_tiker) / half_sum_tiker) * 100
+            if volatility_tiker == 0:
+                self.date_volatility_tiker_0.append(name_tiker)
+            else:
+                self.date.append([name_tiker, volatility_tiker])
+            self.sort_date()
+
+    def search_max_min_tiker(self, reader):
+        max_price_tiker = -math.inf
+        min_price_tiker = math.inf
+        for row in reader:
+            if row == ['SECID', 'TRADETIME', 'PRICE', 'QUANTITY']:
+                continue
+            name_tiker = row[0]
+            max_price_tiker = max(max_price_tiker, float(row[2]))
+            min_price_tiker = min(min_price_tiker, float(row[2]))
+        return name_tiker, max_price_tiker, min_price_tiker
+
+    def sort_date(self):
+        self.date.sort(key=lambda x: x[1], reverse=True)
+        self.date_volatility_tiker_0.sort()
+
+
+    def print_rezult(self):
+        print('Максимальная волатильность:')
+        for line in self.date[:3]:
+            print(f'{line[0]} - {round(line[1], 2)} %')
+
+        print('\nМинимальная волатильность:')
+        for line in self.date[-3:]:
+            print(f'{line[0]} - {round(line[1], 2)} %')
+
+        print('\nНулевая волатильность:')
+        for line in self.date_volatility_tiker_0:
+            print(f'{line}', end=', ')
+
+
+file_zip_path_downloaded = 'C:\\Users\\User\\Downloads\\trades.zip'
+
+A = ParsTiker(file_zip_path_downloaded = 'C:\\Users\\User\\Downloads\\trades.zip')
+A.extract_zip_file()
+A.print_rezult()
+
