@@ -50,7 +50,7 @@ class PrimeNumbers:
         raise StopIteration
 
 
-prime_number_iterator = PrimeNumbers(n=1000)
+prime_number_iterator = PrimeNumbers(n=10000)
 for number in prime_number_iterator:
     print(number)
 
@@ -76,7 +76,7 @@ def prime_numbers_generator(n):
 
 prime_numbers_generator(n=100)
 
-for number in prime_numbers_generator(n=1000):
+for number in prime_numbers_generator(n=10000):
     print(number)
 
 print('-----------------------------------------------Часть 3_1---------------------------------------------')
@@ -134,3 +134,5 @@ def polindrom(number):
 
 for number in filter(polindrom, prime_numbers_generator(n=1000)):
     print(number)
+
+# зачёт! 🚀

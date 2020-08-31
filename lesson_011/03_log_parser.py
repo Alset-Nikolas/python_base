@@ -64,3 +64,5 @@ A = ParsTxtFile(txt_name_file='events.txt')
 A.read_the_file()
 for line in A.write_file():
     print(line, end='')
+
+# зачёт! 🚀

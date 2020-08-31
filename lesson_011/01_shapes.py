@@ -39,3 +39,5 @@ draw_5 = get_polygon(n=5)
 draw_5(point=sd.get_point(100, 400), angle=13, length=100)
 
 sd.pause()
+
+# зачёт! 🚀
