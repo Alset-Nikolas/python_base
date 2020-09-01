@@ -143,4 +143,4 @@ file_zip_path_downloaded = 'trades.zip'
 #  как мне указать относильный путь к этому файлу из данного скрипта?
 A = ParsTiker(file_zip_path_downloaded=file_zip_path_downloaded)
 A.run()
-# TODO оформить код по PEP8
+
