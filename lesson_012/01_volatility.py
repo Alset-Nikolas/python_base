@@ -78,7 +78,6 @@ import math
 import zipfile
 
 
-# TODO по условию задания обработку данных нужно производить в методе run
 class ParsTiker:
 
     def __init__(self, file_zip_path_downloaded):
@@ -86,6 +85,10 @@ class ParsTiker:
         self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
         self.date = []
         self.date_volatility_tiker_0 = []
+
+    def run(self):
+        self.extract_zip_file()
+        self.print_result()
 
     def extract_zip_file(self):
         for name_file in self.zip.namelist():
@@ -121,8 +124,7 @@ class ParsTiker:
         self.date.sort(key=lambda x: x[1], reverse=True)
         self.date_volatility_tiker_0.sort()
 
-
-    def print_rezult(self):  # TODO в названии метода print_rezult допущена ошибка
+    def print_result(self):
         print('Максимальная волатильность:')
         for line in self.date[:3]:
             print(f'{line[0]} - {round(line[1], 2)} %')
@@ -136,11 +138,9 @@ class ParsTiker:
             print(f'{line}', end=', ')
 
 
-file_zip_path_downloaded = 'C:\\Users\\User\\Downloads\\trades.zip'
-# TODO пути до файлов должны быть относительными
-#  иначе у меня на ПК (или у кого-либо ещё) этот код не запускается
-A = ParsTiker(file_zip_path_downloaded = 'C:\\Users\\User\\Downloads\\trades.zip')
-A.extract_zip_file()
-A.print_rezult()
-
+file_zip_path_downloaded = 'trades.zip'
+# TODO я не понимаю как определить относительный путь к скаченному файлу. Есть файл (где-то в компьютере),
+#  как мне указать относильный путь к этому файлу из данного скрипта?
+A = ParsTiker(file_zip_path_downloaded=file_zip_path_downloaded)
+A.run()
 # TODO оформить код по PEP8
