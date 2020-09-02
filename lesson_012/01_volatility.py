@@ -82,7 +82,7 @@ class ParsTiker:
 
     def __init__(self, file_zip_path_downloaded):
         self.file_zip_path_downloaded = file_zip_path_downloaded
-        self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
+
         self.date = []
         self.date_volatility_tiker_0 = []
 
@@ -90,7 +90,14 @@ class ParsTiker:
         self.extract_zip_file()
         self.print_result()
 
+    def checking_name_file(self):
+        try:
+            self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
+        except Exception as e:
+            print(e)
+
     def extract_zip_file(self):
+        self.checking_name_file()
         for name_file in self.zip.namelist():
             self.zip.extract(member=name_file)
 
@@ -144,7 +151,5 @@ file_zip_path_downloaded = 'trades.zip'
 # NOTE если файл с кодом 01_volatility.py и trades.zip расположены в одной директории, то как сейчас записано - верно
 
 A = ParsTiker(file_zip_path_downloaded=file_zip_path_downloaded)
-# TODO если файла нет - приложение завершает работу с ошибкой
-# TODO нужно обрабатывать такую ситуацию и выводить сообщение
 A.run()
 
