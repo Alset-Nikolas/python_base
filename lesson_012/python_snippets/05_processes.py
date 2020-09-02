@@ -51,14 +51,14 @@ if __name__ == '__main__':
     # Для windows это условие обязательно
 
     # Второй рыбак у нас будет ловить в отдельном процессе
-    proc = Process(target=fishing, kwargs=dict(name='Вася', worms=10))
+    proc = Process(target=fishing, kwargs=dict(name='Вася', worms=1000))
+    proc_2 = Process(target=fishing, kwargs=dict(name='Дима', worms=1000))
     proc.start()
-
-    fishing(name='Коля', worms=10)
-
+    proc_2.start()
+    fishing(name='Коля', worms=1000)
     proc.join()
-
-
+    proc_2.join()
+'''
 # Лучше на классах
 class Fisher(Process):
 
@@ -264,3 +264,4 @@ if __name__ == '__main__':
 
 # Так же в multiprocessing есть обьекты синхронизации - RLock, Barrier, Condition, Event, Semaphore.
 # Это практически клоны своих тезок из threading.
+'''
