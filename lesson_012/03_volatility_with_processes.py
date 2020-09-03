@@ -23,6 +23,7 @@ import threading
 import csv
 import math
 import zipfile
+from pprint import pprint
 
 
 class ParsFile(multiprocessing.Process):
@@ -55,8 +56,11 @@ class ParsFile(multiprocessing.Process):
                 max_price_tiker = max(max_price_tiker, float(row[2]))
                 min_price_tiker = min(min_price_tiker, float(row[2]))
             except Exception as e:
-                print(e)
-                print(row, i)
+                print('================================')
+                print('\t',e,' строка номер = ',i , ' выводит значение ', row)
+
+                print('================================')
+
         return max_price_tiker, min_price_tiker
 
 class ExtractZiFile:
@@ -97,19 +101,19 @@ class Manager:
         parsers = [ParsFile(name, collector) for name in self.names_file]
         for parser in parsers:
             parser.start()
-        while True:
-            try:
-                [name_tiker, volatility_tiker] = self.collector.get()
-                print([name_tiker, volatility_tiker])
-                if volatility_tiker == 0:
-                    self.date_volatility_tiker_0.append(name_tiker)
-                else:
-                    self.date.append([name_tiker, volatility_tiker])
-            except self.collector.Empty:
-                print('---------------пусто------------')
-                if not any(parser.is_alive() for parser in parsers):
-                    print(self.date)
-                    break
+        pam = 1
+        while any(parser.is_alive() for parser in parsers):
+            [name_tiker, volatility_tiker] = self.collector.get()
+            #print([name_tiker, volatility_tiker])
+            print(pam, '/' , len(self.names_file))
+            pam +=1
+            if volatility_tiker == 0:
+                self.date_volatility_tiker_0.append(name_tiker)
+            else:
+                self.date.append([name_tiker, volatility_tiker])
+            if pam == len(self.names_file):
+                break
+
         for parser in parsers:
             parser.join()
 
