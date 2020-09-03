@@ -78,14 +78,13 @@ import math
 import zipfile
 
 
-# TODO во всех названиях, где встречается tiker - допущена ошибка. Должно быть ticker
-class ParsTiker:
+class ParsTicker:
 
     def __init__(self, file_zip_path_downloaded):
         self.file_zip_path_downloaded = file_zip_path_downloaded
 
         self.date = []
-        self.date_volatility_tiker_0 = []
+        self.date_volatility_ticker_0 = []
 
     def run(self):
         self.extract_zip_file()
@@ -102,35 +101,35 @@ class ParsTiker:
         for name_file in self.zip.namelist():
             self.zip.extract(member=name_file)
 
-            self.open_csv_file(name_file)
+            self.parse_csv_file(name_file)
 
-    def open_csv_file(self, name_file):  # TODO более корректное название этого метода - parse_csv_file
+    def parse_csv_file(self, name_file):
         if name_file[-4:] == '.csv':
             with open(name_file) as File:
                 reader = csv.reader(File)
-                name_tiker, max_price_tiker, min_price_tiker = self.search_max_min_tiker(reader)
-            half_sum_tiker = (max_price_tiker + min_price_tiker) / 2
-            volatility_tiker = ((max_price_tiker - min_price_tiker) / half_sum_tiker) * 100
-            if volatility_tiker == 0:
-                self.date_volatility_tiker_0.append(name_tiker)
+                name_ticker, max_price_ticker, min_price_ticker = self.search_max_min_ticker(reader)
+            half_sum_ticker = (max_price_ticker + min_price_ticker) / 2
+            volatility_ticker = ((max_price_ticker - min_price_ticker) / half_sum_ticker) * 100
+            if volatility_ticker == 0:
+                self.date_volatility_ticker_0.append(name_ticker)
             else:
-                self.date.append([name_tiker, volatility_tiker])
+                self.date.append([name_ticker, volatility_ticker])
             self.sort_date()
 
-    def search_max_min_tiker(self, reader):
-        max_price_tiker = -math.inf
-        min_price_tiker = math.inf
+    def search_max_min_ticker(self, reader):
+        max_price_ticker = -math.inf
+        min_price_ticker = math.inf
         for row in reader:
             if row == ['SECID', 'TRADETIME', 'PRICE', 'QUANTITY']:
                 continue
-            name_tiker = row[0]
-            max_price_tiker = max(max_price_tiker, float(row[2]))
-            min_price_tiker = min(min_price_tiker, float(row[2]))
-        return name_tiker, max_price_tiker, min_price_tiker
+            name_ticker = row[0]
+            max_price_ticker = max(max_price_ticker, float(row[2]))
+            min_price_ticker = min(min_price_ticker, float(row[2]))
+        return name_ticker, max_price_ticker, min_price_ticker
 
     def sort_date(self):
         self.date.sort(key=lambda x: x[1], reverse=True)
-        self.date_volatility_tiker_0.sort()
+        self.date_volatility_ticker_0.sort()
 
     def print_result(self):
         print('Максимальная волатильность:')
@@ -142,16 +141,15 @@ class ParsTiker:
             print(f'{line[0]} - {round(line[1], 2)} %')
 
         print('\nНулевая волатильность:')
-        for line in self.date_volatility_tiker_0:
-            print(f'{line}', end=', ')
-        # TODO последний элемент в этом цикле распечатать так, чтобы запятая в конце строки не подставлялось:
-        #  CLM9, CYH9, EDU9, EuH0, EuZ9, JPM9, MTM9, O4H9, PDU9, PTU9, RIH0, RRG9, TRH9, VIH9,
+        for line in self.date_volatility_ticker_0:
+
+            if line != self.date_volatility_ticker_0[-1]:
+                print(f'{line}', end=', ')
+            else:
+                print(f'{line}')
+
 
 
 file_zip_path_downloaded = 'trades.zip'
-# NOTE я не понимаю как определить относительный путь к скаченному файлу. Есть файл (где-то в компьютере),
-#  как мне указать относильный путь к этому файлу из данного скрипта?
-# NOTE если файл с кодом 01_volatility.py и trades.zip расположены в одной директории, то как сейчас записано - верно
-
-A = ParsTiker(file_zip_path_downloaded=file_zip_path_downloaded)
+A = ParsTicker(file_zip_path_downloaded=file_zip_path_downloaded)
 A.run()
