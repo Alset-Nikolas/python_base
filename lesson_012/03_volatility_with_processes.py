@@ -18,52 +18,45 @@
 # Волатильности указывать в порядке убывания. Тикеры с нулевой волатильностью упорядочить по имени.
 #
 import multiprocessing
-import threading
-
 import csv
 import math
 import zipfile
 
-from pprint import pprint
-# TODO лишние импорты нужно удалить
 
-# TODO во всех названиях, где встречается tiker - допущена ошибка. Должно быть ticker
-class ParsFile(multiprocessing.Process):
+class ParseFile(multiprocessing.Process):
     def __init__(self, name_file, collector, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name_file = name_file
         self.collector = collector
-        self.name_tiker = None
+        self.name_ticker = None
 
     def run(self):
         with open(self.name_file) as File:
             reader = csv.reader(File)
-            max_price_tiker, min_price_tiker = self.search_max_min_tiker(reader)
-        half_sum_tiker = (max_price_tiker + min_price_tiker) / 2
-        volatility_tiker = ((max_price_tiker - min_price_tiker) / half_sum_tiker) * 100
+            max_price_ticker, min_price_ticker = self.search_max_min_ticker(reader)
+        half_sum_ticker = (max_price_ticker + min_price_ticker) / 2
+        volatility_ticker = ((max_price_ticker - min_price_ticker) / half_sum_ticker) * 100
 
-        self.volatility_tiker = volatility_tiker
-        self.collector.put([self.name_tiker, volatility_tiker])
+        self.volatility_ticker = volatility_ticker
+        self.collector.put([self.name_ticker, volatility_ticker])
 
-
-
-    def search_max_min_tiker(self, reader):
-        max_price_tiker = -math.inf
-        min_price_tiker = math.inf
+    def search_max_min_ticker(self, reader):
+        max_price_ticker = -math.inf
+        min_price_ticker = math.inf
         for i, row in enumerate(reader):
+
             if row == ['SECID', 'TRADETIME', 'PRICE', 'QUANTITY']:
                 continue
-            self.name_tiker = row[0]
+            self.name_ticker = row[0]
             try:
-                max_price_tiker = max(max_price_tiker, float(row[2]))
-                min_price_tiker = min(min_price_tiker, float(row[2]))
-            except Exception as e:
-                print('================================')
-                print('\t',e,' строка номер = ',i , ' выводит значение ', row)
+                max_price_ticker = max(max_price_ticker, float(row[2]))
+                min_price_ticker = min(min_price_ticker, float(row[2]))
+            except:
+                print(row)
+                print('-------------=============------------------')
 
-                print('================================')
+        return max_price_ticker, min_price_ticker
 
-        return max_price_tiker, min_price_tiker
 
 class ExtractZiFile:
     def __init__(self, file_zip_path_downloaded):
@@ -77,7 +70,6 @@ class ExtractZiFile:
             if name_file[-4:] == '.csv':
                 self.names_file.append(name_file)
 
-
     def checking_name_file(self):
         try:
             self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
@@ -85,34 +77,26 @@ class ExtractZiFile:
             print(e)
 
 
-
-file_zip_path_downloaded = 'trades.zip'
-zip_open = ExtractZiFile(file_zip_path_downloaded=file_zip_path_downloaded)
-zip_open.extract_zip_file()
-
-
-class Manager:
-    def __init__(self, names_file, collector):
+class Manager(multiprocessing.Process):
+    def __init__(self, names_file, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.names_file = names_file
         self.date = []
-        self.date_volatility_tiker_0 = []
-        self.collector = collector
+        self.date_volatility_ticker_0 = []
+        self.collector = multiprocessing.Queue()
 
-
-    def main(self):
-        parsers = [ParsFile(name, collector) for name in self.names_file]
+    def run(self):
+        parsers = [ParseFile(name, self.collector) for name in self.names_file]
         for parser in parsers:
             parser.start()
         pam = 1
         while any(parser.is_alive() for parser in parsers):
-            [name_tiker, volatility_tiker] = self.collector.get()
-            #print([name_tiker, volatility_tiker])
-            print(pam, '/' , len(self.names_file))
-            pam +=1
-            if volatility_tiker == 0:
-                self.date_volatility_tiker_0.append(name_tiker)
+            [name_ticker, volatility_ticker] = self.collector.get()
+            pam += 1
+            if volatility_ticker == 0:
+                self.date_volatility_ticker_0.append(name_ticker)
             else:
-                self.date.append([name_tiker, volatility_tiker])
+                self.date.append([name_ticker, volatility_ticker])
             if pam == len(self.names_file):
                 break
 
@@ -124,7 +108,7 @@ class Manager:
 
     def ssort(self):
         self.date.sort(key=lambda x: x[1], reverse=True)
-        self.date_volatility_tiker_0.sort()
+        self.date_volatility_ticker_0.sort()
 
     def pprint(self):
 
@@ -137,15 +121,18 @@ class Manager:
             print(f'{line[0]} - {round(line[1], 2)} %')
 
         print('\nНулевая волатильность:')
-        for line in self.date_volatility_tiker_0:
-            print(f'{line}', end=', ')
-        # TODO последний элемент в этом цикле распечатать так, чтобы запятая в конце строки не подставлялось:
-        #  CLM9, CYH9, EDU9, EuH0, EuZ9, JPM9, MTM9, O4H9, PDU9, PTU9, RIH0, RRG9, TRH9, VIH9,
+        for line in self.date_volatility_ticker_0:
+            if line != self.date_volatility_ticker_0[-1]:
+                print(f'{line}', end=', ')
+            else:
+                print(f'{line}')
 
 
-if __name__ =='__main__':
-    collector = multiprocessing.Queue()
-    A = Manager(zip_open.names_file, collector)
-    A.main()
+if __name__ == '__main__':
+    file_zip_path_downloaded = 'trades.zip'
+    zip_open = ExtractZiFile(file_zip_path_downloaded=file_zip_path_downloaded)
+    zip_open.extract_zip_file()
 
-# TODO оформить код по PEP8
+    A = Manager(zip_open.names_file)
+    A.start()
+    A.join()
