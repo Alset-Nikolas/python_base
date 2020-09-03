@@ -24,9 +24,8 @@ import csv
 import math
 import zipfile
 
-# TODO во всех названиях, где встречается tiker - допущена ошибка. Должно быть ticker
 
-class ParsFile(threading.Thread):  # TODO должно быть ParseFile
+class ParseFile(threading.Thread):
     def __init__(self, name_file,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name_file = name_file
@@ -34,22 +33,22 @@ class ParsFile(threading.Thread):  # TODO должно быть ParseFile
     def run(self):
         with open(self.name_file) as File:
             reader = csv.reader(File)
-            max_price_tiker, min_price_tiker = self.search_max_min_tiker(reader)
-        half_sum_tiker = (max_price_tiker + min_price_tiker) / 2
-        volatility_tiker = ((max_price_tiker - min_price_tiker) / half_sum_tiker) * 100
+            max_price_ticker, min_price_ticker = self.search_max_min_ticker(reader)
+        half_sum_ticker = (max_price_ticker + min_price_ticker) / 2
+        volatility_ticker = ((max_price_ticker - min_price_ticker) / half_sum_ticker) * 100
 
-        self.volatility_tiker = volatility_tiker
+        self.volatility_ticker = volatility_ticker
 
-    def search_max_min_tiker(self, reader):
-        max_price_tiker = -math.inf
-        min_price_tiker = math.inf
+    def search_max_min_ticker(self, reader):
+        max_price_ticker = -math.inf
+        min_price_ticker = math.inf
         for row in reader:
             if row == ['SECID', 'TRADETIME', 'PRICE', 'QUANTITY']:
                 continue
-            self.name_tiker = row[0]
-            max_price_tiker = max(max_price_tiker, float(row[2]))
-            min_price_tiker = min(min_price_tiker, float(row[2]))
-        return max_price_tiker, min_price_tiker
+            self.name_ticker = row[0]
+            max_price_ticker = max(max_price_ticker, float(row[2]))
+            min_price_ticker = min(min_price_ticker, float(row[2]))
+        return max_price_ticker, min_price_ticker
 
 class ExtractZiFile:
     def __init__(self, file_zip_path_downloaded):
@@ -81,24 +80,24 @@ class Manager:
     def __init__(self, names_file):
         self.names_file = names_file
         self.date = []
-        self.date_volatility_tiker_0 = []
+        self.date_volatility_ticker_0 = []
 
     def main(self):
-        parsers = [ParsFile(name) for name in self.names_file]
+        parsers = [ParseFile(name) for name in self.names_file]
         for parser in parsers:
             parser.start()
         for parser in parsers:
             parser.join()
-            if parser.volatility_tiker == 0:
-                self.date_volatility_tiker_0.append(parser.name_tiker)
+            if parser.volatility_ticker == 0:
+                self.date_volatility_ticker_0.append(parser.name_ticker)
             else:
-                self.date.append([parser.name_tiker, parser.volatility_tiker])
+                self.date.append([parser.name_ticker, parser.volatility_ticker])
         self.ssort()
         self.pprint()
 
     def ssort(self):
         self.date.sort(key=lambda x: x[1], reverse=True)
-        self.date_volatility_tiker_0.sort()
+        self.date_volatility_ticker_0.sort()
 
     def pprint(self):
 
@@ -111,13 +110,13 @@ class Manager:
             print(f'{line[0]} - {round(line[1], 2)} %')
 
         print('\nНулевая волатильность:')
-        for line in self.date_volatility_tiker_0:
-            print(f'{line}', end=', ')
-        # TODO последний элемент в этом цикле распечатать так, чтобы запятая в конце строки не подставлялось:
-        #  CLM9, CYH9, EDU9, EuH0, EuZ9, JPM9, MTM9, O4H9, PDU9, PTU9, RIH0, RRG9, TRH9, VIH9,
+        for line in self.date_volatility_ticker_0:
+            if line != self.date_volatility_ticker_0[-1]:
+                print(f'{line}', end=', ')
+            else:
+                print(f'{line}')
 
 
 
 A = Manager(zip_open.names_file)
 A.main()
-# TODO оформить код по PEP8
