@@ -23,9 +23,11 @@ import threading
 import csv
 import math
 import zipfile
+
 from pprint import pprint
+# TODO лишние импорты нужно удалить
 
-
+# TODO во всех названиях, где встречается tiker - допущена ошибка. Должно быть ticker
 class ParsFile(multiprocessing.Process):
     def __init__(self, name_file, collector, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -137,9 +139,13 @@ class Manager:
         print('\nНулевая волатильность:')
         for line in self.date_volatility_tiker_0:
             print(f'{line}', end=', ')
+        # TODO последний элемент в этом цикле распечатать так, чтобы запятая в конце строки не подставлялось:
+        #  CLM9, CYH9, EDU9, EuH0, EuZ9, JPM9, MTM9, O4H9, PDU9, PTU9, RIH0, RRG9, TRH9, VIH9,
 
 
 if __name__ =='__main__':
     collector = multiprocessing.Queue()
     A = Manager(zip_open.names_file, collector)
     A.main()
+
+# TODO оформить код по PEP8

@@ -78,6 +78,7 @@ import math
 import zipfile
 
 
+# TODO во всех названиях, где встречается tiker - допущена ошибка. Должно быть ticker
 class ParsTiker:
 
     def __init__(self, file_zip_path_downloaded):
@@ -103,7 +104,7 @@ class ParsTiker:
 
             self.open_csv_file(name_file)
 
-    def open_csv_file(self, name_file):
+    def open_csv_file(self, name_file):  # TODO более корректное название этого метода - parse_csv_file
         if name_file[-4:] == '.csv':
             with open(name_file) as File:
                 reader = csv.reader(File)
@@ -143,6 +144,8 @@ class ParsTiker:
         print('\nНулевая волатильность:')
         for line in self.date_volatility_tiker_0:
             print(f'{line}', end=', ')
+        # TODO последний элемент в этом цикле распечатать так, чтобы запятая в конце строки не подставлялось:
+        #  CLM9, CYH9, EDU9, EuH0, EuZ9, JPM9, MTM9, O4H9, PDU9, PTU9, RIH0, RRG9, TRH9, VIH9,
 
 
 file_zip_path_downloaded = 'trades.zip'
@@ -152,4 +155,3 @@ file_zip_path_downloaded = 'trades.zip'
 
 A = ParsTiker(file_zip_path_downloaded=file_zip_path_downloaded)
 A.run()
-

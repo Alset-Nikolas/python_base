@@ -24,8 +24,9 @@ import csv
 import math
 import zipfile
 
+# TODO во всех названиях, где встречается tiker - допущена ошибка. Должно быть ticker
 
-class ParsFile(threading.Thread):
+class ParsFile(threading.Thread):  # TODO должно быть ParseFile
     def __init__(self, name_file,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name_file = name_file
@@ -112,8 +113,11 @@ class Manager:
         print('\nНулевая волатильность:')
         for line in self.date_volatility_tiker_0:
             print(f'{line}', end=', ')
+        # TODO последний элемент в этом цикле распечатать так, чтобы запятая в конце строки не подставлялось:
+        #  CLM9, CYH9, EDU9, EuH0, EuZ9, JPM9, MTM9, O4H9, PDU9, PTU9, RIH0, RRG9, TRH9, VIH9,
 
 
 
 A = Manager(zip_open.names_file)
 A.main()
+# TODO оформить код по PEP8
