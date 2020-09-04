@@ -90,6 +90,7 @@ class Manager(multiprocessing.Process):
         for parser in parsers:
             parser.start()
         pam = 1
+        # TODO С таким алгоритмом иногда выход производится раньше, чем считается последний тикер
         while any(parser.is_alive() for parser in parsers):
             [name_ticker, volatility_ticker] = self.collector.get()
             pam += 1
@@ -98,8 +99,12 @@ class Manager(multiprocessing.Process):
             else:
                 self.date.append([name_ticker, volatility_ticker])
             if pam == len(self.names_file):
+                print(self.names_file)
+                # TODO Это видно на этом принте (по крайней мере если запустить код на средненьком железе)
+                # TODO Скину скриншот в ЛМС
                 break
-
+        # TODO Используйте один из представленных методов сбора данных из очереди
+        # TODO (например в practice_03 из снипетов, или из 05_processes)
         for parser in parsers:
             parser.join()
 
@@ -136,3 +141,14 @@ if __name__ == '__main__':
     A = Manager(zip_open.names_file)
     A.start()
     A.join()
+
+# TODO От запуска к запуску изменяется результат:
+# Максимальная волатильность:
+# PDM9 - 23.2 %
+# PDH9 - 22.69 %
+# MNH9 - 20.68 %
+# Максимальная волатильность:
+# SiH9 - 24.39 %
+# PDM9 - 23.2 %
+# PDH9 - 22.69 %
+# TODO Второй вариант верный, в первом, как видите теряется тикер SiH9

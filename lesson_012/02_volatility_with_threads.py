@@ -24,7 +24,7 @@ import csv
 import math
 import zipfile
 
-
+# TODO Тут стоит поправить стиль (Code/Reformat code)
 class ParseFile(threading.Thread):
     def __init__(self, name_file,*args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,6 +37,7 @@ class ParseFile(threading.Thread):
         half_sum_ticker = (max_price_ticker + min_price_ticker) / 2
         volatility_ticker = ((max_price_ticker - min_price_ticker) / half_sum_ticker) * 100
 
+        # TODO И атрибуты, которые вы исполльзуете в методах - сперва стоит обозначить в init
         self.volatility_ticker = volatility_ticker
 
     def search_max_min_ticker(self, reader):

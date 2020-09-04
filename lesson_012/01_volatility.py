@@ -152,3 +152,4 @@ class ParsTicker:
 file_zip_path_downloaded = 'trades.zip'
 A = ParsTicker(file_zip_path_downloaded=file_zip_path_downloaded)
 A.run()
+#зачёт!
