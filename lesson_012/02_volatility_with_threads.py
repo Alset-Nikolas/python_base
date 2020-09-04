@@ -24,11 +24,13 @@ import csv
 import math
 import zipfile
 
-# TODO Тут стоит поправить стиль (Code/Reformat code)
+
 class ParseFile(threading.Thread):
-    def __init__(self, name_file,*args, **kwargs):
+    def __init__(self, name_file, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name_file = name_file
+        self.volatility_ticker = None
+        self.name_ticker = None
 
     def run(self):
         with open(self.name_file) as File:
@@ -37,7 +39,6 @@ class ParseFile(threading.Thread):
         half_sum_ticker = (max_price_ticker + min_price_ticker) / 2
         volatility_ticker = ((max_price_ticker - min_price_ticker) / half_sum_ticker) * 100
 
-        # TODO И атрибуты, которые вы исполльзуете в методах - сперва стоит обозначить в init
         self.volatility_ticker = volatility_ticker
 
     def search_max_min_ticker(self, reader):
@@ -51,6 +52,7 @@ class ParseFile(threading.Thread):
             min_price_ticker = min(min_price_ticker, float(row[2]))
         return max_price_ticker, min_price_ticker
 
+
 class ExtractZiFile:
     def __init__(self, file_zip_path_downloaded):
         self.file_zip_path_downloaded = file_zip_path_downloaded
@@ -63,13 +65,11 @@ class ExtractZiFile:
             if name_file[-4:] == '.csv':
                 self.names_file.append(name_file)
 
-
     def checking_name_file(self):
         try:
             self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
         except Exception as e:
             print(e)
-
 
 
 file_zip_path_downloaded = 'trades.zip'
@@ -116,7 +116,6 @@ class Manager:
                 print(f'{line}', end=', ')
             else:
                 print(f'{line}')
-
 
 
 A = Manager(zip_open.names_file)
