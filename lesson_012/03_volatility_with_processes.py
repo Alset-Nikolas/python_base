@@ -21,6 +21,7 @@ import multiprocessing
 import csv
 import math
 import zipfile
+from queue import Empty
 
 
 class ParseFile(multiprocessing.Process):
@@ -29,6 +30,7 @@ class ParseFile(multiprocessing.Process):
         self.name_file = name_file
         self.collector = collector
         self.name_ticker = None
+        self.volatility_ticker = None
 
     def run(self):
         with open(self.name_file) as File:
@@ -62,6 +64,7 @@ class ExtractZiFile:
     def __init__(self, file_zip_path_downloaded):
         self.file_zip_path_downloaded = file_zip_path_downloaded
         self.names_file = []
+        self.zip = None
 
     def extract_zip_file(self):
         self.checking_name_file()
@@ -90,21 +93,24 @@ class Manager(multiprocessing.Process):
         for parser in parsers:
             parser.start()
         pam = 1
-        # TODO С таким алгоритмом иногда выход производится раньше, чем считается последний тикер
-        while any(parser.is_alive() for parser in parsers):
-            [name_ticker, volatility_ticker] = self.collector.get()
-            pam += 1
-            if volatility_ticker == 0:
-                self.date_volatility_ticker_0.append(name_ticker)
-            else:
-                self.date.append([name_ticker, volatility_ticker])
-            if pam == len(self.names_file):
-                print(self.names_file)
-                # TODO Это видно на этом принте (по крайней мере если запустить код на средненьком железе)
-                # TODO Скину скриншот в ЛМС
+        while True:
+            try:
+                [name_ticker, volatility_ticker] = self.collector.get()
+                #print([name_ticker, volatility_ticker])
+                if volatility_ticker == 0:
+                    self.date_volatility_ticker_0.append(name_ticker)
+                else:
+                    self.date.append([name_ticker, volatility_ticker])
+            except Empty:
+                print(Empty)
+
+            if not any(parser.is_alive() for parser in parsers) or pam == len(self.names_file):
+                print(f'{pam} / {len(self.names_file)}')
                 break
-        # TODO Используйте один из представленных методов сбора данных из очереди
-        # TODO (например в practice_03 из снипетов, или из 05_processes)
+            pam += 1
+
+
+
         for parser in parsers:
             parser.join()
 
@@ -142,7 +148,6 @@ if __name__ == '__main__':
     A.start()
     A.join()
 
-# TODO От запуска к запуску изменяется результат:
 # Максимальная волатильность:
 # PDM9 - 23.2 %
 # PDH9 - 22.69 %
@@ -151,4 +156,3 @@ if __name__ == '__main__':
 # SiH9 - 24.39 %
 # PDM9 - 23.2 %
 # PDH9 - 22.69 %
-# TODO Второй вариант верный, в первом, как видите теряется тикер SiH9
