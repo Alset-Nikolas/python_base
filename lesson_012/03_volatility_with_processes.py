@@ -96,7 +96,7 @@ class Manager(multiprocessing.Process):
         while True:
             try:
                 [name_ticker, volatility_ticker] = self.collector.get()
-                #print([name_ticker, volatility_ticker])
+                # print([name_ticker, volatility_ticker])
                 if volatility_ticker == 0:
                     self.date_volatility_ticker_0.append(name_ticker)
                 else:
@@ -108,8 +108,6 @@ class Manager(multiprocessing.Process):
                 print(f'{pam} / {len(self.names_file)}')
                 break
             pam += 1
-
-
 
         for parser in parsers:
             parser.join()
