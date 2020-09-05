@@ -100,8 +100,6 @@ class Manager(multiprocessing.Process):
                     self.date_volatility_ticker_0.append(name_ticker)
                 else:
                     self.date.append([name_ticker, volatility_ticker])
-
-
             except Empty:
                 if not any(parser.is_alive() for parser in parsers):
                     break
@@ -150,3 +148,4 @@ if __name__ == '__main__':
 # SiH9 - 24.39 %
 # PDM9 - 23.2 %
 # PDH9 - 22.69 %
+#зачёт!

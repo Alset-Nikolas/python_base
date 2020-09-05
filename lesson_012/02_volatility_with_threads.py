@@ -121,3 +121,4 @@ class Manager:
 
 A = Manager(zip_open.names_file)
 A.main()
+#зачёт!
