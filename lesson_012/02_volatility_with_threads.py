@@ -67,6 +67,7 @@ class ExtractZiFile:
 
     def checking_name_file(self):
         try:
+            # TODO В init надо обозначить все атрибуты, которые вы используете в классе
             self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
         except Exception as e:
             print(e)

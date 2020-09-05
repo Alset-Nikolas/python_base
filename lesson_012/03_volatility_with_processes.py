@@ -96,6 +96,7 @@ class Manager(multiprocessing.Process):
         while True:
             try:
                 [name_ticker, volatility_ticker] = self.collector.get()
+                # TODO Тут в get стоит указать timeout (хотя бы 0.1)
                 # print([name_ticker, volatility_ticker])
                 if volatility_ticker == 0:
                     self.date_volatility_ticker_0.append(name_ticker)
@@ -107,7 +108,7 @@ class Manager(multiprocessing.Process):
             if not any(parser.is_alive() for parser in parsers) or pam == len(self.names_file):
                 print(f'{pam} / {len(self.names_file)}')
                 break
-            pam += 1
+            pam += 1  # TODO тогда вот этот "ручной" выход будет не нужен
 
         for parser in parsers:
             parser.join()
