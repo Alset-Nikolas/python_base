@@ -31,6 +31,7 @@ class ParseFile(threading.Thread):
         self.name_file = name_file
         self.volatility_ticker = None
         self.name_ticker = None
+        self.zip = None
 
     def run(self):
         with open(self.name_file) as File:
@@ -67,7 +68,6 @@ class ExtractZiFile:
 
     def checking_name_file(self):
         try:
-            # TODO В init надо обозначить все атрибуты, которые вы используете в классе
             self.zip = zipfile.ZipFile(file=self.file_zip_path_downloaded, mode='r')
         except Exception as e:
             print(e)
