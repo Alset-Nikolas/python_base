@@ -63,7 +63,7 @@ parser.add_argument('--date', action="store", dest='date', help="Enter Date!", d
 parser.add_argument('--save_to', action="store", dest="path", default='image.png', type=str,
                     help="Where to save?")
 
-args = parser.parse_args()
+args = parser.parse_args('--fio MLV --from M --to L --date 10/09/2020 --save_to privet.png'.split())
 print(args)
 
 make_ticket(fio=args.fio, from_=args.from_, to=args.to, date=args.date, path_save='\\' + args.path)
@@ -77,3 +77,4 @@ make_ticket(fio=args.fio, from_=args.from_, to=args.to, date=args.date, path_sav
 #   --date - обязательный, когда летим.
 #   --save_to - необязательный, путь для сохранения заполненнего билета.
 # и заполнять билет.
+#зачёт!
