@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from pprint import pprint
 from random import randint
 import vk_api
 import vk_api.bot_longpoll
@@ -27,12 +27,10 @@ class Bot:
                 print(err)
     def on_event(self, event):
         if event.type == vk_api.bot_longpoll.VkBotEventType.MESSAGE_NEW:
-            print(event.object['message']['text'])
-            print(event.object['message']['text'], randint(0, 2**20), type(event), event.obj.peer_id)
             self.api.messages.send(
                 message=event.object['message']['text'],
                 random_id=randint(0, 2**20),
-                peer_id=event.obj.peer_id
+                peer_id=event.object['message']['peer_id']
             )
         else:
             print('не умею обрабатывать', event.type)
