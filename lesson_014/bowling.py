@@ -11,8 +11,6 @@ class GetScore:
         if self.game_result == '':
             raise Exception('Не прошла проверку на корректность данных: длина!')
         if self.game_result.count('X') + len(self.game_result) != 2 * self.number_of_frames:
-            print(self.game_result.count('X') + len(self.game_result))
-
             raise Exception('Не прошла проверку на корректность данных: не соответствует длина!')
 
     def check_edge_cases(self):
@@ -36,17 +34,16 @@ class GetScore:
         while i < len(self.game_result) - 1:
 
             if self.game_result[i].isdigit() and self.game_result[i + 1].isdigit():
-                if int(self.game_result[i]) + int(self.game_result[i + 1]) > 10:
-                    raise Exception(f'Не прошла проверку на корректность данных: mistake summa  '
-                                    f'{self.game_result[i]}+{self.game_result[i + 1]}>10 !')
+                if int(self.game_result[i]) + int(self.game_result[i + 1]) > 9:
+                    raise Exception(f'Не прошла проверку на корректность данных: mistake summa !')
                 i += 1
             i += 1
 
     def check_all_symbols(self):
-        all_symbols = {'X', "/", '-'} | {str(x) for x in range(10)}
+        all_symbols = {'X', "/", '-'} | {str(x) for x in range(1,10)}
         for letter in self.game_result:
             if letter not in all_symbols:
-                raise Exception(f'Не прошла проверку на корректность данных: mistake letter', letter)
+                raise Exception(f'Не прошла проверку на корректность данных: mistake letter')
 
     def check_rus_x(self):
         if 'х' in self.game_result or 'Х' in self.game_result:
