@@ -1,6 +1,6 @@
 class GetScore:
 
-    def __init__(self, game_result, number_of_frames=4):
+    def __init__(self, game_result, number_of_frames=10):
         self.game_result = game_result
         self.number_of_frames = number_of_frames
 
@@ -10,7 +10,7 @@ class GetScore:
         '''
         if self.game_result == '':
             raise Exception('Не прошла проверку на корректность данных: длина!')
-        if self.game_result.count('X') + len(self.game_result) != 2 * self.number_of_frames:
+        if self.game_result.count('X') + len(self.game_result) != 2*self.number_of_frames:
             raise Exception('Не прошла проверку на корректность данных: не соответствует длина!')
 
     def check_edge_cases(self):
@@ -80,8 +80,5 @@ class GetScore:
 
 
 if __name__ == '__main__':
-    A = GetScore('3532X332/3/62--62X')  # TODO Правильный результат, не должен вызывать ошибки
-    # Всего 10 кеглей. Игра состоит из 10 фреймов.
-    # TODO В примере был указан сокращенный результат)
-    # TODO А так надо ровно 10 фреймов проверять
+    A = GetScore('3532X332/3/62--62X')
     print(A.get_score())

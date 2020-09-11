@@ -6,57 +6,61 @@ class ExternalResourceGetterTest(unittest.TestCase):
 
 
     def bug_catcher(self, result):
-        try:
+        with self.assertRaises(Exception) as cm:
             A = GetScore(result)
             A.get_score()
-        except Exception as err:
-            return str(err)
+        return str(cm.exception)
 
-    # TODO Для проверки на ошибку - можно использовать специальный ассерт - assertRaises
-    # with self.assertRaises(TypeError):
-    #     действие()
     def test_check_len_long(self):
-        err = self.bug_catcher('X'*10)
-        Er_expected =str(Exception('Не прошла проверку на корректность данных: не соответствует длина!'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception('Не прошла проверку на корректность данных: не соответствует длина!')
+        the_exception =self.bug_catcher('X'*20)
+        self.assertEqual(the_exception, str(some_exception))
 
     def test_check_len_short(self):
-        err = self.bug_catcher('X'*1)
-        Er_expected = str(Exception('Не прошла проверку на корректность данных: не соответствует длина!'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception('Не прошла проверку на корректность данных: не соответствует длина!')
+        the_exception = self.bug_catcher('X' * 1)
+        self.assertEqual(the_exception, str(some_exception))
 
     def test_edge_cases_v1(self):
-        err = self.bug_catcher('X//1212')
-        Er_expected = str(Exception('Не прошла проверку на корректность данных: inverted spare  !'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception('Не прошла проверку на корректность данных: inverted spare  !')
+        the_exception = self.bug_catcher('X//' + '1'*16)
+        self.assertEqual(the_exception, str(some_exception))
+
 
     def test_edge_cases_v2(self):
-        err = self.bug_catcher('X/11212')
-        Er_expected = str(Exception('Не прошла проверку на корректность данных: inverted spare  !'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception('Не прошла проверку на корректность данных: inverted spare  !')
+        the_exception = self.bug_catcher('X/' + '1'*17)
+        self.assertEqual(the_exception, str(some_exception))
+
 
     def test_summa_nearby_v1(self):
-        err = self.bug_catcher('X911212')
-        Er_expected = str(Exception(f'Не прошла проверку на корректность данных: mistake summa !'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception(f'Не прошла проверку на корректность данных: mistake summa !')
+        the_exception = self.bug_catcher('X9' + '1'*17)
+        self.assertEqual(the_exception, str(some_exception))
+
 
     def test_all_symbols_v1(self):
-        err = self.bug_catcher('X011212')
-        Er_expected = str(Exception(f'Не прошла проверку на корректность данных: mistake letter'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception(f'Не прошла проверку на корректность данных: mistake letter')
+        the_exception = self.bug_catcher('X0' + '1'*17)
+        self.assertEqual(the_exception, str(some_exception))
+
     def test_all_symbols_v2(self):
-        err = self.bug_catcher('X*11212')
-        Er_expected = str(Exception(f'Не прошла проверку на корректность данных: mistake letter'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception(f'Не прошла проверку на корректность данных: mistake letter')
+        the_exception = self.bug_catcher('X*' + '1'*17)
+        self.assertEqual(the_exception, str(some_exception))
+
     def test_all_symbols_v3(self):
-        err = self.bug_catcher('X!11212')
-        Er_expected = str(Exception(f'Не прошла проверку на корректность данных: mistake letter'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception(f'Не прошла проверку на корректность данных: mistake letter')
+        the_exception = self.bug_catcher('X!' + '1'*17)
+        self.assertEqual(the_exception, str(some_exception))
+
 
     def test_rus_x(self):
-        err = self.bug_catcher('Х!11212')
-        Er_expected = str(Exception(f'ввод Х на русском! Требуется X EN'))
-        self.assertEqual(str(err), Er_expected)
+        some_exception = Exception(f'ввод Х на русском! Требуется X EN')
+        the_exception = self.bug_catcher('Х!' + '1'*17)
+        self.assertEqual(the_exception, str(some_exception))
+
+
 
 if __name__ == '__main__':
     # запускам автодискавер тестов
