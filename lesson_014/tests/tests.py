@@ -12,7 +12,9 @@ class ExternalResourceGetterTest(unittest.TestCase):
         except Exception as err:
             return str(err)
 
-
+    # TODO Для проверки на ошибку - можно использовать специальный ассерт - assertRaises
+    # with self.assertRaises(TypeError):
+    #     действие()
     def test_check_len_long(self):
         err = self.bug_catcher('X'*10)
         Er_expected =str(Exception('Не прошла проверку на корректность данных: не соответствует длина!'))
