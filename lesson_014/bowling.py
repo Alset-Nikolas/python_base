@@ -32,12 +32,15 @@ class GetScore:
         '''
         i = 0
         while i < len(self.game_result) - 1:
-
+            if self.game_result[i] == 'X':
+                i+=1
             if self.game_result[i].isdigit() and self.game_result[i + 1].isdigit():
                 if int(self.game_result[i]) + int(self.game_result[i + 1]) > 9:
+                    print(i)
                     raise Exception(f'Не прошла проверку на корректность данных: mistake summa !')
-                i += 1
-            i += 1
+
+
+            i += 2
 
     def check_all_symbols(self):
         all_symbols = {'X', "/", '-'} | {str(x) for x in range(1,10)}
@@ -75,17 +78,22 @@ class GetScore:
                 result += int(self.game_result[i + 1])
             elif self.game_result[i + 1] == '-' and self.game_result[i].isdigit():
                 result += int(self.game_result[i])
+            elif self.game_result[i + 1] == '-' and self.game_result[i] == '-':
+                result += 0
             i += 2
+        else:
+            if self.game_result[i] == 'X':
+                result += 20
         return result
 
 
 if __name__ == '__main__':
     A = GetScore('--8-X3/4/1/-12651X')
     print(A.get_score())
-# TODO Добавлю пару примеров(из следующей части) для того, чтобы вы могли откалибровать ваш алгоритм
+
 # ### Tour 1
 # Антон	1/6/1/--327-18812382     Недопустимая комбинация фрейма - «82»
-# Елена	3532X332/3/62--62X       105  TODO Вот тут у вас выдаётся неверный ответ
+# Елена	3532X332/3/62--62X       105
 # Роман	725518X--8/--543152      Недопустимая комбинация фрейма - «55»
 # Татьяна	8/--35-47/371/518-4/     Недопустимая комбинация фрейма - «37»
 # Ринат	4-3/7/3/8/X711627-5      113
@@ -95,6 +103,6 @@ if __name__ == '__main__':
 # Татьяна	42X--3/4/2-8271171/      Недопустимая комбинация фрейма - «82»
 # Роман	811/X--3/XX171/43        129
 # Ринат	-263X815/5/27-----6      85
-# Алексей	--8-X3/4/1/-12651X       108  TODO А вот здесь ошибка, хотя строка верная и должна быть равна 108
+# Алексей	--8-X3/4/1/-12651X       108
 # Павел	3-6/5/9/5---1/--5-52     80
 # winner is Роман
