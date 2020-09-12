@@ -80,15 +80,19 @@ class GetScore:
                 result += int(self.game_result[i])
             elif self.game_result[i + 1] == '-' and self.game_result[i] == '-':
                 result += 0
+            print(i,  self.game_result[i],  self.game_result[i + 1])
             i += 2
         else:
+            print(i)
+            # TODO Лишняя проверка получается, к ошибке ведет
+            # TODO Разве последний индекс не будет проверен в цикле выше?
             if self.game_result[i] == 'X':
                 result += 20
         return result
 
 
 if __name__ == '__main__':
-    A = GetScore('--8-X3/4/1/-12651X')
+    A = GetScore('4-3/7/3/8/X711627-5')
     print(A.get_score())
 
 # ### Tour 1
