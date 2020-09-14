@@ -32,17 +32,14 @@ class GetScore:
         '''
         i = 0
         while i < len(self.game_result) - 1:
-            print(self.game_result)
-            print(self.game_result[i])
             if self.game_result[i] == 'X':
-                i += 1
-            if self.game_result[i].isdigit() and self.game_result[i + 1].isdigit():
+                i -= 1
+            elif self.game_result[i].isdigit() and self.game_result[i + 1].isdigit():
                 if int(self.game_result[i]) + int(self.game_result[i + 1]) > 9:
-                    print(i)
                     raise Exception(f'Не прошла проверку на корректность данных: mistake summa !')
 
-            i += 2  # TODO Похоже при выпадении страйка - следующий за страйком фрейм не проверяется
-            # TODO т.к. прибавляется по итогу +3 к индексу
+            i += 2
+
 
     def check_all_symbols(self):
         all_symbols = {'X', "/", '-'} | {str(x) for x in range(1, 10)}
@@ -88,7 +85,7 @@ class GetScore:
 
 
 if __name__ == '__main__':
-    A = GetScore('811/X--3/XX171/99')  # TODO Почему работает этот вариант? 9+9=18 многовато будет
+    A = GetScore('811/X--3/XX171/43')
     print(A.get_score())
 
 # ### Tour 1
