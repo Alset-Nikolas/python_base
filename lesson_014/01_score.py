@@ -60,9 +60,11 @@ def show(game_result):
             print(' ', end='')
     print('\n----------------------')
 
+
 parser = argparse.ArgumentParser(description='Ping script')
 parser.add_argument('--result', action="store", dest="result")
 args = parser.parse_args()
 show(args.result)
 A = GetScore(args.result)
-print(f'"{args.result}" - {A.get_score()}' )
+print(f'"{args.result}" - {A.get_score()}')
+#зачёт!
