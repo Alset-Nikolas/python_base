@@ -10,7 +10,7 @@ class GetScore:
         '''
         if self.game_result == '':
             raise Exception('Не прошла проверку на корректность данных: длина!')
-        if self.game_result.count('X') + len(self.game_result) != 2*self.number_of_frames:
+        if self.game_result.count('X') + len(self.game_result) != 2 * self.number_of_frames:
             raise Exception('Не прошла проверку на корректность данных: не соответствует длина!')
 
     def check_edge_cases(self):
@@ -33,17 +33,16 @@ class GetScore:
         i = 0
         while i < len(self.game_result) - 1:
             if self.game_result[i] == 'X':
-                i+=1
+                i += 1
             if self.game_result[i].isdigit() and self.game_result[i + 1].isdigit():
                 if int(self.game_result[i]) + int(self.game_result[i + 1]) > 9:
                     print(i)
                     raise Exception(f'Не прошла проверку на корректность данных: mistake summa !')
 
-
             i += 2
 
     def check_all_symbols(self):
-        all_symbols = {'X', "/", '-'} | {str(x) for x in range(1,10)}
+        all_symbols = {'X', "/", '-'} | {str(x) for x in range(1, 10)}
         for letter in self.game_result:
             if letter not in all_symbols:
                 raise Exception(f'Не прошла проверку на корректность данных: mistake letter')
@@ -66,7 +65,7 @@ class GetScore:
         self.check_param()
         result = 0
         i = 0
-        while i < len(self.game_result) - 1:
+        while i <= len(self.game_result) - 1:
             if self.game_result[i] == 'X':
                 result += 20
                 i -= 1
@@ -80,19 +79,13 @@ class GetScore:
                 result += int(self.game_result[i])
             elif self.game_result[i + 1] == '-' and self.game_result[i] == '-':
                 result += 0
-            print(i,  self.game_result[i],  self.game_result[i + 1])
             i += 2
-        else:
-            print(i)
-            # TODO Лишняя проверка получается, к ошибке ведет
-            # TODO Разве последний индекс не будет проверен в цикле выше?
-            if self.game_result[i] == 'X':
-                result += 20
+
         return result
 
 
 if __name__ == '__main__':
-    A = GetScore('4-3/7/3/8/X711627-5')
+    A = GetScore('-263X815/5/27-----6')
     print(A.get_score())
 
 # ### Tour 1
