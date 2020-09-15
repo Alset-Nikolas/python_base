@@ -25,8 +25,31 @@
 #
 # Из текущего файла сделать консольный скрипт для формирования файла с результатами турнира.
 # Параметры скрипта: --input <файл протокола турнира> и --output <файл результатов турнира>
+import argparse
+import os
 
-# TODO тут ваш код
+from processing_input_file import Processing
+
+
+
+parser = argparse.ArgumentParser(description='Ping script')
+
+parser.add_argument('--input', action="store", dest='input', help="Enter input file!",
+                    default="tournament.txt")
+parser.add_argument('--output', action="store", dest='output', help="Enter output file!",
+                    default="tournament_result.txt")
+
+args = parser.parse_args()
+print(args)
+all_path = __file__
+name_file = os.path.basename(__file__)
+
+path_dir = all_path[:-len(name_file) - 1]
+path_dir = os.path.normpath(path_dir)
+
+path_input_file = os.path.join(path_dir, args.input)
+path_output_file = os.path.join(path_dir, args.output)
+Processing(input_file=path_input_file, output_file=path_output_file).run()
 
 # Усложненное задание (делать по желанию)
 #
