@@ -27,7 +27,6 @@
 # Параметры скрипта: --input <файл протокола турнира> и --output <файл результатов турнира>
 import argparse
 import os
-
 from processing_input_file import Processing
 
 

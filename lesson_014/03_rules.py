@@ -24,9 +24,38 @@
 # Необходимые изменения сделать во всех модулях. Тесты - дополнить.
 
 # "И да, старые правила должны остаться! для внутреннего рынка..." - уточнил менеджер напоследок.
-# TODO Алексей	--8-X3/4/1/-12651X  88 Должен быть такой ответ
-# TODO У вас сейчас вот такой выдает
-#  Алексей	--8-X3/4/1/-12651	93
+import argparse
+import os
+from processing_input_file import Processing, NewProcessing
 
-# TODO Плюс тут надо добавить парсер с ещё одним параметром,
-# TODO чтобы можно было выбирать им тип правил
+parser = argparse.ArgumentParser(description='Ping script')
+
+parser.add_argument('--input', action="store", dest='input', help="Enter input file!",
+                    default="tournament.txt")
+parser.add_argument('--output', action="store", dest='output', help="Enter output file!",
+                    default="tournament_result.txt")
+
+args = parser.parse_args('--input tournament.txt --output tour_test.txt'.split())
+print(args)
+all_path = __file__
+name_file = os.path.basename(__file__)
+print(all_path, name_file, os.getcwd())  # текущий путь можно получить так
+
+path_dir = all_path[:-len(name_file) - 1]
+path_dir = os.path.normpath(path_dir)
+
+path_input_file = os.path.join(path_dir, args.input)
+path_output_file = os.path.join(path_dir, args.output)
+
+print("Есть два варианта типов правил!")
+print("1) X = 20, \= 15")
+print("2) Сложные правила")
+N = input()
+if N in {"1", "2"}:
+    if N == '1':
+        Processing(input_file=path_input_file, output_file=path_output_file).run()
+    if N == '2':
+        NewProcessing(input_file=path_input_file, output_file=path_output_file).run()
+
+
+

@@ -48,7 +48,7 @@ class NewGetScore(GetScore):
             elif self.game_result[index+1].isdigit() and self.game_result[index+2].isdigit():
                 result += int(self.game_result[index+1]) + int(self.game_result[index+2])
             elif self.game_result[index+2] == '/':
-                result += 15
+                result += 10
             elif self.game_result[index+1] == '-' and self.game_result[index+2].isdigit():
                 result += int(self.game_result[index+1])
             elif self.game_result[index+1] == '-' and self.game_result[index+2].isdigit():
@@ -73,6 +73,6 @@ class NewGetScore(GetScore):
 
 
 if __name__ == '__main__':
-    print('811/X--3/XX17XX')
-    A = NewGetScore('811/X--3/XX17XX')
+    print('--8-X3/4/1/-12651X')
+    A = NewGetScore('--8-X3/4/1/-12651X')
     print(A.get_score())

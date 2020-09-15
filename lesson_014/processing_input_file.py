@@ -39,7 +39,7 @@ class Processing:
                 tour_new[i + 1] = tour[i+1][:-1]
             else:
                 try:
-                    result_player_numeral = NewGetScore(result_player).get_score()
+                    result_player_numeral = GetScore(result_player).get_score()
                     self.add_matr(line.split())
                 except Exception as er:
                     result_player_numeral = str(er)
@@ -104,6 +104,28 @@ class Processing:
             print(f'| {line[0]:^10} | {line[1]:^18} | {line[2]:^12} |')
             print("+------------+--------------------+--------------+")
 
+
+class NewProcessing(Processing):
+    def tour_handling(self, tour):
+        tour_new=[0]*(len(tour)+1)
+        tour_new[0]=tour[0][:-1]
+
+        for i,line in enumerate(tour[1:]):
+            result_player=line.split()[1]
+            if "### Tour" in line:
+                tour_new[i + 1] = tour[i+1][:-1]
+            else:
+                try:
+                    result_player_numeral = NewGetScore(result_player).get_score()
+                    self.add_matr(line.split())
+                except Exception as er:
+                    result_player_numeral = str(er)
+
+                tour_new[i+1]=(line[:-2] + "\t" + str(result_player_numeral))
+        winner_name = self.determine_the_winner(tour_new);
+        self.add_matr_winner(winner_name)
+        tour_new[-1] = "winner is "+winner_name
+        self.parsing_output_file(tour_new)
 
 if __name__ == "__main__":
     A = Processing(input_file="tournament.txt",
