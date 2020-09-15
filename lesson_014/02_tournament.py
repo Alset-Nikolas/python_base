@@ -62,3 +62,4 @@ Processing(input_file=path_input_file, output_file=path_output_file).run()
 # ...
 # | Алексей  |        20        |       5      |
 # +----------+------------------+--------------+
+#зачёт!

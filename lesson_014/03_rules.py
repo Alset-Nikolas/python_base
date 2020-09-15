@@ -56,6 +56,4 @@ if N in {"1", "2"}:
         Processing(input_file=path_input_file, output_file=path_output_file).run()
     if N == '2':
         NewProcessing(input_file=path_input_file, output_file=path_output_file).run()
-
-
-
+#зачёт!
