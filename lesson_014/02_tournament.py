@@ -39,10 +39,11 @@ parser.add_argument('--input', action="store", dest='input', help="Enter input f
 parser.add_argument('--output', action="store", dest='output', help="Enter output file!",
                     default="tournament_result.txt")
 
-args = parser.parse_args()
+args = parser.parse_args('--input tournament.txt --output tour_test.txt'.split())
 print(args)
 all_path = __file__
 name_file = os.path.basename(__file__)
+print(all_path, name_file, os.getcwd())  # текущий путь можно получить так
 
 path_dir = all_path[:-len(name_file) - 1]
 path_dir = os.path.normpath(path_dir)
