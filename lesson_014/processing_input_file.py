@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from bowling import GetScore
+from bowling_NEW import NewGetScore
 
 
 class Processing:
@@ -38,7 +39,7 @@ class Processing:
                 tour_new[i + 1] = tour[i+1][:-1]
             else:
                 try:
-                    result_player_numeral = GetScore(result_player).get_score()
+                    result_player_numeral = NewGetScore(result_player).get_score()
                     self.add_matr(line.split())
                 except Exception as er:
                     result_player_numeral = str(er)

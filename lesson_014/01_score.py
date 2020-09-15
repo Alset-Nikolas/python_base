@@ -39,6 +39,7 @@
 import argparse
 
 from bowling import GetScore
+from bowling_NEW import NewGetScore
 
 
 def show(game_result):
@@ -65,6 +66,6 @@ parser = argparse.ArgumentParser(description='Ping script')
 parser.add_argument('--result', action="store", dest="result")
 args = parser.parse_args()
 show(args.result)
-A = GetScore(args.result)
+A = NewGetScore(args.result)
 print(f'"{args.result}" - {A.get_score()}')
 #зачёт!
