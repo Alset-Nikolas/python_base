@@ -24,7 +24,8 @@ def configure_logging():
 
 try:
     import settings
-except ImportError:
+except ImportError as er:
+    print(er)
     exit("DO cp settings.py.default settings.py and set token!")
 
 class Bot:
