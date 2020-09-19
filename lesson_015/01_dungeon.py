@@ -173,6 +173,9 @@ class Game:
         print()
         for i, location in enumerate(self.loaded_json_file[self.name_lokation]):
             if type(location) == str:
+                # TODO Так сравнивать типы - это антипаттерн
+                # TODO ИСпользуйте функцию isinstance(element, Class)
+                # TODO (замените тут и ниже везде)
                 continue
             else:
                 for _location in location.keys():
@@ -192,12 +195,18 @@ class Game:
         print('|{:^70}|'.format("2.Перейти в другую локацию или идти на ощупь, если ничего не видно!"))
         print('|{:^70}|'.format("3.Сдаться и выйти из игры"))
         print('-' * 72)
-
         key = int(input('Выбор:'))
         if key not in [1, 2, 3]:
             print()
             print("{:^70}".format("Всего 3 варианта!"))
             print()
+        # TODO Очень длинный метод получается
+        # TODO Можете ли вы разбить код по действиям
+        # TODO Чтобы в идеале была структура
+        #  if key == 1
+        #      действие_1()
+        #  elif key == 2
+        #      действие_2()
         if key == 1:
             if monstrs == []:
                 print()
@@ -283,6 +292,8 @@ class Game:
 
 
 if __name__ == "__main__":
+    # TODO в идеале нужно весь этот код занести внутрь класса
+    # TODO чтобы тут остались только инициализация класса и запуск одного метода
     getcontext().prec = 50
     count = 1
     game_WIN_flag = False
