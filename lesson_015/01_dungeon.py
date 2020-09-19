@@ -113,6 +113,8 @@ class Game:
         self.name_lokation = None
         self.gameover_flag = False
         self.game_WIN_flag = False
+        self.exit_flag = False
+
 
         self.experience = 0
         self.remaining_time = Decimal('123456.0987654321')
@@ -134,7 +136,7 @@ class Game:
     def start(self):
         getcontext().prec = 50
         count = 1
-        while not self.game_WIN_flag:
+        while not self.game_WIN_flag and not self.exit_flag:
             print("{:^70}".format(f'Жизнь {count}'))
 
             self.checking_file_for_existence()
@@ -146,9 +148,9 @@ class Game:
             self.write_rpg_file()
 
             count += 1
-
-        print("{:^70}".format(f'Ураа!!!!'))
-        print("{:^70}".format(f'Всего {count} попыток!'))
+        if self.game_WIN_flag:
+            print("{:^70}".format(f'Ураа!!!!'))
+            print("{:^70}".format(f'Всего {count} попыток!'))
 
     def write_rpg_file(self):
 
@@ -201,14 +203,14 @@ class Game:
         print('|{:^70}|'.format("2.Перейти в другую локацию или идти на ощупь, если ничего не видно!"))
         print('|{:^70}|'.format("3.Сдаться и выйти из игры"))
         print('-' * 72)
-        key = int(input('Выбор:'))
-        # TODO Связку int(input()) надо использовать осторожно
-        # TODO При вводе букв - вылетит исключение.
-        # TODO Так что сперва стоит проверить полученную строка при помощи isdigit()
-        if key not in [1, 2, 3]:
-            print()
-            print("{:^70}".format("Всего 3 варианта!"))
-            print()
+        key = input('Выбор:')
+        if not key.isdigit() or key not in ["1", "2", "3"]:
+            while not key.isdigit() or key not in ["1", "2", "3"]:
+                print("{:^70}".format("Всего 3 варианта!"))
+                key = input('Выбор:')
+        key = int(key)
+
+
         if key == 1:
             self.kill_moster(monstrs)
         if key == 2:
@@ -222,16 +224,13 @@ class Game:
     def surrendered(self):
         self.gameover_flag = True
         print('{:^70}'.format('Вы проиграли'))
-        self.write_rpg_file()
-        exit()
-        # TODO При вызове этого метода нужно гарантировать, что все финализаторы всяких объектов отработают.
-        # TODO Это прокатит при их вызове в __del__, но не везде это возможно.
-        # TODO Старайтесь избегать вызова exit, давайте программе штатно завершиться
+        self.exit_flag = True
+
+
 
     def going_deeper(self, locations):
         if not self.game_over(locations):
-            if locations == []:  # TODO Пустоту списка можно проверить ещё вот так if not locations
-                # TODO пустой список в условии даёт ответ False
+            if not locations:
                 print()
                 print("{:^70}".format('Очень жаль, это тупик! Назад ходить нельзя!'))
                 print("{:^70}".format("YOU DIED"))
