@@ -244,7 +244,7 @@ class Game:
                         flag_correctnesses = True
                 if not flag_correctnesses:
                     print()
-                    print("{:^70}".format("Такого вариан!"))
+                    print("{:^70}".format("Такого нет варианта!"))
                     print()
         else:
             self.gameover_flag = True
