@@ -125,7 +125,6 @@ class Game:
 
     def checking_file_for_existence(self):
         check_file = os.path.exists('rpg.csv')
-        print(check_file)
         if not check_file:
             field_names = ['current_location', 'current_experience', 'current_date']
             with open('rpg.csv', 'w', newline='') as f:
@@ -133,12 +132,23 @@ class Game:
                 writer.writerow(field_names)
 
     def start(self):
-        self.checking_file_for_existence()
-        self.read_rpg_map()
-        self.go_first()
-        while not self.gameover_flag:
-            self.go()
-        self.write_rpg_file()
+        getcontext().prec = 50
+        count = 1
+        while not self.game_WIN_flag:
+            print("{:^70}".format(f'Жизнь {count}'))
+
+            self.checking_file_for_existence()
+            self.read_rpg_map()
+
+            self.go_first()
+            while not self.gameover_flag:
+                self.go()
+            self.write_rpg_file()
+
+            count += 1
+
+        print("{:^70}".format(f'Ураа!!!!'))
+        print("{:^70}".format(f'Всего {count} попыток!'))
 
     def write_rpg_file(self):
 
@@ -165,17 +175,15 @@ class Game:
         print()
         print('|{:^70}|'.format("Внутри вы видите:"))
         for monstr in self.loaded_json_file[self.name_lokation]:
-            if type(monstr) == dict:
+            if isinstance(monstr, dict):
                 continue
             else:
                 print('|{:^70}|'.format(f"— Монстра {monstr}"))
                 monstrs.append(monstr)
         print()
         for i, location in enumerate(self.loaded_json_file[self.name_lokation]):
-            if type(location) == str:
-                # TODO Так сравнивать типы - это антипаттерн
-                # TODO ИСпользуйте функцию isinstance(element, Class)
-                # TODO (замените тут и ниже везде)
+            if isinstance(location, str):
+
                 continue
             else:
                 for _location in location.keys():
@@ -189,9 +197,7 @@ class Game:
         print('-' * 72)
         print('|{:^70}|'.format(" Выберите действие:"))
         print('-' * 72)
-
         print('|{:^70}|'.format("1.Атаковать монстра"))
-
         print('|{:^70}|'.format("2.Перейти в другую локацию или идти на ощупь, если ничего не видно!"))
         print('|{:^70}|'.format("3.Сдаться и выйти из игры"))
         print('-' * 72)
@@ -200,66 +206,63 @@ class Game:
             print()
             print("{:^70}".format("Всего 3 варианта!"))
             print()
-        # TODO Очень длинный метод получается
-        # TODO Можете ли вы разбить код по действиям
-        # TODO Чтобы в идеале была структура
-        #  if key == 1
-        #      действие_1()
-        #  elif key == 2
-        #      действие_2()
         if key == 1:
-            if monstrs == []:
-                print()
-                print("{:^70}".format("Тут врагов нет !"))
-                print()
-            else:
-                monstr = monstrs[0]
-                # monstr_pattern = r'Boss_exp|Mob_exp[0:999]_tm[0:999]'
-                pars = re.split(r'_tm', monstr)
-                time = pars[1]
-                exp = re.split(r'_exp', pars[0])[1]
-                self.time_processing(time=time)
-                self.exp_processinf(exp=exp)
-                self.loaded_json_file[self.name_lokation].remove(monstr)
+            self.kill_moster(monstrs)
         if key == 2:
-            if not self.game_over(locations):
-                if locations == []:
-                    print()
-                    print("{:^70}".format('Очень жаль, это тупик! Назад ходить нельзя!'))
-                    print("{:^70}".format("YOU DIED"))
-                    print()
-                    self.gameover_flag = True
-                else:
-                    key_location = input("Введите номер локации: Location_?_tm..  ?=")
-                    location_pattern = f'Location_{key_location}_tm'
-                    flag_correctnesses = False
-                    for loc in locations:
-                        if location_pattern in loc[1]:
-                            print()
-
-                            # print("Добро пожаловать в ", loc[1])
-                            time = loc[1][len(location_pattern):]
-                            self.time_processing(time=time)
-                            self.loaded_json_file = self.loaded_json_file[self.name_lokation][loc[0]]
-                            self.name_lokation = loc[1]
-                            flag_correctnesses = True
-                    if not flag_correctnesses:
-                        print()
-                        print("{:^70}".format("Такого вариан!"))
-                        print()
-
-
-
-            else:
-                self.gameover_flag = True
+            self.going_deeper(locations)
 
         if key == 3:
-            self.gameover_flag = True
-            print('{:^70}'.format('Вы проиграли'))
-            self.write_rpg_file()
-            exit()
+            self.surrendered()
         a = datetime.timedelta(seconds=float(self.remaining_time))
         self.date.append([self.name_lokation, self.experience, a])
+
+    def surrendered(self):
+        self.gameover_flag = True
+        print('{:^70}'.format('Вы проиграли'))
+        self.write_rpg_file()
+        exit()
+
+    def going_deeper(self, locations):
+        if not self.game_over(locations):
+            if locations == []:
+                print()
+                print("{:^70}".format('Очень жаль, это тупик! Назад ходить нельзя!'))
+                print("{:^70}".format("YOU DIED"))
+                print()
+                self.gameover_flag = True
+            else:
+                key_location = input("Введите номер локации: Location_?_tm..  ?=")
+                location_pattern = f'Location_{key_location}_tm'
+                flag_correctnesses = False
+                for loc in locations:
+                    if location_pattern in loc[1]:
+                        print()
+                        time = loc[1][len(location_pattern):]
+                        self.time_processing(time=time)
+                        self.loaded_json_file = self.loaded_json_file[self.name_lokation][loc[0]]
+                        self.name_lokation = loc[1]
+                        flag_correctnesses = True
+                if not flag_correctnesses:
+                    print()
+                    print("{:^70}".format("Такого вариан!"))
+                    print()
+        else:
+            self.gameover_flag = True
+
+    def kill_moster(self, monstrs):
+        if monstrs == []:
+            print()
+            print("{:^70}".format("Тут врагов нет !"))
+            print()
+        else:
+            monstr = monstrs[0]
+            # monstr_pattern = r'Boss_exp|Mob_exp[0:999]_tm[0:999]'
+            pars = re.split(r'_tm', monstr)
+            time = pars[1]
+            exp = re.split(r'_exp', pars[0])[1]
+            self.time_processing(time=time)
+            self.exp_processinf(exp=exp)
+            self.loaded_json_file[self.name_lokation].remove(monstr)
 
     def time_processing(self, time):
         print("!" + '=' * 70 + "!")
@@ -292,18 +295,7 @@ class Game:
 
 
 if __name__ == "__main__":
-    # TODO в идеале нужно весь этот код занести внутрь класса
-    # TODO чтобы тут остались только инициализация класса и запуск одного метода
-    getcontext().prec = 50
-    count = 1
-    game_WIN_flag = False
-    while not game_WIN_flag:
-        print("{:^70}".format(f'Жизнь {count}'))
-        game = Game()
-        game.start()
-        game_WIN_flag = game.game_WIN_flag
-        count += 1
+    game = Game()
+    game.start()
 
-    print("{:^70}".format(f'Ураа!!!!'))
-    print("{:^70}".format(f'Всего {count} попыток!'))
 # Учитывая время и опыт, не забывайте о точности вычислений!
