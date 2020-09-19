@@ -202,6 +202,9 @@ class Game:
         print('|{:^70}|'.format("3.Сдаться и выйти из игры"))
         print('-' * 72)
         key = int(input('Выбор:'))
+        # TODO Связку int(input()) надо использовать осторожно
+        # TODO При вводе букв - вылетит исключение.
+        # TODO Так что сперва стоит проверить полученную строка при помощи isdigit()
         if key not in [1, 2, 3]:
             print()
             print("{:^70}".format("Всего 3 варианта!"))
@@ -221,10 +224,14 @@ class Game:
         print('{:^70}'.format('Вы проиграли'))
         self.write_rpg_file()
         exit()
+        # TODO При вызове этого метода нужно гарантировать, что все финализаторы всяких объектов отработают.
+        # TODO Это прокатит при их вызове в __del__, но не везде это возможно.
+        # TODO Старайтесь избегать вызова exit, давайте программе штатно завершиться
 
     def going_deeper(self, locations):
         if not self.game_over(locations):
-            if locations == []:
+            if locations == []:  # TODO Пустоту списка можно проверить ещё вот так if not locations
+                # TODO пустой список в условии даёт ответ False
                 print()
                 print("{:^70}".format('Очень жаль, это тупик! Назад ходить нельзя!'))
                 print("{:^70}".format("YOU DIED"))
@@ -250,7 +257,7 @@ class Game:
             self.gameover_flag = True
 
     def kill_moster(self, monstrs):
-        if monstrs == []:
+        if monstrs == []:  # TODO И тут стоит поправить сравнение
             print()
             print("{:^70}".format("Тут врагов нет !"))
             print()
