@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock, ANY
 
 from vk_api.bot_longpoll import VkBotMessageEvent
 
-from chatbot import Bot
+from bot import Bot
 
 
 class Test1(TestCase):
