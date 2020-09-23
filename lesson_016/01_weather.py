@@ -18,31 +18,46 @@ from pprint import pprint
 import requests
 from bs4 import BeautifulSoup
 # сегодня
-html_text = requests.get('https://www.meteoservice.ru/weather/now/moskva').text
-soup = BeautifulSoup(html_text, 'html.parser')
-date = soup.find(id='point-time').contents[0]
-temperature = soup.find('span', class_='value').contents[0]
-a = soup.find('p', class_='margin-bottom-0').contents[0]
-print(date)
-print(temperature)
-print(a)
-print()
-#на 10 дней
-html_text_10 = requests.get('https://www.meteoservice.ru/weather/10days/moskva').text
-soup_1 = BeautifulSoup(html_text_10, 'html.parser')
-date_ = soup_1.find_all(class_="text-nowrap grey font-condensed font-smaller")
-temperature_ = soup_1.find_all('div', class_="font-larger")
-a_ = soup_1.find_all('div', class_="column value show-for-large text-left font-smaller")
-for i in range(1,10):
-
-    print(date_[i].contents[0])
-    print(temperature_[i].contents[0].split()[0])
-    print(a_[i].contents[0])
-    print()
-
-class W
 
 
+class WeatherMaker:
+
+    def __init__(self):
+        self.html_text = requests.get('https://www.meteoservice.ru/weather/now/moskva').text
+        self.soup_today = BeautifulSoup(self.html_text, 'html.parser')
+
+        self.html_text_10days = requests.get('https://www.meteoservice.ru/weather/10days/moskva').text
+        self.soup_10days = BeautifulSoup(self.html_text_10days, 'html.parser')
+
+        self.matrix_weather = []
+
+    def run(self):
+        self._today()
+        self._days10()
+        pprint(self.matrix_weather)
+
+    def _today(self):
+        date = self.soup_today.find(id='point-time').contents[0]
+        temperature = self.soup_today.find('span', class_='value').contents[0]
+        weather = self.soup_today.find('p', class_='margin-bottom-0').contents[0]
+
+        self.matrix_weather.append({"погода": weather, "температура": temperature, "дата":date})
+
+    def _days10(self):
+        dates = self.soup_10days.find_all(class_="text-nowrap grey font-condensed font-smaller")
+        temperatures_ = self.soup_10days.find_all('div', class_="font-larger")
+        weathers = self.soup_10days.find_all('div', class_="column value show-for-large text-left font-smaller")
+
+        for i in range(1, 10):
+            date = dates[i].contents[0]
+            temperature = temperatures_[i].contents[0].split()[0]
+            weather = weathers[i].contents[0]
+
+            self.matrix_weather.append({"погода": weather, "температура": temperature, "дата": date})
+
+
+A = WeatherMaker()
+A.run()
 # Добавить класс ImageMaker.
 # Снабдить его методом рисования открытки
 # (использовать OpenCV, в качестве заготовки брать lesson_016/python_snippets/external_data/probe.jpg):
