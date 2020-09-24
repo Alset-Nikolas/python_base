@@ -21,12 +21,12 @@ import requests
 from bs4 import BeautifulSoup
 
 # сегодня
-
+from translate import Translator
 
 class WeatherMaker:
 
     def __init__(self):
-        self.html_text = requests.get('https://www.meteoservice.ru/weather/now/moskva').text
+        self.html_text = requests.get('https://www.meteoservice.ru/weather/now/moskva', ).text
         self.soup_today = BeautifulSoup(self.html_text, 'html.parser')
 
         self.html_text_10days = requests.get('https://www.meteoservice.ru/weather/10days/moskva').text
@@ -103,6 +103,7 @@ class ImageMaker:
             self.weather_picture(self.path_card_sun)
             self.color_yellow()
             self.gluing()
+            self.add_text(now)
             self.schow_card(self.main_card, "main")
         elif now['погода'] in ['Дождь']:
             self.weather_picture(self.path_card_rain)
@@ -127,7 +128,22 @@ class ImageMaker:
             self.schow_card(self.main_card, "main")
 
 
+    def add_text(self, info):
 
+        date = self.translate_(str(info["дата"]))
+        weather = self.translate_(info["погода"])
+        temper = self.translate_(info["температура"])
+        Y = self.height_main_card // 2
+        (x_down_left, y_down_left) = (self.width_main_card//3, Y)
+        size_text = 1
+        color = (111, 111, 190)
+        size_letters = 3
+
+        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_SIMPLEX, size_text, color, size_letters)
+        cv2.putText(self.main_card, weather, (self.width_main_card//3, Y + 30), cv2.FONT_HERSHEY_SIMPLEX, size_text, color,
+                    size_letters)
+        cv2.putText(self.main_card, temper, (self.width_main_card//3, Y + 60), cv2.FONT_HERSHEY_SIMPLEX, size_text, color,
+                    size_letters)
 
     def create_main_card(self):
         self.main_card = cv2.imread(self.path_card_main)
@@ -191,7 +207,9 @@ class ImageMaker:
                 else:
                     self.main_card[y, x] = [255-int(x//dx_const), 255-int(x//dx_const), 255-int(x//dx_const)]
 
-
+    def translate_(self, str):
+        translator = Translator(from_lang='Russian',to_lang='English')
+        return translator.translate(str)
     def schow_card(self, image, name_of_window):
         cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
         cv2.imshow(name_of_window, image)
