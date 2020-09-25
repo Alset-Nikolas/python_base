@@ -32,10 +32,10 @@ class WeatherMaker:
         self.html_text_10days = requests.get('https://www.meteoservice.ru/weather/10days/moskva').text
         self.soup_10days = BeautifulSoup(self.html_text_10days, 'html.parser')
 
-        self.matrix_weather = []
+        self.matrix_weather = {}
 
     def run(self):
-        self._today_forecast()
+        #self._today_forecast()
         self._days10_forecast()
         return self.matrix_weather
     def _today_forecast(self):
@@ -50,25 +50,21 @@ class WeatherMaker:
         temperatures_ = self.soup_10days.find_all('div', class_="font-larger")
         weathers = self.soup_10days.find_all('div', class_="column value show-for-large text-left font-smaller")
 
-        for i in range(1, 10):
+        for i in range(0, 10):
             date = dates[i].contents[0]
             temperature = temperatures_[i].contents[0].split()[0]
             weather = weathers[i].contents[0]
 
-            self.matrix_weather.append({"погода": weather, "температура": temperature, "дата": date})
+            self.matrix_weather[date] = {"погода": weather, "температура": temperature}
 
 
 
 import cv2
 class ImageMaker:
-    #rgb
-    COLOR_WHITE = (255, 255, 255)
-    COLOR_BLACK = (0, 0, 0)
+    COLOR_WHITE = [255, 255, 255]
+    COLOR_BLACK = [0, 0, 0]
 
-    COLOR_YELLOW = (255, 255, 0)
-    COLOR_BLUE = (0, 0, 255)
-    COLOR_DARK_BLUE = (0, 0, 127)
-    COLOR_GRAY = (127, 127, 127)
+
 
     def __init__(self):
         self.path_card_main = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\probe.jpg")
@@ -88,61 +84,65 @@ class ImageMaker:
         self.height_weather_card = None
         self.size_weather_card = None
 
+        self.matrix_weather = None
+
     def run(self):
         self.create_main_card()
+        self.matrix_weather = WeatherMaker().run()
+        pprint(self.matrix_weather)
+        self.creating_card_for_specific_day(day='29 сентября')
+
+    def creating_card_for_specific_day(self, day):
 
 
-        matrix_weather = WeatherMaker().run()
-        pprint(matrix_weather)
-        self.fone(matrix_weather)
-
-    def fone(self, matrix_weather):
-        now = matrix_weather[0]
-
-        if now['погода'] in ['Ясно', 'Солнечно', 'Ясная погода', 'Малооблачно']:
+        if self.matrix_weather[day]["погода"] in ['Ясно', 'Солнечно', 'Ясная погода', 'Малооблачно']:
             self.weather_picture(self.path_card_sun)
             self.color_yellow()
             self.gluing()
-            self.add_text(now)
+            self.add_text(day)
             self.schow_card(self.main_card, "main")
-        elif now['погода'] in ['Дождь']:
+        elif self.matrix_weather[day]["погода"] in ['Дождь']:
             self.weather_picture(self.path_card_rain)
             self.color_dark_blue()
             self.gluing()
+            self.add_text(day)
             self.schow_card(self.main_card, "main")
-        elif now['погода'] in ['Снег']:
+        elif self.matrix_weather[day]["погода"] in ['Снег']:
             self.weather_picture(self.path_card_snow)
             self.color_blue()
             self.gluing()
+            self.add_text(day)
             self.schow_card(self.main_card, "main")
-        elif now['погода'] in ['Облачно']:
+        elif self.matrix_weather[day]["погода"] in ['Облачно', "Пасмурно"]:
             self.weather_picture(self.path_card_cloud)
             self.color_grey()
             self.gluing()
+            self.add_text(day)
             self.schow_card(self.main_card, "main")
         else:
-            print("Необходимо добавить такой тип погоды :", now['погода'])
+            print("Необходимо добавить такой тип погоды :", self.matrix_weather[day]["погода"])
             self.weather_picture(self.path_card_sun)
             self.color_yellow()
             self.gluing()
+            self.add_text(day)
             self.schow_card(self.main_card, "main")
 
 
-    def add_text(self, info):
+    def add_text(self, day):
 
-        date = self.translate_(str(info["дата"]))
-        weather = self.translate_(info["погода"])
-        temper = self.translate_(info["температура"])
+        date = day
+        weather = self.matrix_weather[day]["погода"]
+        temper = self.matrix_weather[day]["температура"].replace('…', '...')[:-1]
         Y = self.height_main_card // 2
         (x_down_left, y_down_left) = (self.width_main_card//3, Y)
         size_text = 1
         color = (111, 111, 190)
         size_letters = 3
 
-        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_SIMPLEX, size_text, color, size_letters)
-        cv2.putText(self.main_card, weather, (self.width_main_card//3, Y + 30), cv2.FONT_HERSHEY_SIMPLEX, size_text, color,
+        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_COMPLEX, size_text, color, size_letters)
+        cv2.putText(self.main_card, weather, (self.width_main_card//3, Y + 30), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
                     size_letters)
-        cv2.putText(self.main_card, temper, (self.width_main_card//3, Y + 60), cv2.FONT_HERSHEY_SIMPLEX, size_text, color,
+        cv2.putText(self.main_card, temper, (self.width_main_card//3, Y + 60), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
                     size_letters)
 
     def create_main_card(self):
@@ -167,49 +167,62 @@ class ImageMaker:
                 self.main_card[y, x+dx] = self.weather_card[y, x]
 
     def color_blue(self):
+        COLOR_BLUE = [255, 255, 0]
+
         dx_const = math.ceil((self.width_main_card / 255))
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
                 if 255-int(x//dx_const) < 0 :
-                    self.main_card[y, x] = [255, 255, 0]
+                    self.main_card[y, x] = COLOR_BLUE
                 else:
                     self.main_card[y, x] = [255, 255, 255-int(x//dx_const)]
 
     def color_yellow(self):
+        COLOR_YELLOW = [0, 255, 255]
+
         dx_const = math.ceil((self.width_main_card / 255))
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
                 if 255-int(x//dx_const) < 0 :
-                    self.main_card[y, x] = [0, 255, 255]
+                    self.main_card[y, x] = COLOR_YELLOW
                 else:
                     self.main_card[y, x] = [255-int(x//dx_const), 255, 255]
 
 
     def color_dark_blue(self):
+        COLOR_DARK_BLUE = [255, 0, 0]
+
         dx_const = math.ceil((self.width_main_card / 255))
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
                 if 255-int(x//dx_const) < 0 :
-                    self.main_card[y, x] = [255, 0, 0]
+                    self.main_card[y, x] = COLOR_DARK_BLUE
                 else:
                     self.main_card[y, x] = [255, 255-int(x//dx_const), 255-int(x//dx_const)]
 
     def color_grey(self):
+        COLOR_GRAY = [127, 127, 127]
         dx_const = math.ceil((self.width_main_card / 127))
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
                 if 255-int(x//dx_const) < 0 :
-                    self.main_card[y, x] = [127, 127, 127]
+                    self.main_card[y, x] = COLOR_GRAY
                 else:
                     self.main_card[y, x] = [255-int(x//dx_const), 255-int(x//dx_const), 255-int(x//dx_const)]
 
     def translate_(self, str):
-        translator = Translator(from_lang='Russian',to_lang='English')
-        return translator.translate(str)
+        str = str.lower()
+        translator = Translator(from_lang='Russian', to_lang='English')
+        str = str.split()
+        otvet =''
+        for slovo in str:
+            otvet +=translator.translate(slovo) + ' '
+
+        return otvet.capitalize()
     def schow_card(self, image, name_of_window):
         cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
         cv2.imshow(name_of_window, image)
@@ -229,7 +242,28 @@ A.run()
 # Дождь - от синего к белому
 # Снег - от голубого к белому+
 # Облачно - от серого к белому
+from peewee import *
+import datetime
 
+# Создадим новую БД, для подключения будем использовать SQLite
+db = SqliteDatabase('people.db')
+
+class Person(Model):
+    name = CharField()
+    birthday = DateField()
+
+    class Meta:
+        database = db # This model uses the "people.db" database.
+
+class Pet(Model):
+    owner = ForeignKeyField(Person, backref='pets')
+    name = CharField()
+    animal_type = CharField()
+
+    class Meta:
+        database = db  # this model uses the "people.db" database
+db.connect()
+db.create_tables([Person, Pet])
 # Добавить класс DatabaseUpdater с методами:
 #   Получающим данные из базы данных за указанный диапазон дат.
 #   Сохраняющим прогнозы в базу данных (использовать peewee)
