@@ -89,7 +89,6 @@ class ImageMaker:
     def run(self):
         self.create_main_card()
         self.matrix_weather = WeatherMaker().run()
-        pprint(self.matrix_weather)
         self.creating_card_for_specific_day(day='29 сентября')
 
     def creating_card_for_specific_day(self, day):
@@ -231,6 +230,29 @@ class ImageMaker:
 
 A = ImageMaker()
 A.run()
+
+
+import peewee
+database = peewee.SqliteDatabase("DateBase.db")
+
+class Weather(peewee.Model):
+    date = peewee.CharField()
+    weather = peewee.CharField()
+    temperature = peewee.CharField()
+
+    class Meta:
+        database = database
+
+database.create_tables([Weather])
+
+for day, line in A.matrix_weather.items():
+    print(day, line)
+    artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"] )
+    artist.save()
+
+for weather in Weather.select():
+    print(f'День: {weather.date} Название альбома: {weather.weather} Дата релиза: {weather.temperature}')
+
 # Добавить класс ImageMaker.
 # Снабдить его методом рисования открытки
 # (использовать OpenCV, в качестве заготовки брать lesson_016/python_snippets/external_data/probe.jpg):
@@ -242,28 +264,7 @@ A.run()
 # Дождь - от синего к белому
 # Снег - от голубого к белому+
 # Облачно - от серого к белому
-from peewee import *
-import datetime
 
-# Создадим новую БД, для подключения будем использовать SQLite
-db = SqliteDatabase('people.db')
-
-class Person(Model):
-    name = CharField()
-    birthday = DateField()
-
-    class Meta:
-        database = db # This model uses the "people.db" database.
-
-class Pet(Model):
-    owner = ForeignKeyField(Person, backref='pets')
-    name = CharField()
-    animal_type = CharField()
-
-    class Meta:
-        database = db  # this model uses the "people.db" database
-db.connect()
-db.create_tables([Person, Pet])
 # Добавить класс DatabaseUpdater с методами:
 #   Получающим данные из базы данных за указанный диапазон дат.
 #   Сохраняющим прогнозы в базу данных (использовать peewee)
