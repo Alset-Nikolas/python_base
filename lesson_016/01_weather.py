@@ -89,7 +89,7 @@ class ImageMaker:
     def run(self):
         self.create_main_card()
         self.matrix_weather = WeatherMaker().run()
-        self.creating_card_for_specific_day(day='29 сентября')
+        #self.creating_card_for_specific_day(day='29 сентября')
 
     def creating_card_for_specific_day(self, day):
 
@@ -243,16 +243,33 @@ class Weather(peewee.Model):
     class Meta:
         database = database
 
-database.create_tables([Weather])
+import os.path
 
-for day, line in A.matrix_weather.items():
-    print(day, line)
-    artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"] )
-    artist.save()
+if not os.path.exists("DateBase.db"):
+    database.create_tables([Weather])
 
-for weather in Weather.select():
-    print(f'День: {weather.date} Название альбома: {weather.weather} Дата релиза: {weather.temperature}')
+    for day, line in A.matrix_weather.items():
+        artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"] )
+        artist.save()
+else:
+    '''
+    for day, line in A.matrix_weather.items():
+        try:
 
+            id_del = Weather.get(Weather.date == day).id
+            day = Weather.get(Weather.name == day)
+            print("удалить", id_del)
+            Weather.delete_by_id(id_del).save()
+
+        except:
+
+            artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"])
+            artist.save()
+    '''
+    for weather in Weather.select():
+        print(weather, type(weather))
+        print(f'{weather.date} Погода: {weather.weather} Температура: {weather.temperature}')
+database.close()
 # Добавить класс ImageMaker.
 # Снабдить его методом рисования открытки
 # (использовать OpenCV, в качестве заготовки брать lesson_016/python_snippets/external_data/probe.jpg):
@@ -264,7 +281,13 @@ for weather in Weather.select():
 # Дождь - от синего к белому
 # Снег - от голубого к белому+
 # Облачно - от серого к белому
+class DatabaseUpdater:
+    def __init__(self):
+        self.start_range_date = None
+        self.last_range_date = None
 
+    def save_new_results_for_the_next_week(self):
+        pass
 # Добавить класс DatabaseUpdater с методами:
 #   Получающим данные из базы данных за указанный диапазон дат.
 #   Сохраняющим прогнозы в базу данных (использовать peewee)
