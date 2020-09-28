@@ -24,6 +24,7 @@ import cv2
 import peewee
 import os.path
 
+
 class WeatherMaker:
 
     def __init__(self):
@@ -39,16 +40,13 @@ class WeatherMaker:
         self._days10_forecast()
         return self.matrix_weather
 
-
     def _days10_forecast(self):
         dates = self.soup_10days.find_all(class_="text-nowrap grey font-condensed font-smaller")
         temperatures_ = self.soup_10days.find_all('div', class_="font-larger")
         weathers = self.soup_10days.find_all('div', class_="column value show-for-large text-left font-smaller")
 
-
-
         MONTHS = {"января": '01',
-                  "февраля":'02',
+                  "февраля": '02',
                   "марта": '03',
                   "апреля": '04',
                   "мая": '05',
@@ -64,22 +62,23 @@ class WeatherMaker:
         for i in range(0, 10):
             date = dates[i].contents[0]
             date = date.split()
-            date = date[0]+'.'+MONTHS[date[1]]+'.' + str(datetime.datetime.now().year)
+            date = date[0] + '.' + MONTHS[date[1]] + '.' + str(datetime.datetime.now().year)
 
             temperature = temperatures_[i].contents[0].split()[0]
             weather = weathers[i].contents[0]
 
             self.matrix_weather[date] = {"погода": weather, "температура": temperature}
+
+
 class ImageMaker:
     COLOR_WHITE = [255, 255, 255]
     COLOR_BLACK = [0, 0, 0]
 
-
-
     def __init__(self, day):
         self.path_card_main = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\probe.jpg")
 
-        self.path_card_cloud = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\cloud.jpg")
+        self.path_card_cloud = os.getcwd() + os.path.normpath(
+            "\\python_snippets\\external_data\\weather_img\\cloud.jpg")
         self.path_card_rain = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\rain.jpg")
         self.path_card_snow = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\snow.jpg")
         self.path_card_sun = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\sun.jpg")
@@ -94,7 +93,6 @@ class ImageMaker:
         self.height_weather_card = None
         self.size_weather_card = None
 
-
         self.matrix_weather = None
 
         self.day = day
@@ -105,7 +103,6 @@ class ImageMaker:
         self.creating_card_for_specific_day(self.day)
 
     def creating_card_for_specific_day(self, day):
-
 
         if self.matrix_weather[day]["погода"] in ['Ясно', 'Солнечно', 'Ясная погода', 'Малооблачно']:
             self.weather_picture(self.path_card_sun)
@@ -139,22 +136,24 @@ class ImageMaker:
             self.add_text(day)
             self.schow_card(self.main_card, "main")
 
-
     def add_text(self, day):
 
         date = day
         weather = self.matrix_weather[day]["погода"]
         temper = self.matrix_weather[day]["температура"].replace('…', '...')[:-1]
         Y = self.height_main_card // 2
-        (x_down_left, y_down_left) = (self.width_main_card//3, Y)
+        (x_down_left, y_down_left) = (self.width_main_card // 3, Y)
         size_text = 1
         color = (111, 111, 190)
         size_letters = 3
 
-        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_COMPLEX, size_text, color, size_letters)
-        cv2.putText(self.main_card, weather, (self.width_main_card//3, Y + 30), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
+        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
                     size_letters)
-        cv2.putText(self.main_card, temper, (self.width_main_card//3, Y + 60), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
+        cv2.putText(self.main_card, weather, (self.width_main_card // 3, Y + 30), cv2.FONT_HERSHEY_COMPLEX, size_text,
+                    color,
+                    size_letters)
+        cv2.putText(self.main_card, temper, (self.width_main_card // 3, Y + 60), cv2.FONT_HERSHEY_COMPLEX, size_text,
+                    color,
                     size_letters)
 
     def create_main_card(self):
@@ -176,7 +175,7 @@ class ImageMaker:
         dy = self.height_main_card - self.height_weather_card
         for x in range(self.width_weather_card):
             for y in range(self.height_weather_card):
-                self.main_card[y, x+dx] = self.weather_card[y, x]
+                self.main_card[y, x + dx] = self.weather_card[y, x]
 
     def color_blue(self):
         COLOR_BLUE = [255, 255, 0]
@@ -185,10 +184,10 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_BLUE
                 else:
-                    self.main_card[y, x] = [255, 255, 255-int(x//dx_const)]
+                    self.main_card[y, x] = [255, 255, 255 - int(x // dx_const)]
 
     def color_yellow(self):
         COLOR_YELLOW = [0, 255, 255]
@@ -197,11 +196,10 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_YELLOW
                 else:
-                    self.main_card[y, x] = [255-int(x//dx_const), 255, 255]
-
+                    self.main_card[y, x] = [255 - int(x // dx_const), 255, 255]
 
     def color_dark_blue(self):
         COLOR_DARK_BLUE = [255, 0, 0]
@@ -210,10 +208,10 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_DARK_BLUE
                 else:
-                    self.main_card[y, x] = [255, 255-int(x//dx_const), 255-int(x//dx_const)]
+                    self.main_card[y, x] = [255, 255 - int(x // dx_const), 255 - int(x // dx_const)]
 
     def color_grey(self):
         COLOR_GRAY = [127, 127, 127]
@@ -221,25 +219,28 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_GRAY
                 else:
-                    self.main_card[y, x] = [255-int(x//dx_const), 255-int(x//dx_const), 255-int(x//dx_const)]
+                    self.main_card[y, x] = [255 - int(x // dx_const), 255 - int(x // dx_const),
+                                            255 - int(x // dx_const)]
 
     def translate_(self, str):
         str = str.lower()
         translator = Translator(from_lang='Russian', to_lang='English')
         str = str.split()
-        otvet =''
+        otvet = ''
         for slovo in str:
-            otvet +=translator.translate(slovo) + ' '
+            otvet += translator.translate(slovo) + ' '
 
         return otvet.capitalize()
+
     def schow_card(self, image, name_of_window):
         cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
         cv2.imshow(name_of_window, image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
 
 class Weather_BD(peewee.Model):
     date = peewee.DateTimeField()
@@ -248,6 +249,8 @@ class Weather_BD(peewee.Model):
 
     class Meta:
         database = peewee.SqliteDatabase("DateBase.db")
+
+
 class DatabaseUpdater:
     def __init__(self, start_range_date, last_range_date=datetime.datetime.now()):
         self.start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
@@ -281,8 +284,6 @@ class DatabaseUpdater:
         self.database.close()
         self.start_date_bd = datetime.datetime.strptime(Weather_BD.get(Weather_BD.id == 1).date, '%d.%m.%Y').date()
 
-
-
     def show_BD(self):
         for weather in Weather_BD.select():
             print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
@@ -297,7 +298,8 @@ class DatabaseUpdater:
             self.last_range_date = datetime.datetime.now().date() + datetime.timedelta(days=9)
         print()
         for weather in Weather_BD.select():
-            if self.start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=self.last_range_date:
+            if self.start_range_date <= datetime.datetime.strptime(weather.date,
+                                                                   '%d.%m.%Y').date() <= self.last_range_date:
                 print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
 
     def run(self):
@@ -318,8 +320,6 @@ class DatabaseUpdater:
 # Облачно - от серого к белому
 
 
-
-
 '''
 parser = argparse.ArgumentParser(description='Ping script')
 
@@ -331,6 +331,7 @@ parser.add_argument('--last_range_date', action="store", dest='last_range_date',
 args = parser.parse_args('--start_range_date 28.09.2020 --last_range_dat 30.09.2020'.split())
 '''
 
+
 class Main:
     def __init__(self):
         pass
@@ -341,7 +342,6 @@ class Main:
             WeatherMaker().run()
         else:
             print("БД уже есть!")
-
 
     def add_new_day(self, day, weather, temperature):
         print("\tДобавим новый день!")
@@ -371,21 +371,20 @@ class Main:
 
     def pictures_in_range_date(self, start_range_date, last_range_date):
         print('\tДелаем картинки')
-        start_range_date=datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
+        start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
         last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
         for weather in Weather_BD.select():
-            if start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=last_range_date:
+            if start_range_date <= datetime.datetime.strptime(weather.date, '%d.%m.%Y').date() <= last_range_date:
                 ImageMaker(day=weather.date).run()
 
     def schow_in_range_date(self, start_range_date, last_range_date):
         DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date).run()
 
 
-
 while True:
     A = Main()
     print()
-    print('='*30)
+    print('=' * 30)
     print("1 - Проверить наличие БД")
     print("2 - Посмотреть всю БД")
     print("3 - Показать в диапазоне дат все данные")
@@ -396,7 +395,7 @@ while True:
     if N not in ('q', '1', '2', '3', '4'):
         print("Такого варианта нет!")
         continue
-    if N=='q':
+    if N == 'q':
         exit()
     elif N == '1':
         A.create_bd()
@@ -408,7 +407,7 @@ while True:
             start = input("Введите с какой даты хотите смотреть = ")
             last = input("До какой = ")
             try:
-                A.schow_in_range_date(start,last)
+                A.schow_in_range_date(start, last)
                 break
             except:
                 print("Данные в другом фармате!")
@@ -418,7 +417,7 @@ while True:
             start = input("Введите с какой даты хотите смотреть = ")
             last = input("До какой = ")
             try:
-                A.pictures_in_range_date(start,last)
+                A.pictures_in_range_date(start, last)
                 break
             except:
                 print("Данные в другом фармате!")
