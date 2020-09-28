@@ -13,6 +13,7 @@
 # Создать модуль-движок с классом WeatherMaker, необходимым для получения и формирования предсказаний.
 # В нём должен быть метод, получающий прогноз с выбранного вами сайта (парсинг + re) за некоторый диапазон дат,
 # а затем, получив данные, сформировать их в словарь {погода: Облачная, температура: 10, дата:datetime...}
+import argparse
 import datetime
 import math
 import os
@@ -35,15 +36,9 @@ class WeatherMaker:
         self.matrix_weather = {}
 
     def run(self):
-        #self._today_forecast()
         self._days10_forecast()
         return self.matrix_weather
-    def _today_forecast(self):
-        date = self.soup_today.find(id='point-time').contents[0]
-        temperature = self.soup_today.find('span', class_='value').contents[0]
-        weather = self.soup_today.find('p', class_='margin-bottom-0').contents[0]
 
-        self.matrix_weather.append({"погода": weather, "температура": temperature, "дата":date})
 
     def _days10_forecast(self):
         dates = self.soup_10days.find_all(class_="text-nowrap grey font-condensed font-smaller")
@@ -81,7 +76,7 @@ class ImageMaker:
 
 
 
-    def __init__(self):
+    def __init__(self, day):
         self.path_card_main = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\probe.jpg")
 
         self.path_card_cloud = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\cloud.jpg")
@@ -99,12 +94,15 @@ class ImageMaker:
         self.height_weather_card = None
         self.size_weather_card = None
 
+
         self.matrix_weather = None
+
+        self.day = day
 
     def run(self):
         self.create_main_card()
         self.matrix_weather = WeatherMaker().run()
-        #self.creating_card_for_specific_day(day='29 сентября')
+        self.creating_card_for_specific_day(self.day)
 
     def creating_card_for_specific_day(self, day):
 
@@ -243,10 +241,68 @@ class ImageMaker:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-A = ImageMaker()
-A.run()
+class Weather_BD(peewee.Model):
+    date = peewee.DateTimeField()
+    weather = peewee.CharField()
+    temperature = peewee.CharField()
+
+    class Meta:
+        database = peewee.SqliteDatabase("DateBase.db")
+class DatabaseUpdater:
+    def __init__(self, start_range_date, last_range_date=datetime.datetime.now()):
+        self.start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
+        self.last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
+
+        self.database = peewee.SqliteDatabase("DateBase.db")
+
+        self.start_date_bd = None
+        self.matrix_weather = WeatherMaker().run()
+
+    def abdate_results_for_the_next_week(self):
+        if not os.path.exists("DateBase.db"):
+            self.database.create_tables([Weather_BD])
+
+            for day, line in self.matrix_weather.items():
+                artist = Weather_BD.create(date=day, weather=line["погода"], temperature=line["температура"])
+                artist.save()
+        else:
+
+            for day, line in self.matrix_weather.items():
+                try:
+                    probe = Weather_BD.get(Weather_BD.date == day)
+                    probe.weather = line['погода']
+                    probe.temperature = line["температура"]
+                    probe.save()
+                    print('Обновил ', day)
+                except:
+                    new_day = Weather_BD.create(date=day, weather=line["погода"], temperature=line["температура"])
+                    new_day.save()
+                    print('Добавил ', new_day)
+        self.database.close()
+        self.start_date_bd = datetime.datetime.strptime(Weather_BD.get(Weather_BD.id == 1).date, '%d.%m.%Y').date()
 
 
+
+    def show_BD(self):
+        for weather in Weather_BD.select():
+            print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
+
+    def date_range(self):
+
+        if self.start_range_date < self.start_date_bd:
+            self.start_range_date = self.start_date_bd
+        if self.start_range_date > self.last_range_date:
+            self.start_range_date, self.last_range_date = self.last_range_date, self.start_range_date
+        if self.last_range_date > datetime.datetime.now().date() + datetime.timedelta(days=9):
+            self.last_range_date = datetime.datetime.now().date() + datetime.timedelta(days=9)
+        print()
+        for weather in Weather_BD.select():
+            if self.start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=self.last_range_date:
+                print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
+
+    def run(self):
+        self.abdate_results_for_the_next_week()
+        self.date_range()
 
 
 # Добавить класс ImageMaker.
@@ -260,79 +316,123 @@ A.run()
 # Дождь - от синего к белому
 # Снег - от голубого к белому+
 # Облачно - от серого к белому
-class Weather(peewee.Model):
-    date = peewee.DateTimeField()
-    weather = peewee.CharField()
-    temperature = peewee.CharField()
 
-    class Meta:
-        database = peewee.SqliteDatabase("DateBase.db")
-class DatabaseUpdater:
-    def __init__(self, start_range_date, last_range_date):
-        self.start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
-        self.last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
 
-        self.database = peewee.SqliteDatabase("DateBase.db")
 
-        self.start_date_bd = None
 
-    def save_new_results_for_the_next_week(self):
+'''
+parser = argparse.ArgumentParser(description='Ping script')
+
+parser.add_argument('--start_range_date', action="store", dest='start_range_date', help='Например 28.09.2020',
+                    default='28.09.2020')
+parser.add_argument('--last_range_date', action="store", dest='last_range_date', help="Например 28.09.2020",
+                    default='30.09.2020')
+
+args = parser.parse_args('--start_range_date 28.09.2020 --last_range_dat 30.09.2020'.split())
+'''
+
+class Main:
+    def __init__(self):
+        pass
+
+    def create_bd(self):
         if not os.path.exists("DateBase.db"):
-            self.database.create_tables([Weather])
-
-            for day, line in A.matrix_weather.items():
-                artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"])
-                artist.save()
+            print("Создали БД! Теперь есть прогнозы на 10 дней")
+            WeatherMaker().run()
         else:
-
-            for day, line in A.matrix_weather.items():
-                try:
-                    probe = Weather.get(Weather.date == day)
-                    probe.weather = line['погода']
-                    probe.temperature = line["температура"]
-                    probe.save()
-                    print('Обновил ', day)
-                except:
-                    new_day = Weather.create(date=day, weather=line["погода"], temperature=line["температура"])
-                    new_day.save()
-                    print('Добавил ', new_day)
-        self.database.close()
-        self.start_date_bd = datetime.datetime.strptime(Weather.get(Weather.id == 1).date , '%d.%m.%Y').date()
+            print("БД уже есть!")
 
 
+    def add_new_day(self, day, weather, temperature):
+        print("\tДобавим новый день!")
+        try:
+            probe = Weather_BD.get(Weather_BD.date == day)
+            probe.weather = weather
+            probe.temperature = temperature
+            probe.save()
+            print('Обновил ', day)
+        except:
+            new_day = Weather_BD.create(date=day, weather=weather, temperature=temperature)
+            new_day.save()
+            print('Добавил ', new_day)
 
-    def show_BD(self):
-        for weather in Weather.select():
-            print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
+    def show_all(self):
+        DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999').run()
 
-    def date_range(self):
+    def show_day(self, day):
+        print('\t Посмотрим на день!')
+        try:
+            probe = Weather_BD.get(Weather_BD.date == day)
+            print(f'{probe.date} \tПогода: {probe.weather} Температура: {probe.temperature}')
 
-        if self.start_range_date < self.start_date_bd:
-            self.start_range_date = self.start_date_bd
-        if self.start_range_date > self.last_range_date:
-            self.start_range_date, self.last_range_date = self.last_range_date, self.start_range_date
-        if self.last_range_date > datetime.datetime.now().date() + datetime.timedelta(days=9):
-            self.last_range_date = datetime.datetime.now().date() + datetime.timedelta(days=9)
+        except:
 
-        for weather in Weather.select():
-            if self.start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=self.last_range_date:
-                print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
+            print('В базе нет такого дня! ', day)
 
-    def run(self):
-        self.save_new_results_for_the_next_week()
-        self.date_range()
+    def pictures_in_range_date(self, start_range_date, last_range_date):
+        print('\tДелаем картинки')
+        start_range_date=datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
+        last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
+        for weather in Weather_BD.select():
+            if start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=last_range_date:
+                ImageMaker(day=weather.date).run()
 
-A =DatabaseUpdater('28.09.2020', '30.09.2020').run()
+    def schow_in_range_date(self, start_range_date, last_range_date):
+        DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date).run()
+
+
+
+while True:
+    A = Main()
+    print()
+    print('='*30)
+    print("1 - Проверить наличие БД")
+    print("2 - Посмотреть всю БД")
+    print("3 - Показать в диапазоне дат все данные")
+    print("4 - Показать картинки с погодой в диапазоне дат")
+    print("q - Выход")
+    print('=' * 30)
+    N = input()
+    if N not in ('q', '1', '2', '3', '4'):
+        print("Такого варианта нет!")
+        continue
+    if N=='q':
+        exit()
+    elif N == '1':
+        A.create_bd()
+    elif N == '2':
+        A.show_all()
+    elif N == '3':
+        while True:
+            print('Пример 20.09.2020')
+            start = input("Введите с какой даты хотите смотреть = ")
+            last = input("До какой = ")
+            try:
+                A.schow_in_range_date(start,last)
+                break
+            except:
+                print("Данные в другом фармате!")
+    elif N == '4':
+        while True:
+            print('Пример 20.09.2020')
+            start = input("Введите с какой даты хотите смотреть = ")
+            last = input("До какой = ")
+            try:
+                A.pictures_in_range_date(start,last)
+                break
+            except:
+                print("Данные в другом фармате!")
+
 # Добавить класс DatabaseUpdater с методами:
 #   Получающим данные из базы данных за указанный диапазон дат.
 #   Сохраняющим прогнозы в базу данных (использовать peewee)
 
 # Сделать программу с консольным интерфейсом, постаравшись все выполняемые действия вынести в отдельные функции.
 # Среди действий, доступных пользователю, должны быть:
-#   Добавление прогнозов за диапазон дат в базу данных
-#   Получение прогнозов за диапазон дат из базы
-#   Создание открыток из полученных прогнозов
-#   Выведение полученных прогнозов на консоль
+#   Добавление прогнозов за диапазон дат в базу данных+
+#   Получение прогнозов за диапазон дат из базы+
+#   Создание открыток из полученных прогнозов+
+#   Выведение полученных прогнозов на консоль+
 # При старте консольная утилита должна загружать прогнозы за прошедшую неделю.
 
 # Рекомендации:
