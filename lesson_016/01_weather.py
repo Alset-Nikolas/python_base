@@ -13,15 +13,15 @@
 # Создать модуль-движок с классом WeatherMaker, необходимым для получения и формирования предсказаний.
 # В нём должен быть метод, получающий прогноз с выбранного вами сайта (парсинг + re) за некоторый диапазон дат,
 # а затем, получив данные, сформировать их в словарь {погода: Облачная, температура: 10, дата:datetime...}
+import datetime
 import math
 import os
-from pprint import pprint
-
 import requests
 from bs4 import BeautifulSoup
-
-# сегодня
 from translate import Translator
+import cv2
+import peewee
+import os.path
 
 class WeatherMaker:
 
@@ -50,16 +50,31 @@ class WeatherMaker:
         temperatures_ = self.soup_10days.find_all('div', class_="font-larger")
         weathers = self.soup_10days.find_all('div', class_="column value show-for-large text-left font-smaller")
 
+
+
+        MONTHS = {"января": '01',
+                  "февраля":'02',
+                  "марта": '03',
+                  "апреля": '04',
+                  "мая": '05',
+                  "июня": '06',
+                  "июля": '07',
+                  "августа": '08',
+                  "сентября": '09',
+                  "октября": '10',
+                  "ноября": '11',
+                  "декабря": '12',
+                  }
+
         for i in range(0, 10):
             date = dates[i].contents[0]
+            date = date.split()
+            date = date[0]+'.'+MONTHS[date[1]]+'.' + str(datetime.datetime.now().year)
+
             temperature = temperatures_[i].contents[0].split()[0]
             weather = weathers[i].contents[0]
 
             self.matrix_weather[date] = {"погода": weather, "температура": temperature}
-
-
-
-import cv2
 class ImageMaker:
     COLOR_WHITE = [255, 255, 255]
     COLOR_BLACK = [0, 0, 0]
@@ -232,44 +247,8 @@ A = ImageMaker()
 A.run()
 
 
-import peewee
-database = peewee.SqliteDatabase("DateBase.db")
 
-class Weather(peewee.Model):
-    date = peewee.CharField()
-    weather = peewee.CharField()
-    temperature = peewee.CharField()
 
-    class Meta:
-        database = database
-
-import os.path
-
-if not os.path.exists("DateBase.db"):
-    database.create_tables([Weather])
-
-    for day, line in A.matrix_weather.items():
-        artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"] )
-        artist.save()
-else:
-    '''
-    for day, line in A.matrix_weather.items():
-        try:
-
-            id_del = Weather.get(Weather.date == day).id
-            day = Weather.get(Weather.name == day)
-            print("удалить", id_del)
-            Weather.delete_by_id(id_del).save()
-
-        except:
-
-            artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"])
-            artist.save()
-    '''
-    for weather in Weather.select():
-        print(weather, type(weather))
-        print(f'{weather.date} Погода: {weather.weather} Температура: {weather.temperature}')
-database.close()
 # Добавить класс ImageMaker.
 # Снабдить его методом рисования открытки
 # (использовать OpenCV, в качестве заготовки брать lesson_016/python_snippets/external_data/probe.jpg):
@@ -281,13 +260,69 @@ database.close()
 # Дождь - от синего к белому
 # Снег - от голубого к белому+
 # Облачно - от серого к белому
+class Weather(peewee.Model):
+    date = peewee.DateTimeField()
+    weather = peewee.CharField()
+    temperature = peewee.CharField()
+
+    class Meta:
+        database = peewee.SqliteDatabase("DateBase.db")
 class DatabaseUpdater:
-    def __init__(self):
-        self.start_range_date = None
-        self.last_range_date = None
+    def __init__(self, start_range_date, last_range_date):
+        self.start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
+        self.last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
+
+        self.database = peewee.SqliteDatabase("DateBase.db")
+
+        self.start_date_bd = None
 
     def save_new_results_for_the_next_week(self):
-        pass
+        if not os.path.exists("DateBase.db"):
+            self.database.create_tables([Weather])
+
+            for day, line in A.matrix_weather.items():
+                artist = Weather.create(date=day, weather=line["погода"], temperature=line["температура"])
+                artist.save()
+        else:
+
+            for day, line in A.matrix_weather.items():
+                try:
+                    probe = Weather.get(Weather.date == day)
+                    probe.weather = line['погода']
+                    probe.temperature = line["температура"]
+                    probe.save()
+                    print('Обновил ', day)
+                except:
+                    new_day = Weather.create(date=day, weather=line["погода"], temperature=line["температура"])
+                    new_day.save()
+                    print('Добавил ', new_day)
+        self.database.close()
+        self.start_date_bd = datetime.datetime.strptime(Weather.get(Weather.id == 1).date , '%d.%m.%Y').date()
+
+
+
+    def show_BD(self):
+        for weather in Weather.select():
+            print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
+
+    def date_range(self):
+
+        if self.start_range_date < self.start_date_bd:
+            self.start_range_date = self.start_date_bd
+        if self.start_range_date > self.last_range_date:
+            self.start_range_date, self.last_range_date = self.last_range_date, self.start_range_date
+        if self.last_range_date > datetime.datetime.now().date() + datetime.timedelta(days=9):
+            self.last_range_date = datetime.datetime.now().date() + datetime.timedelta(days=9)
+
+        for weather in Weather.select():
+            if self.start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=self.last_range_date:
+                print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
+
+    def run(self):
+        self.save_new_results_for_the_next_week()
+        self.date_range()
+
+A =DatabaseUpdater('28.09.2020', '30.09.2020').run()
 # Добавить класс DatabaseUpdater с методами:
 #   Получающим данные из базы данных за указанный диапазон дат.
 #   Сохраняющим прогнозы в базу данных (использовать peewee)
