@@ -24,6 +24,7 @@ import cv2
 import peewee
 import os.path
 
+
 class WeatherMaker:
 
     def __init__(self):
@@ -39,16 +40,13 @@ class WeatherMaker:
         self._days10_forecast()
         return self.matrix_weather
 
-
     def _days10_forecast(self):
         dates = self.soup_10days.find_all(class_="text-nowrap grey font-condensed font-smaller")
         temperatures_ = self.soup_10days.find_all('div', class_="font-larger")
         weathers = self.soup_10days.find_all('div', class_="column value show-for-large text-left font-smaller")
 
-
-
         MONTHS = {"января": '01',
-                  "февраля":'02',
+                  "февраля": '02',
                   "марта": '03',
                   "апреля": '04',
                   "мая": '05',
@@ -64,22 +62,23 @@ class WeatherMaker:
         for i in range(0, 10):
             date = dates[i].contents[0]
             date = date.split()
-            date = date[0]+'.'+MONTHS[date[1]]+'.' + str(datetime.datetime.now().year)
+            date = date[0] + '.' + MONTHS[date[1]] + '.' + str(datetime.datetime.now().year)
 
             temperature = temperatures_[i].contents[0].split()[0]
             weather = weathers[i].contents[0]
 
             self.matrix_weather[date] = {"погода": weather, "температура": temperature}
+
+
 class ImageMaker:
     COLOR_WHITE = [255, 255, 255]
     COLOR_BLACK = [0, 0, 0]
 
-
-
     def __init__(self, day):
         self.path_card_main = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\probe.jpg")
 
-        self.path_card_cloud = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\cloud.jpg")
+        self.path_card_cloud = os.getcwd() + os.path.normpath(
+            "\\python_snippets\\external_data\\weather_img\\cloud.jpg")
         self.path_card_rain = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\rain.jpg")
         self.path_card_snow = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\snow.jpg")
         self.path_card_sun = os.getcwd() + os.path.normpath("\\python_snippets\\external_data\\weather_img\\sun.jpg")
@@ -94,19 +93,22 @@ class ImageMaker:
         self.height_weather_card = None
         self.size_weather_card = None
 
-
         self.matrix_weather = None
 
         self.day = day
 
     def run(self):
+        # TODO Из этого класса не нужно обращаться и использовать другие
+        # TODO Рассчитывайте, что сюда просто придут данные в нужном формате параметром
+        # TODO А уже в каком-нибудь классе Менеджере создать оба эти класса
+        # TODO получить сперва данные из weathermaker-а
+        # TODO затем передать их в imagemaker и сделать открытку
         self.create_main_card()
         self.matrix_weather = WeatherMaker().run()
         self.creating_card_for_specific_day(self.day)
 
     def creating_card_for_specific_day(self, day):
-
-
+        # TODO Отсюда надо убрать дублирование кода
         if self.matrix_weather[day]["погода"] in ['Ясно', 'Солнечно', 'Ясная погода', 'Малооблачно']:
             self.weather_picture(self.path_card_sun)
             self.color_yellow()
@@ -138,7 +140,8 @@ class ImageMaker:
             self.gluing()
             self.add_text(day)
             self.schow_card(self.main_card, "main")
-
+        # TODO Изображение надо сохранять (желательно сперва создать папку, перед этим проверив, нет ли её ещё)
+        # TODO и далее использовать дату, чтобы название файла указать
 
     def add_text(self, day):
 
@@ -146,15 +149,18 @@ class ImageMaker:
         weather = self.matrix_weather[day]["погода"]
         temper = self.matrix_weather[day]["температура"].replace('…', '...')[:-1]
         Y = self.height_main_card // 2
-        (x_down_left, y_down_left) = (self.width_main_card//3, Y)
+        (x_down_left, y_down_left) = (self.width_main_card // 3, Y)
         size_text = 1
         color = (111, 111, 190)
         size_letters = 3
 
-        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_COMPLEX, size_text, color, size_letters)
-        cv2.putText(self.main_card, weather, (self.width_main_card//3, Y + 30), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
+        cv2.putText(self.main_card, date, (x_down_left, y_down_left), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
                     size_letters)
-        cv2.putText(self.main_card, temper, (self.width_main_card//3, Y + 60), cv2.FONT_HERSHEY_COMPLEX, size_text, color,
+        cv2.putText(self.main_card, weather, (self.width_main_card // 3, Y + 30), cv2.FONT_HERSHEY_COMPLEX, size_text,
+                    color,
+                    size_letters)
+        cv2.putText(self.main_card, temper, (self.width_main_card // 3, Y + 60), cv2.FONT_HERSHEY_COMPLEX, size_text,
+                    color,
                     size_letters)
 
     def create_main_card(self):
@@ -173,10 +179,10 @@ class ImageMaker:
 
     def gluing(self):
         dx = self.width_main_card - self.width_weather_card
-        dy = self.height_main_card - self.height_weather_card
+        dy = self.height_main_card - self.height_weather_card  # TODO dy не используется ниже, может его убрать тогда?
         for x in range(self.width_weather_card):
             for y in range(self.height_weather_card):
-                self.main_card[y, x+dx] = self.weather_card[y, x]
+                self.main_card[y, x + dx] = self.weather_card[y, x]
 
     def color_blue(self):
         COLOR_BLUE = [255, 255, 0]
@@ -185,11 +191,14 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_BLUE
                 else:
-                    self.main_card[y, x] = [255, 255, 255-int(x//dx_const)]
+                    self.main_card[y, x] = [255, 255, 255 - int(x // dx_const)]
 
+    # TODO попробуйте создать один метод для рисования всех градиентов
+    # TODO начальный цвет задавайте при помощи параметра
+    # TODO В самом низу приведу пример как можно упростить алгоритм
     def color_yellow(self):
         COLOR_YELLOW = [0, 255, 255]
 
@@ -197,11 +206,10 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_YELLOW
                 else:
-                    self.main_card[y, x] = [255-int(x//dx_const), 255, 255]
-
+                    self.main_card[y, x] = [255 - int(x // dx_const), 255, 255]
 
     def color_dark_blue(self):
         COLOR_DARK_BLUE = [255, 0, 0]
@@ -210,10 +218,10 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_DARK_BLUE
                 else:
-                    self.main_card[y, x] = [255, 255-int(x//dx_const), 255-int(x//dx_const)]
+                    self.main_card[y, x] = [255, 255 - int(x // dx_const), 255 - int(x // dx_const)]
 
     def color_grey(self):
         COLOR_GRAY = [127, 127, 127]
@@ -221,26 +229,30 @@ class ImageMaker:
 
         for y in range(self.height_main_card):
             for x in range(self.width_main_card):
-                if 255-int(x//dx_const) < 0 :
+                if 255 - int(x // dx_const) < 0:
                     self.main_card[y, x] = COLOR_GRAY
                 else:
-                    self.main_card[y, x] = [255-int(x//dx_const), 255-int(x//dx_const), 255-int(x//dx_const)]
+                    self.main_card[y, x] = [255 - int(x // dx_const), 255 - int(x // dx_const),
+                                            255 - int(x // dx_const)]
 
     def translate_(self, str):
         str = str.lower()
         translator = Translator(from_lang='Russian', to_lang='English')
         str = str.split()
-        otvet =''
+        otvet = ''
         for slovo in str:
-            otvet +=translator.translate(slovo) + ' '
+            otvet += translator.translate(slovo) + ' '
 
         return otvet.capitalize()
+
     def schow_card(self, image, name_of_window):
         cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
         cv2.imshow(name_of_window, image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+# TODO описание БД стоит вынести в отдельный модуль
+# TODO (на самом деле лучше вообще каждый класс вынести в свой модуль, а тут только импортировать их и спользовать)
 class Weather_BD(peewee.Model):
     date = peewee.DateTimeField()
     weather = peewee.CharField()
@@ -248,6 +260,8 @@ class Weather_BD(peewee.Model):
 
     class Meta:
         database = peewee.SqliteDatabase("DateBase.db")
+
+
 class DatabaseUpdater:
     def __init__(self, start_range_date, last_range_date=datetime.datetime.now()):
         self.start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
@@ -268,6 +282,26 @@ class DatabaseUpdater:
         else:
 
             for day, line in self.matrix_weather.items():
+                # TODO Обратите внимание на описание этого метода и на то, что он возвращает при использовании
+                # http://docs.peewee-orm.com/en/latest/peewee/api.html#Model.get_or_create
+                # TODO Returns:
+                #  Tuple of Model instance and boolean indicating if a new object was created.
+                # TODO Т.е. возвращается кортеж с ID элемента, который был найден или был создан
+                # TODO И возвращается True/False объект, который говорит о том, был ли объект создан
+                # TODO Если объект не был создан - его хорошо было бы обновить по вернувшемуся ID
+                # TODO Принцип примерно следующий:
+                # for data in data_to_save:
+                # TODO Сперва получаем данные из get_or_create по одному из полей(в данном случае по дате)
+                #     weather, created = Weather.get_or_create(
+                #         date=data['date'],
+                # TODO В defaults указываются остальные данные, которые будут использованы при создании записи
+                #         defaults={'temperature': data['temperature'], 'pressure': data['pressure'],
+                #                   'conditions': data['conditions'], 'wind': data['wind']})
+                #     if not created:
+                # TODO Если запись не создана - обновляем её
+                #         query = Weather.update(temperature=data['temperature'], pressure=data['pressure'],
+                #                                conditions=data['conditions'], wind=data['wind']).where(Weather.id == weather.id)
+                #         query.execute()
                 try:
                     probe = Weather_BD.get(Weather_BD.date == day)
                     probe.weather = line['погода']
@@ -280,8 +314,6 @@ class DatabaseUpdater:
                     print('Добавил ', new_day)
         self.database.close()
         self.start_date_bd = datetime.datetime.strptime(Weather_BD.get(Weather_BD.id == 1).date, '%d.%m.%Y').date()
-
-
 
     def show_BD(self):
         for weather in Weather_BD.select():
@@ -297,7 +329,11 @@ class DatabaseUpdater:
             self.last_range_date = datetime.datetime.now().date() + datetime.timedelta(days=9)
         print()
         for weather in Weather_BD.select():
-            if self.start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=self.last_range_date:
+            # TODO в peewee можно выбрать сразу множество дат
+            # TODO Например .where(Weather.date.between(date_from, date_to))
+            # TODO тогда не нужно будет циклом повторять многократно запрос к базе
+            if self.start_range_date <= datetime.datetime.strptime(weather.date,
+                                                                   '%d.%m.%Y').date() <= self.last_range_date:
                 print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
 
     def run(self):
@@ -318,8 +354,6 @@ class DatabaseUpdater:
 # Облачно - от серого к белому
 
 
-
-
 '''
 parser = argparse.ArgumentParser(description='Ping script')
 
@@ -331,20 +365,22 @@ parser.add_argument('--last_range_date', action="store", dest='last_range_date',
 args = parser.parse_args('--start_range_date 28.09.2020 --last_range_dat 30.09.2020'.split())
 '''
 
+# TODO всё взаимоотношение между классами надо перенести в этот общий метод
 class Main:
     def __init__(self):
         pass
 
-    def create_bd(self):
+    def create_bd(self):  # TODO такая проверка и создание уже есть, дублировать её не нужно
         if not os.path.exists("DateBase.db"):
             print("Создали БД! Теперь есть прогнозы на 10 дней")
             WeatherMaker().run()
         else:
             print("БД уже есть!")
 
-
     def add_new_day(self, day, weather, temperature):
         print("\tДобавим новый день!")
+        # TODO Запись данных надо организовывать в соответственном классе
+        # TODO Тут просто получить данные из одного места и передать их классу который работает с БД
         try:
             probe = Weather_BD.get(Weather_BD.date == day)
             probe.weather = weather
@@ -371,21 +407,25 @@ class Main:
 
     def pictures_in_range_date(self, start_range_date, last_range_date):
         print('\tДелаем картинки')
-        start_range_date=datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
+        start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
         last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
+        # TODO И селект отсюда использовать не нужно
+        # TODO все эти действия должны быть реализованы в классе по работе с БД
+        # TODO и уже там надо сделать селект и вернуть итоговый набор данных
+        # TODO а тут просто передать его ImageMaker-у
         for weather in Weather_BD.select():
-            if start_range_date<=datetime.datetime.strptime(weather.date, '%d.%m.%Y').date()<=last_range_date:
+            if start_range_date <= datetime.datetime.strptime(weather.date, '%d.%m.%Y').date() <= last_range_date:
                 ImageMaker(day=weather.date).run()
 
     def schow_in_range_date(self, start_range_date, last_range_date):
         DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date).run()
 
 
-
+# TODO Весь этот код с циклом и прочим надо добавить в класс, в main например
 while True:
     A = Main()
     print()
-    print('='*30)
+    print('=' * 30)
     print("1 - Проверить наличие БД")
     print("2 - Посмотреть всю БД")
     print("3 - Показать в диапазоне дат все данные")
@@ -396,10 +436,15 @@ while True:
     if N not in ('q', '1', '2', '3', '4'):
         print("Такого варианта нет!")
         continue
-    if N=='q':
+    if N == 'q':
         exit()
+        # TODO При вызове этого метода нужно гарантировать, что все финализаторы всяких объектов отработают.
+        # TODO Это прокатит при их вызове в __del__, но не везде это возможно.
+        # TODO Старайтесь избегать вызова exit, давайте программе штатно завершиться
     elif N == '1':
-        A.create_bd()
+        A.create_bd()  # TODO в идеале все действия собрать в словарь и вызывать их по ключу
+        # TODO чтобы избваиться от множества сравнений подобных
+        # TODO Названия действий тоже можно в этот словарь сложить и оттуда печать вести, вместо строк 427-434
     elif N == '2':
         A.show_all()
     elif N == '3':
@@ -408,7 +453,7 @@ while True:
             start = input("Введите с какой даты хотите смотреть = ")
             last = input("До какой = ")
             try:
-                A.schow_in_range_date(start,last)
+                A.schow_in_range_date(start, last)
                 break
             except:
                 print("Данные в другом фармате!")
@@ -418,7 +463,7 @@ while True:
             start = input("Введите с какой даты хотите смотреть = ")
             last = input("До какой = ")
             try:
-                A.pictures_in_range_date(start,last)
+                A.pictures_in_range_date(start, last)
                 break
             except:
                 print("Данные в другом фармате!")
@@ -443,3 +488,15 @@ while True:
 # Приконнектится по полученному url-пути к базе данных
 # Инициализировать её через DatabaseProxy()
 # https://peewee.readthedocs.io/en/latest/peewee/database.html#dynamically-defining-a-database
+# TODO Чтобы попроще было - приведу парочку примеров (обратите внимание на размерности)
+background_of_postcard = cv2.imread('python_snippets/external_data/photos/0bmFUg4BDepQDQu-.jpg')
+print(background_of_postcard.shape)
+print(background_of_postcard[:1, :1].shape)
+print(background_of_postcard[:, :1].shape)
+print(background_of_postcard[:1, :].shape)
+background_of_postcard[20:30, :] = (0, 0, 0)
+background_of_postcard[:, 10:20] = (0, 0, 0)
+cv2.namedWindow('test', cv2.WINDOW_NORMAL)
+cv2.imshow('test', background_of_postcard)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
