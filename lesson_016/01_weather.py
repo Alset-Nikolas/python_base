@@ -45,120 +45,93 @@ from DatabaseUpdater import DatabaseUpdater
 # Облачно - от серого к белому
 
 
-'''
-parser = argparse.ArgumentParser(description='Ping script')
-
-parser.add_argument('--start_range_date', action="store", dest='start_range_date', help='Например 28.09.2020',
-                    default='28.09.2020')
-parser.add_argument('--last_range_date', action="store", dest='last_range_date', help="Например 28.09.2020",
-                    default='30.09.2020')
-
-args = parser.parse_args('--start_range_date 28.09.2020 --last_range_dat 30.09.2020'.split())
-'''
 
 # TODO всё взаимоотношение между классами надо перенести в этот общий метод
 class Main:
     def __init__(self):
-        pass
-
-    def create_bd(self):  # TODO такая проверка и создание уже есть, дублировать её не нужно
-        if not os.path.exists("DateBase.db"):
-            print("Создали БД! Теперь есть прогнозы на 10 дней")
-            WeatherMaker().run()
-        else:
-            print("БД уже есть!")
+        self.matrix_weather = WeatherMaker().run()
+        self.Weather_BD = Weather_BD
+        self.DatabaseUpdater=DatabaseUpdater
+        self.ImageMaker = ImageMaker
 
     def add_new_day(self, day, weather, temperature):
         print("\tДобавим новый день!")
-        # TODO Запись данных надо организовывать в соответственном классе
-        # TODO Тут просто получить данные из одного места и передать их классу который работает с БД
-        try:
-            probe = Weather_BD.get(Weather_BD.date == day)
-            probe.weather = weather
-            probe.temperature = temperature
-            probe.save()
-            print('Обновил ', day)
-        except:
-            new_day = Weather_BD.create(date=day, weather=weather, temperature=temperature)
-            new_day.save()
-            print('Добавил ', new_day)
+        self.DatabaseUpdater.add_new_day(day=day, weather=weather, temperature=temperature)
 
     def show_all(self):
-        DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999').run()
+        self.DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999').run()
 
     def show_day(self, day):
         print('\t Посмотрим на день!')
         try:
-            probe = Weather_BD.get(Weather_BD.date == day)
+            probe = self.Weather_BD.get(Weather_BD.date == day)
             print(f'{probe.date} \tПогода: {probe.weather} Температура: {probe.temperature}')
-
         except:
-
             print('В базе нет такого дня! ', day)
 
     def pictures_in_range_date(self, start_range_date, last_range_date):
         print('\tДелаем картинки')
-        start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
-        last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
-        # TODO И селект отсюда использовать не нужно
-        # TODO все эти действия должны быть реализованы в классе по работе с БД
-        # TODO и уже там надо сделать селект и вернуть итоговый набор данных
-        # TODO а тут просто передать его ImageMaker-у
-        for weather in Weather_BD.select():
-            if start_range_date <= datetime.datetime.strptime(weather.date, '%d.%m.%Y').date() <= last_range_date:
-                ImageMaker(day=weather.date).run()
+        list_date=DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date, matrix_weather=self.matrix_weather).run()
+        for day in list_date:
+            day = datetime.datetime.strptime(day, '%d.%m.%Y').date()
+            day = str(day.day)+'.'+str(day.month)+'.'+str(day.year)
+            self.ImageMaker(day=day, matrix_weather=self.matrix_weather).run()
 
     def schow_in_range_date(self, start_range_date, last_range_date):
-        DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date).run()
+        DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date, matrix_weather=self.matrix_weather).run()
 
-
-# TODO Весь этот код с циклом и прочим надо добавить в класс, в main например
-while True:
-    A = Main()
-    print()
-    print('=' * 30)
-    print("1 - Проверить наличие БД")
-    print("2 - Посмотреть всю БД")
-    print("3 - Показать в диапазоне дат все данные")
-    print("4 - Показать картинки с погодой в диапазоне дат")
-    print("q - Выход")
-    print('=' * 30)
-    N = input()
-    if N not in ('q', '1', '2', '3', '4'):
-        print("Такого варианта нет!")
-        continue
-    if N == 'q':
-        break
-        # TODO При вызове этого метода нужно гарантировать, что все финализаторы всяких объектов отработают.
-        # TODO Это прокатит при их вызове в __del__, но не везде это возможно.
-        # TODO Старайтесь избегать вызова exit, давайте программе штатно завершиться
-    elif N == '1':
-        A.create_bd()  # TODO в идеале все действия собрать в словарь и вызывать их по ключу
-        # TODO чтобы избваиться от множества сравнений подобных
-        # TODO Названия действий тоже можно в этот словарь сложить и оттуда печать вести, вместо строк 427-434
-    elif N == '2':
-        A.show_all()
-    elif N == '3':
+    def run(self):
         while True:
-            print('Пример 20.09.2020')
-            start = input("Введите с какой даты хотите смотреть = ")
-            last = input("До какой = ")
-            try:
-                A.schow_in_range_date(start, last)
+
+            print()
+            print('=' * 30)
+            print("1 - Посмотреть всю БД")
+            print("2 - Показать в диапазоне дат все данные")
+            print("3 - Показать картинки с погодой в диапазоне дат")
+            print("q - Выход")
+            print('=' * 30)
+            N = input()
+            if N not in ('q', '0', '1', '2'):
+                print("Такого варианта нет!")
+                continue
+            if N == 'q':
                 break
-            except:
-                print("Данные в другом фармате!")
-    elif N == '4':
+
+            go = [self.show_all(), self.go_schow_in_range_date(), self.go_pictures_in_range_date()]
+
+
+            go[N]
+
+
+    def go_schow_in_range_date(self):
         while True:
-            print('Пример 20.09.2020')
+            print('Пример 2.10.2020')
             start = input("Введите с какой даты хотите смотреть = ")
             last = input("До какой = ")
             try:
-                A.pictures_in_range_date(start, last)
+                self.schow_in_range_date(start, last)
                 break
             except:
                 print("Данные в другом фармате!")
 
+    def go_pictures_in_range_date(self):
+
+
+        while True:
+            print('Пример 2.11.2020')
+            start = input("Введите с какой даты хотите смотреть = ")
+            last = input("До какой = ")
+            try:
+                self.pictures_in_range_date(start, last)
+                break
+
+            except:
+                print("Данные в другом фармате!")
+
+
+
+if __name__ == '__main__':
+    Main().run()
 # Добавить класс DatabaseUpdater с методами:
 #   Получающим данные из базы данных за указанный диапазон дат.
 #   Сохраняющим прогнозы в базу данных (использовать peewee)

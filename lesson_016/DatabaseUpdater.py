@@ -9,10 +9,9 @@ from WeatherMaker import WeatherMaker
 
 
 class DatabaseUpdater:
-    def __init__(self, start_range_date, matrix_weather, last_range_date=datetime.datetime.now()):
+    def __init__(self, start_range_date='01.01.0001', matrix_weather={}, last_range_date="01.01.9999"):
         self.start_range_date = datetime.datetime.strptime(start_range_date, '%d.%m.%Y').date()
         self.last_range_date = datetime.datetime.strptime(last_range_date, '%d.%m.%Y').date()
-        print(self.start_range_date)
         self.database = peewee.SqliteDatabase("DateBase.db")
 
         self.start_date_bd = None
@@ -23,13 +22,13 @@ class DatabaseUpdater:
             self.database.create_tables([Weather_BD])
 
             for day, line in self.matrix_weather.items():
-                day = datetime.datetime.strptime(day, '%d.%m.%Y').date()
+                day = datetime.datetime.strptime(day, '%d.%m.%Y')
                 artist = Weather_BD.create(date=day, weather=line["погода"], temperature=line["температура"])
                 artist.save()
         else:
 
             for day, line in self.matrix_weather.items():
-                day = datetime.datetime.strptime(day, '%d.%m.%Y').date()
+
                 weather, created = Weather_BD.get_or_create(
                     date=day,
                     weather=line["погода"],
@@ -49,7 +48,7 @@ class DatabaseUpdater:
             print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
 
     def date_range(self):
-
+        list_date = []
         if self.start_range_date < self.start_date_bd:
             self.start_range_date = self.start_date_bd
         if self.start_range_date > self.last_range_date:
@@ -61,15 +60,27 @@ class DatabaseUpdater:
                  .select()
                  .where(Weather_BD.date.between(self.start_range_date, self.last_range_date)))
         for weather in query:
-            print(f'{weather.date} \tПогода: {weather.weather} Температура: {weather.temperature}')
-
+            list_date.append(str(weather.date.strftime("%d.%m.%Y")))
+            print(f'{weather.date.strftime("%d.%m.%Y")} \tПогода: {weather.weather} Температура: {weather.temperature}')
+        return list_date
 
     def run(self):
         self.abdate_results_for_the_next_week()
-        self.date_range()
+        return self.date_range()
 
+
+    def add_new_day(self, day, weather, temperature):
+        weather, created = Weather_BD.get_or_create(
+            date=day,
+            weather=weather,
+            temperature=temperature)
+
+        if not created:
+            query = Weather_BD.update(date=day,
+                                      weather=weather,
+                                      temperature=temperature).where(Weather_BD.id == weather.id)
+            query.execute()
 
 if __name__ == "__main__":
     matrix_weather = WeatherMaker().run()
-    pprint(matrix_weather)
     A = DatabaseUpdater(start_range_date='29.09.2020', last_range_date='3.10.2020', matrix_weather=matrix_weather).run()
