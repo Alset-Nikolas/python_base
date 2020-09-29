@@ -90,8 +90,9 @@ for image_path in downloaded_files:
             draw_mustache(image, x, y, w, h)
 
 # Шаг 4 - пишем в файл и базу
-
+        print(image_path)
         mustached_image_path = image_path.replace('photos', 'photos_results')
+        print(mustached_image_path)
         cv2.imwrite(mustached_image_path, image)
         Mustached.create(name=mustached_image_path)
 
