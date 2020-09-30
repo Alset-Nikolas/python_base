@@ -104,8 +104,10 @@ class Main:
             if N == 'q':
                 break
 
+            for line in go[N].values():
+                line()
 
-            go[N]()
+
 
             '''
             if N == '1':
