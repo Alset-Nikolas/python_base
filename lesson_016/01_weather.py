@@ -88,9 +88,13 @@ class Main:
 
             print()
             print('=' * 30)
-            print("1 - Посмотреть всю БД")
-            print("2 - Показать в диапазоне дат все данные")
-            print("3 - Показать картинки с погодой в диапазоне дат")
+
+            go = {"1": {"1 - Посмотреть всю БД" : self.show_all},
+                  "2": {"2 - Показать в диапазоне дат все данные": self.go_schow_in_range_date},
+                  "3": {"3 - Показать картинки с погодой в диапазоне дат": self.go_pictures_in_range_date}}
+            for line in go.values():
+                for text in line.keys():
+                    print(text)
             print("q - Выход")
             print('=' * 30)
             N = input("=")
@@ -100,9 +104,7 @@ class Main:
             if N == 'q':
                 break
 
-            go = {"1": self.show_all,
-                  "2": self.go_schow_in_range_date,
-                  "3": self.go_pictures_in_range_date}
+
             go[N]()
 
             '''
