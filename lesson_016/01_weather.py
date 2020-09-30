@@ -46,7 +46,6 @@ from DatabaseUpdater import DatabaseUpdater
 # Облачно - от серого к белому
 
 
-# TODO всё взаимоотношение между классами надо перенести в этот общий метод
 class Main:
     def __init__(self):
         self.matrix_weather = WeatherMaker().run()
@@ -59,7 +58,7 @@ class Main:
         self.DatabaseUpdater.add_new_day(day=day, weather=weather, temperature=temperature)
 
     def show_all(self):
-        self.DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999').run()
+        self.DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999', matrix_weather=self.matrix_weather).run()
 
     def show_day(self, day):
         print('\t Посмотрим на день!')
@@ -77,6 +76,7 @@ class Main:
             day = datetime.datetime.strptime(day, '%d.%m.%Y').date()
             day = str(day.day) + '.' + str(day.month) + '.' + str(day.year)
             self.ImageMaker(day=day, matrix_weather=self.matrix_weather).run()
+        print("Все даты которые были в базе сохранены в картинках!")
 
     def schow_in_range_date(self, start_range_date, last_range_date):
         DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date,
@@ -103,9 +103,12 @@ class Main:
             # TODO надо хранить функции/методы без скобок, тогда они не будут вызываться заранее
             # TODO советую хранить в словаре и там же названия хранить
             # TODO тогда можно будет распечатывать названия из словаре, а не отдельными принтами выше
-            '''
-            go = [self.show_all(), self.go_schow_in_range_date(), self.go_pictures_in_range_date()]
-            go[N]
+
+            go = {"1": self.show_all,
+                  "2":self.go_schow_in_range_date,
+                  "3":self.go_pictures_in_range_date}
+            go[N]()
+
             '''
             if N == '1':
                 self.show_all()
@@ -113,6 +116,8 @@ class Main:
                 self.go_schow_in_range_date()
             elif N == "3":
                 self.go_pictures_in_range_date()
+            '''
+
 
     def go_schow_in_range_date(self):
         while True:
@@ -122,8 +127,8 @@ class Main:
             try:
                 self.schow_in_range_date(start, last)
                 break
-            except:  # TODO except-ы не очень хорошо оставлять пустыми, можно хотя бы Exception добавлять
-                print("Данные в другом фармате!")
+            except Exception as e:
+                print("Данные в другом фармате! ", e)
 
     def go_pictures_in_range_date(self):
 
