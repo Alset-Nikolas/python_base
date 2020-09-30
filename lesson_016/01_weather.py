@@ -19,7 +19,7 @@ import math
 import os
 import requests
 from bs4 import BeautifulSoup
-from translate import Translator
+#from translate import Translator
 import cv2
 import peewee
 import os.path
@@ -31,6 +31,7 @@ from ImageMaker import ImageMaker
 from Weather_BD import Weather_BD
 
 from DatabaseUpdater import DatabaseUpdater
+
 
 # Добавить класс ImageMaker.
 # Снабдить его методом рисования открытки
@@ -45,13 +46,12 @@ from DatabaseUpdater import DatabaseUpdater
 # Облачно - от серого к белому
 
 
-
 # TODO всё взаимоотношение между классами надо перенести в этот общий метод
 class Main:
     def __init__(self):
         self.matrix_weather = WeatherMaker().run()
         self.Weather_BD = Weather_BD
-        self.DatabaseUpdater=DatabaseUpdater
+        self.DatabaseUpdater = DatabaseUpdater
         self.ImageMaker = ImageMaker
 
     def add_new_day(self, day, weather, temperature):
@@ -71,14 +71,16 @@ class Main:
 
     def pictures_in_range_date(self, start_range_date, last_range_date):
         print('\tДелаем картинки')
-        list_date=DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date, matrix_weather=self.matrix_weather).run()
+        list_date = DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date,
+                                    matrix_weather=self.matrix_weather).run()
         for day in list_date:
             day = datetime.datetime.strptime(day, '%d.%m.%Y').date()
-            day = str(day.day)+'.'+str(day.month)+'.'+str(day.year)
+            day = str(day.day) + '.' + str(day.month) + '.' + str(day.year)
             self.ImageMaker(day=day, matrix_weather=self.matrix_weather).run()
 
     def schow_in_range_date(self, start_range_date, last_range_date):
-        DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date, matrix_weather=self.matrix_weather).run()
+        DatabaseUpdater(start_range_date=start_range_date, last_range_date=last_range_date,
+                        matrix_weather=self.matrix_weather).run()
 
     def run(self):
         while True:
@@ -97,6 +99,10 @@ class Main:
             if N == 'q':
                 break
 
+            # TODO в этом примере проблема в "()"
+            # TODO надо хранить функции/методы без скобок, тогда они не будут вызываться заранее
+            # TODO советую хранить в словаре и там же названия хранить
+            # TODO тогда можно будет распечатывать названия из словаре, а не отдельными принтами выше
             '''
             go = [self.show_all(), self.go_schow_in_range_date(), self.go_pictures_in_range_date()]
             go[N]
@@ -108,8 +114,6 @@ class Main:
             elif N == "3":
                 self.go_pictures_in_range_date()
 
-
-
     def go_schow_in_range_date(self):
         while True:
             print('Пример 2.10.2020')
@@ -118,11 +122,10 @@ class Main:
             try:
                 self.schow_in_range_date(start, last)
                 break
-            except:
+            except:  # TODO except-ы не очень хорошо оставлять пустыми, можно хотя бы Exception добавлять
                 print("Данные в другом фармате!")
 
     def go_pictures_in_range_date(self):
-
 
         while True:
             print('Пример 2.11.2020')
@@ -134,7 +137,6 @@ class Main:
 
             except:
                 print("Данные в другом фармате!")
-
 
 
 if __name__ == '__main__':
