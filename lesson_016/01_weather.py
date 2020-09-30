@@ -19,7 +19,7 @@ import math
 import os
 import requests
 from bs4 import BeautifulSoup
-#from translate import Translator
+# from translate import Translator
 import cv2
 import peewee
 import os.path
@@ -58,7 +58,8 @@ class Main:
         self.DatabaseUpdater.add_new_day(day=day, weather=weather, temperature=temperature)
 
     def show_all(self):
-        self.DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999', matrix_weather=self.matrix_weather).run()
+        self.DatabaseUpdater(start_range_date='28.09.0001', last_range_date='28.09.9999',
+                             matrix_weather=self.matrix_weather).run()
 
     def show_day(self, day):
         print('\t Посмотрим на день!')
@@ -99,14 +100,9 @@ class Main:
             if N == 'q':
                 break
 
-            # TODO в этом примере проблема в "()"
-            # TODO надо хранить функции/методы без скобок, тогда они не будут вызываться заранее
-            # TODO советую хранить в словаре и там же названия хранить
-            # TODO тогда можно будет распечатывать названия из словаре, а не отдельными принтами выше
-
             go = {"1": self.show_all,
-                  "2":self.go_schow_in_range_date,
-                  "3":self.go_pictures_in_range_date}
+                  "2": self.go_schow_in_range_date,
+                  "3": self.go_pictures_in_range_date}
             go[N]()
 
             '''
@@ -117,7 +113,6 @@ class Main:
             elif N == "3":
                 self.go_pictures_in_range_date()
             '''
-
 
     def go_schow_in_range_date(self):
         while True:
