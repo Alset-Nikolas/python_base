@@ -90,17 +90,24 @@ class Main:
             print("3 - Показать картинки с погодой в диапазоне дат")
             print("q - Выход")
             print('=' * 30)
-            N = input()
-            if N not in ('q', '0', '1', '2'):
+            N = input("=")
+            if N not in ('q', '3', '1', '2'):
                 print("Такого варианта нет!")
                 continue
             if N == 'q':
                 break
 
+            '''
             go = [self.show_all(), self.go_schow_in_range_date(), self.go_pictures_in_range_date()]
-
-
             go[N]
+            '''
+            if N == '1':
+                self.show_all()
+            elif N == '2':
+                self.go_schow_in_range_date()
+            elif N == "3":
+                self.go_pictures_in_range_date()
+
 
 
     def go_schow_in_range_date(self):
