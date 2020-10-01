@@ -89,7 +89,7 @@ class Main:
             print()
             print('=' * 30)
 
-            go = {"1": {"1 - Посмотреть всю БД" : self.show_all},
+            go = {"1": {"1 - Посмотреть всю БД": self.show_all},
                   "2": {"2 - Показать в диапазоне дат все данные": self.go_schow_in_range_date},
                   "3": {"3 - Показать картинки с погодой в диапазоне дат": self.go_pictures_in_range_date}}
             for line in go.values():
@@ -106,8 +106,6 @@ class Main:
 
             for line in go[N].values():
                 line()
-
-
 
             '''
             if N == '1':
@@ -165,3 +163,4 @@ if __name__ == '__main__':
 # Приконнектится по полученному url-пути к базе данных
 # Инициализировать её через DatabaseProxy()
 # https://peewee.readthedocs.io/en/latest/peewee/database.html#dynamically-defining-a-database
+#зачёт!
