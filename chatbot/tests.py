@@ -64,9 +64,7 @@ class Test1(TestCase):
         events = []
         for input_text in self.INPUTS:
             event = deepcopy(self.RAW_EVENT)
-            # TODO обратите внимание, что в основном модуле, вы пишите text = event.obj['message']["text"]
-            # TODO а значит и тут сообщение должно находиться по этому "адресу"
-            event["object"]["text"] = input_text
+            event["object"]['message']["text"] = input_text
             events.append(VkBotMessageEvent(event))
 
         long_poller_mock = Mock()
