@@ -27,7 +27,7 @@ class Test1(TestCase):
         long_poller_listen_mock.listen = long_poller_mock
         with patch("bot.vk_api.VkApi"):
 
-            with patch("bot.vk_api.VkApi", return_value=long_poller_listen_mock):
+            with patch("bot.VkBotLongPoll", return_value=long_poller_listen_mock):
                 bot = Bot("", "")
                 bot.on_event = Mock()
                 bot.run()
