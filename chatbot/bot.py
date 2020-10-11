@@ -8,6 +8,7 @@ import handlers
 log = logging.getLogger('bot')
 
 
+
 def configure_logging():
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
