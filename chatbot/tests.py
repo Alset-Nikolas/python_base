@@ -55,7 +55,7 @@ class Test1(TestCase):
         settings.SCENARIOS["registration"]["steps"]["step3"]["text"].format(name='Вениамин', email='email@email.ru'),
     ]
 
-    def tust_run_ok(self):
+    def test_run_ok(self):
         send_mock = Mock()
         api_mock = Mock()
         api_mock.messages.send = send_mock
@@ -64,6 +64,8 @@ class Test1(TestCase):
         events = []
         for input_text in self.INPUTS:
             event = deepcopy(self.RAW_EVENT)
+            # TODO обратите внимание, что в основном модуле, вы пишите text = event.obj['message']["text"]
+            # TODO а значит и тут сообщение должно находиться по этому "адресу"
             event["object"]["text"] = input_text
             events.append(VkBotMessageEvent(event))
 
