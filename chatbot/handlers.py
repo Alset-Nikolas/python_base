@@ -19,7 +19,7 @@ def handler_email(text, context):
     matches = re.findall(re_email, text)
     print(len(matches)>0)
     if len(matches)>0:
-        context["email"] = text
+        context["email"]    = text
         return True
     else:
         return False

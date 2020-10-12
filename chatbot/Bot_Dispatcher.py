@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
+import datetime
 from random import randint
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
-import handlers
+import handlers_dispatcher
 
-log = logging.getLogger('bot')
-
+log = logging.getLogger('bot_dispatcher')
 
 
 def configure_logging():
@@ -24,11 +23,10 @@ def configure_logging():
 
 
 try:
-    import settings
+    import settings_dispatcher
 except ImportError as er:
     print(er)
-    exit("DO cp settings.py.default settings.py and set token!")
-
+    exit("DO cp settings_dispatcher.py.default settings_dispatcher.py and set token!")
 
 class UserState:
     """ Состояние пользователя внутри сценария"""
@@ -36,7 +34,8 @@ class UserState:
     def __init__(self, scenario_name, step_name, context=None):
         self.scenario_name = scenario_name
         self.step_name = step_name
-        self.context = context or {"name": None, "email": None}
+        self.context = context or {"departure_city": None, "arrival_city": None,
+                                   "date": None, "flight": None, "comment": None}
 
 
 class Bot:
@@ -65,6 +64,16 @@ class Bot:
 
     def run(self):
         '''Запуск бота.'''
+        vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
+        vk = vk_session.get_api()
+        chat_id = vk.messages.searchConversations()["items"][0]["peer"]["local_id"]
+        start_text = "Вас приветствует Диспетчер! Введите город отправления:"
+        self.api.messages.send(
+            message=start_text,
+            random_id=randint(0, 2 ** 20),
+            peer_id=chat_id
+        )
+
         for event in self.long_poller.listen():
             log.debug("полученло событие")
             try:
@@ -88,7 +97,7 @@ class Bot:
         else:
             # serch intent
 
-            for intent in settings.INTENTS:
+            for intent in settings_dispatcher.INTENTS:
                 log.debug(f"User gets {intent}")
                 if any(token in text.lower() for token in intent["tokens"]):
                     # run intent
@@ -98,33 +107,43 @@ class Bot:
                         text_to_send = self.start_scenario(user_id, intent["scenario"])
                     break
             else:
-                text_to_send = settings.DEFAULT_ANSWER
+                text_to_send = self.start_scenario(user_id, text)
+
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
             peer_id=event.object['message']['peer_id']
         )
 
-    def start_scenario(self, user_id, scanerio_name):
-        scanerio = settings.SCENARIOS[scanerio_name]
+
+    def start_scenario(self, user_id, text):
+        scanerio_name = "registration"
+        scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
         step = scanerio["steps"][first_step]
         text_to_send = step["text"]
         self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
-        return text_to_send
+        self.user_states[user_id].context["departure_city"]=text
+        self.user_states[user_id].step_name = step["next_step"]
+        return text_to_send.format(**self.user_states[user_id].context)
 
     def continue_scenario(self, user_id, text):
+        print("=========================")
         state = self.user_states[user_id]
-        steps = settings.SCENARIOS[state.scenario_name]["steps"]
-        step = steps[state.step_name]
+        print(state.context)
 
-        handler = getattr(handlers, step["handler"])
+        steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
+        step = steps[state.step_name]
+        print(state.step_name)
+
+        handler = getattr(handlers_dispatcher, step["handler"])
+
+
         if handler(text=text, context=state.context):
             # next step
-            next_step = steps[step["next_step"]]
-            text_to_send = next_step["text"].format(**state.context)
 
-            if next_step["next_step"]:
+            text_to_send = step["text"]
+            if step["next_step"]:
                 # switch to next step
                 state.step_name = step["next_step"]
             else:
@@ -133,11 +152,34 @@ class Bot:
                 log.info("Заргеистрирован {name} , {email}".format(**state.context))
         else:
             # retry current step
-            text_to_send = step["failure_text"].format(**state.context)
-        return text_to_send
+            text_to_send = step["failure_text"]
+        print(state.context)
+        otvet = []
+        text = ''
+
+        if state.step_name =="step4":
+            date = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
+            for line in settings_dispatcher.DATE:
+                date_in_line = line["date"]
+                if date_in_line >= date and line["departure_city"]==state.context["departure_city"] and line["arrival_city"]==state.context["arrival_city"]:
+                    otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
+
+            if len(otvet) == 0:
+                text ='Нет таких рейсов!\n\n'
+                step["next_step"] = None
+                self.user_states.pop(user_id)
+                text += 'Вас приветствует Диспетчер! Введите город отправления:'
+            else:
+                text = 'Варианты:\n'
+                for line in otvet:
+                    text += f'{line[0]} в {line[1]} номер рейса {line[2]} свободных мест {line[3]}\n'
+                text_to_send += text
+                text_to_send +="Укажите номер рейса!\n"
+
+        return text_to_send.format(**state.context)
 
 
 if __name__ == '__main__':
     configure_logging()
-    bot = Bot(token=settings.TOKEN, group_id=settings.GROUP_ID)
+    bot = Bot(token=settings_dispatcher.TOKEN, group_id=settings_dispatcher.GROUP_ID)
     bot.run()
