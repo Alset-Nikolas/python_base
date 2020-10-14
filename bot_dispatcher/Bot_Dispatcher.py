@@ -3,7 +3,7 @@ from random import randint
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
-import handlers_dispatcher
+from bot_dispatcher import handlers_dispatcher, settings_dispatcher
 
 log = logging.getLogger('bot_dispatcher')
 
@@ -14,7 +14,7 @@ def configure_logging():
     stream_handler.setLevel(logging.INFO)
     log.addHandler(stream_handler)
 
-    file_handler = logging.FileHandler("bot.log", encoding='UTF-8', mode='w')
+    file_handler = logging.FileHandler("../chatbot/bot.log", encoding='UTF-8', mode='w')
     file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
     file_handler.setLevel(logging.DEBUG)
     log.addHandler(file_handler)
@@ -23,7 +23,7 @@ def configure_logging():
 
 
 try:
-    import settings_dispatcher
+    pass
 except ImportError as er:
     print(er)
     exit("DO cp settings_dispatcher.py.default settings_dispatcher.py and set token!")

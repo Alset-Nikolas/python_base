@@ -10,7 +10,7 @@ re_date = re.compile(r"\d{1,2}-\d{1,2}-\d{4}")
 re_flight = re.compile(r"\d{4}")
 re_telephone = re.compile(r"\d{11}")
 
-from settings_dispatcher import CITY
+from bot_dispatcher.settings_dispatcher import CITY
 
 
 def city_check(city):
@@ -102,7 +102,7 @@ def handler_true(text, context):
     return True
 
 
-from settings_dispatcher import ALL_FLY_NUMBERS
+from bot_dispatcher.settings_dispatcher import ALL_FLY_NUMBERS
 
 
 def handler_flight_selection(text, context):
