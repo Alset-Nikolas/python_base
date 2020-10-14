@@ -8,8 +8,9 @@ TOKEN = 'a8fb6d94efec9852f7287f73067ecb502eb57a55675b0cb6a53295e1f8a0892e9739126
 CITY = {"Гонконг", "Бангкок", "Макао",
         "Сингапур", "Сингапур", "Париж",
         "Дубай", "Дели", "Стамбул",
-        "Куала-Лумпур", "Москва", "Питер"}
+        "Куала-Лумпур", "Москва", "Санкт-Петербург"}
 
+ALL_FLY_NUMBERS = set()
 
 DATE = []
 date_now = datetime.datetime.now().date()
@@ -28,16 +29,23 @@ while date != date_now + datetime.timedelta(weeks=1):
 
 
         fly_time = str(departure_time) + ".00"
-
+        while True:
+            flight_number=random.randint(1000,9999)
+            if flight_number not in ALL_FLY_NUMBERS:
+                ALL_FLY_NUMBERS.add(flight_number)
+                break
         DATE.append({"departure_city" :departure_city, "arrival_city": arrival_city,
-                     "date": date, "fly_time": fly_time, "flight number": random.randint(1000,9999),
+                     "date": date, "fly_time": fly_time, "flight number": flight_number,
                      "free places":random.randint(1, 5)})
+
 
     date += datetime.timedelta(days=1)
 #pprint(DATE)
 
 
 TEXT_HELP = '''
+==================================
+Весь сценарий:
 1.Ввод города отправления.
 2.Ввод города назначения.
 3.Ввод даты: спрашиваем у пользователя дату вылета в формате 01-05-2019.
@@ -47,18 +55,10 @@ TEXT_HELP = '''
 7.Запрашиваем номер телефона.
 
 Если во время сценария вводится команда (/ticket или /help), то сценарий останавливается и выполняется команда 
-
+==================================
 '''
 
 INTENTS = [
-
-    {
-        "name": 'Справка о том, как работает робот.',
-        "tokens": r"/help",
-        "scenario": None,
-        "answer": TEXT_HELP
-
-    },
     {
         "name": 'начинает сценарий заказа билетов',
         "tokens": r"/ticket",
@@ -66,6 +66,14 @@ INTENTS = [
         "answer": None
 
     },
+    {
+        "name": 'Справка о том, как работает робот.',
+        "tokens": r"/help",
+        "scenario": None,
+        "answer": TEXT_HELP
+
+    },
+
 ]
 
 
@@ -75,55 +83,53 @@ SCENARIOS = {
         "steps":{
             "step1": {
                 "text": "Город отправления принят '{departure_city}'. Введите город назначения.",
-                "failure_text": "Город отправления должен состоять из 3-10 букв. Попробуйте еще раз",
+                "failure_text": "У нас нет такого города в базе, попробуйте другие:\n {var}\n Введите город отправления:",
                 "handler": "handler_departure_city",
                 "next_step": "step2"
             },
             "step2": {
                 "text": " Город назначения принят '{arrival_city}'. Введите дату отправления.",
-                "failure_text": "Город назначения должен состоять из 3-10 букв. Попробуйте еще раз",
+                "failure_text": "У нас нет такого города в базе, попробуйте другие:\n {var}\n Введите город назначения:",
                 "handler": "handler_arrival_city",
                 "next_step": "step3"
             },
             "step3": {
-                "text": " Будем искать билеты на '{date}'.\n",
-                "failure_text": "Дата ерор",
+                "text": "Будем искать билеты на '{date}'.\n",
+                "failure_text": "Пример: 14-10-2020",
                 "handler": "handler_date",
                 "next_step": "step4"
             },
             "step4": {
-                "text": " Выбор рейса {flight}.\n Предлагаем написать комментарий в произвольной форме.",
-                "failure_text": "Во введенном адресе ошибка. Попробуйте еще раз",
+                "text": "Выбор рейса {flight}.\n Предлагаем написать комментарий в произвольной форме.",
+                "failure_text": "Такого рейса нет в базе!",
                 "handler": "handler_flight_selection",
                 "next_step": "step5"
             },
 
             "step5": {
-                "text": " Предлагаем написать комментарий в произвольной форме.",
-                "failure_text": "Eror comment",
+                "text": "Спасибо за комментарий! {comment}.\n Уточняем введенные данные.\n {departure_city} --> {arrival_city} {date} рейс {flight} {comment}!\n да или нет?",
+                "failure_text": "Такого рейса нет в базе!",
                 "handler": "handler_comment",
                 "next_step": "step6"
             },
 
             "step6": {
-                "text": "  Уточняем введенные данные. {departure_city} --> {arrival_city} {date} рейс {flight} {comment}",
-                "failure_text": "Во введенном адресе ошибка. Попробуйте еще раз",
-                "handler": "handler_true",
+                "text": "Супер! Введите номер телефона",
+                "failure_text": "да или нет",
+                "handler": "handler_right",
                 "next_step": "step7"
             },
 
             "step7": {
-                "text": "Запрашиваем номер телефона.",
+                "text": ''' Мы будем звонить на {telephone}.\n 
+                            Спасибо за регистрацию!\n
+                            Если хотите заказать еще один билет Введите город отправления:\n
+                        ''',
                 "failure_text": "Во введенном адресе ошибка. Попробуйте еще раз",
-                "handler": "handler_date",
-                "next_step": "step8"
-            },
-            "step8": {
-                "text": "Спасибо за регистрацию, {name}! Мы отправим на {email} билет, распечатайте его.",
-                "failure_text": None,
-                "handler": None,
+                "handler": "handler_telephone",
                 "next_step": None
             },
+
         }
     }
 

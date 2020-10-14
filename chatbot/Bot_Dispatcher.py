@@ -35,8 +35,16 @@ class UserState:
         self.scenario_name = scenario_name
         self.step_name = step_name
         self.context = context or {"departure_city": None, "arrival_city": None,
-                                   "date": None, "flight": None, "comment": None}
-
+                                   "date": None, "flight": None, "comment": None,
+                                   "right": None, "telephone": None, "var":""}
+START_TEXT = """
+=============================
+Вас приветствует Диспетчер!\n
+Укажите город из которого вы хотите улететь!\n
+Или воспольззуйтесь командой /help, чтобы просмотреть весь сценарий\n
+Если вы ошиблись введите /ticket и регистрация начнется сначла\n
+=============================
+"""
 
 class Bot:
     '''
@@ -63,11 +71,12 @@ class Bot:
         self.user_states = dict()  # user_id --> UserState
 
     def run(self):
+        print("=====run=====")
         '''Запуск бота.'''
         vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
         vk = vk_session.get_api()
         chat_id = vk.messages.searchConversations()["items"][0]["peer"]["local_id"]
-        start_text = "Вас приветствует Диспетчер! Введите город отправления:"
+        start_text = START_TEXT
         self.api.messages.send(
             message=start_text,
             random_id=randint(0, 2 ** 20),
@@ -82,33 +91,42 @@ class Bot:
                 log.exception('Ошибка в обработке события:')
 
     def on_event(self, event):
+        print("==========on_event===============")
         '''Отправляет сообщение назад, если это текст.
         :param event: VkBotMessageEvent
         '''
+
+        text_to_send = ''
         if event.type != VkBotEventType.MESSAGE_NEW:
             log.info('не умею обрабатывать %s', event.type)
             return
         user_id = event.object['message']['peer_id']
         text = event.obj['message']["text"]
-        if user_id in self.user_states:
-            # continue scenario
-            text_to_send = self.continue_scenario(user_id, text=text)
 
-        else:
-            # serch intent
-
-            for intent in settings_dispatcher.INTENTS:
-                log.debug(f"User gets {intent}")
-                if any(token in text.lower() for token in intent["tokens"]):
-                    # run intent
+        for intent in settings_dispatcher.INTENTS:
+            log.debug(f"User gets {intent}")
+            if any(token in text.lower() for token in intent["tokens"]):
+                print("tokens", intent["tokens"], intent["tokens"] in text.lower(), text.lower())
+                # run intent
+                if intent["tokens"] in text.lower() or text.lower()[1:] in intent["tokens"][1:]:
                     if intent["answer"]:
+                        print("intent['answer']")
                         text_to_send = intent["answer"]
+                        break
                     else:
-                        text_to_send = self.start_scenario(user_id, intent["scenario"])
-                    break
+                        self.start_scenario(user_id)
+                        text_to_send = '==Start==\nВас приветствует Диспетчер! Введите город отправления:\n'
+                        break
             else:
-                text_to_send = self.start_scenario(user_id, text)
 
+                if user_id not in self.user_states:
+                    self.start_scenario(user_id)
+                    print("user_id not in")
+
+                text_to_send = self.continue_scenario(user_id, text)
+                break
+
+        print("Отправляем в вк", text_to_send)
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -116,66 +134,71 @@ class Bot:
         )
 
 
-    def start_scenario(self, user_id, text):
+    def start_scenario(self, user_id):
+        print("==========start_scenario===============")
         scanerio_name = "registration"
         scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
-        step = scanerio["steps"][first_step]
-        text_to_send = step["text"]
         self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
-        self.user_states[user_id].context["departure_city"]=text
-        self.user_states[user_id].step_name = step["next_step"]
-        return text_to_send.format(**self.user_states[user_id].context)
+
 
     def continue_scenario(self, user_id, text):
-        print("=========================")
+        print("==========continue_scenario===============")
         state = self.user_states[user_id]
         print(state.context)
 
         steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
-        print(state.step_name)
+
 
         handler = getattr(handlers_dispatcher, step["handler"])
-
+        print("handler = ", handler(text=text, context=state.context))
 
         if handler(text=text, context=state.context):
             # next step
-
             text_to_send = step["text"]
+
+            if state.step_name == "step3":
+                otvet = []
+                date = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
+                for line in settings_dispatcher.DATE:
+                    date_in_line = line["date"]
+                    if date_in_line >= date and line["departure_city"] == state.context["departure_city"] and line[
+                        "arrival_city"] == state.context["arrival_city"]:
+                        otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
+
+                if len(otvet) == 0:
+                    text = 'Нет таких рейсов!\n\n'
+                    self.user_states.pop(user_id)
+                    text += START_TEXT
+                    text_to_send=text
+                else:
+                    text = 'Варианты:\n'
+                    for line in otvet:
+                        text += f'{line[0]} в {line[1]} номер рейса {line[2]} свободных мест {line[3]}\n'
+                    text_to_send += text
+                    text_to_send += "Укажите номер рейса!\n"
+
+            if state.step_name == "step6":
+                if not state.context["right"]:
+                    step["next_step"] = None
+                    self.user_states.pop(user_id)
+                    text += 'Вас приветствует Диспетчер! Введите город отправления:'
+                    text_to_send += text
+
+
             if step["next_step"]:
                 # switch to next step
                 state.step_name = step["next_step"]
-            else:
-                # finish scenario
-                self.user_states.pop(user_id)
-                log.info("Заргеистрирован {name} , {email}".format(**state.context))
+
+
         else:
             # retry current step
             text_to_send = step["failure_text"]
-        print(state.context)
-        otvet = []
-        text = ''
 
-        if state.step_name =="step4":
-            date = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
-            for line in settings_dispatcher.DATE:
-                date_in_line = line["date"]
-                if date_in_line >= date and line["departure_city"]==state.context["departure_city"] and line["arrival_city"]==state.context["arrival_city"]:
-                    otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
 
-            if len(otvet) == 0:
-                text ='Нет таких рейсов!\n\n'
-                step["next_step"] = None
-                self.user_states.pop(user_id)
-                text += 'Вас приветствует Диспетчер! Введите город отправления:'
-            else:
-                text = 'Варианты:\n'
-                for line in otvet:
-                    text += f'{line[0]} в {line[1]} номер рейса {line[2]} свободных мест {line[3]}\n'
-                text_to_send += text
-                text_to_send +="Укажите номер рейса!\n"
 
+        print(state.step_name, '--->' ,text_to_send)
         return text_to_send.format(**state.context)
 
 
