@@ -28,6 +28,7 @@ except ImportError as er:
     print(er)
     exit("DO cp settings_dispatcher.py.default settings_dispatcher.py and set token!")
 
+
 class UserState:
     """ Состояние пользователя внутри сценария"""
 
@@ -36,26 +37,27 @@ class UserState:
         self.step_name = step_name
         self.context = context or {"departure_city": None, "arrival_city": None,
                                    "date": None, "flight": None, "comment": None,
-                                   "right": None, "telephone": None, "var":""}
+                                   "right": None, "telephone": None, "var": ""}
+
+
 START_TEXT = """
 =============================
 Вас приветствует Диспетчер!\n
 Укажите город из которого вы хотите улететь!\n
 Или воспольззуйтесь командой /help, чтобы просмотреть весь сценарий\n
-Если вы ошиблись введите /ticket и регистрация начнется сначла\n
+Если вы ошиблись введите /ticket и регистрация начнется сначала\n
 =============================
 """
 
+
 class Bot:
     '''
-    Echo bot vk.com.
+    bot Диспетчер  vk.com.
     Use python 3.7
 
-    Поддерживаем ответы на вопросы про дату, место проведения и сценарий регистрации:
-    - спрашиваем имя
-    - спрашиваем email
-    - говорим об успешной регистрации
-    Если шаг не пройден, задаеи уточняюший вопрос пока шаг не будудет пройден.
+    Поддерживаем ответы на вопросы:
+    - /help
+    - /ticket
     '''
 
     def __init__(self, token, group_id):
@@ -92,9 +94,7 @@ class Bot:
 
     def on_event(self, event):
         print("==========on_event===============")
-        '''Отправляет сообщение назад, если это текст.
-        :param event: VkBotMessageEvent
-        '''
+
 
         text_to_send = ''
         if event.type != VkBotEventType.MESSAGE_NEW:
@@ -133,14 +133,12 @@ class Bot:
             peer_id=event.object['message']['peer_id']
         )
 
-
     def start_scenario(self, user_id):
         print("==========start_scenario===============")
         scanerio_name = "registration"
         scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
         self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
-
 
     def continue_scenario(self, user_id, text):
         print("==========continue_scenario===============")
@@ -149,7 +147,6 @@ class Bot:
 
         steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
-
 
         handler = getattr(handlers_dispatcher, step["handler"])
         print("handler = ", handler(text=text, context=state.context))
@@ -171,7 +168,7 @@ class Bot:
                     text = 'Нет таких рейсов!\n\n'
                     self.user_states.pop(user_id)
                     text += START_TEXT
-                    text_to_send=text
+                    text_to_send = text
                 else:
                     text = 'Варианты:\n'
                     for line in otvet:
@@ -186,7 +183,6 @@ class Bot:
                     text += 'Вас приветствует Диспетчер! Введите город отправления:'
                     text_to_send += text
 
-
             if step["next_step"]:
                 # switch to next step
                 state.step_name = step["next_step"]
@@ -196,9 +192,7 @@ class Bot:
             # retry current step
             text_to_send = step["failure_text"]
 
-
-
-        print(state.step_name, '--->' ,text_to_send)
+        print(state.step_name, '--->', text_to_send)
         return text_to_send.format(**state.context)
 
 
