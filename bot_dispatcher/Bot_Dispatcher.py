@@ -73,7 +73,7 @@ class Bot:
         self.user_states = dict()  # user_id --> UserState
 
     def run(self):
-        print("=====run=====")
+        #print("=====run=====")
         '''Запуск бота.'''
         vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
         vk = vk_session.get_api()
@@ -93,7 +93,7 @@ class Bot:
                 log.exception('Ошибка в обработке события:')
 
     def on_event(self, event):
-        print("==========on_event===============")
+        #print("==========on_event===============")
 
 
         text_to_send = ''
@@ -106,11 +106,11 @@ class Bot:
         for intent in settings_dispatcher.INTENTS:
             log.debug(f"User gets {intent}")
             if any(token in text.lower() for token in intent["tokens"]):
-                print("tokens", intent["tokens"], intent["tokens"] in text.lower(), text.lower())
+                #print("tokens", intent["tokens"], intent["tokens"] in text.lower(), text.lower())
                 # run intent
                 if intent["tokens"] in text.lower() or text.lower()[1:] in intent["tokens"][1:]:
                     if intent["answer"]:
-                        print("intent['answer']")
+                        #print("intent['answer']")
                         text_to_send = intent["answer"]
                         break
                     else:
@@ -121,12 +121,12 @@ class Bot:
 
                 if user_id not in self.user_states:
                     self.start_scenario(user_id)
-                    print("user_id not in")
+                    #print("user_id not in")
 
                 text_to_send = self.continue_scenario(user_id, text)
                 break
 
-        print("Отправляем в вк", text_to_send)
+        #print("Отправляем в вк", text_to_send)
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -134,22 +134,22 @@ class Bot:
         )
 
     def start_scenario(self, user_id):
-        print("==========start_scenario===============")
+        #print("==========start_scenario===============")
         scanerio_name = "registration"
         scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
         self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
 
     def continue_scenario(self, user_id, text):
-        print("==========continue_scenario===============")
+        #print("==========continue_scenario===============")
         state = self.user_states[user_id]
-        print(state.context)
+        #print(state.context)
 
         steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
 
         handler = getattr(handlers_dispatcher, step["handler"])
-        print("handler = ", handler(text=text, context=state.context))
+        #print("handler = ", handler(text=text, context=state.context))
 
         if handler(text=text, context=state.context):
             # next step
@@ -192,7 +192,7 @@ class Bot:
             # retry current step
             text_to_send = step["failure_text"]
 
-        print(state.step_name, '--->', text_to_send)
+        #print(state.step_name, '--->', text_to_send)
         return text_to_send.format(**state.context)
 
 

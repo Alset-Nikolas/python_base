@@ -84,7 +84,7 @@ SCENARIOS = {
                 "next_step": "step2"
             },
             "step2": {
-                "text": " Город назначения принят '{arrival_city}'. Введите дату отправления.",
+                "text": "Город назначения принят '{arrival_city}'. Введите дату отправления.",
                 "failure_text": "У нас нет такого города в базе, попробуйте другие:\n {var}\n Введите город назначения:",
                 "handler": "handler_arrival_city",
                 "next_step": "step3"
