@@ -2,6 +2,7 @@
 Handler - функция, которая принимает на вход text (такст входящего сообщения) и context (dict), а возвращает bool:
 True если шаг пройден, False если данные введены неправильно.
 """
+import datetime
 import re
 
 re_departure_city = re.compile(r'^[\w\-\s]{1,40}$')
@@ -24,11 +25,12 @@ def city_check(city):
         correct_city_lower = correct_city.lower()
         letter_match = 0
         if correct_city_lower[:-1] == city_lower[:-1]:
+            print(1)
             return correct_city
 
         if correct_city_lower in city_lower or city_lower in correct_city_lower:
             if len(city_lower) > 3:
-                print(2)
+
                 return correct_city
             else:
                 variant.append(correct_city)
@@ -38,7 +40,7 @@ def city_check(city):
         for i in range(min_len - 1):
             if city_lower[i] in correct_city_lower[i]:
                 letter_match += 1
-        if letter_match >= len(correct_city_lower)-wrong_characters:
+        if letter_match >= len(correct_city_lower)-wrong_characters and (len(correct_city_lower) >=len(city_lower)-wrong_characters or len(correct_city_lower) >=len(city_lower)-wrong_characters):
             variant.append(correct_city)
 
     variant = set(variant)
@@ -91,7 +93,8 @@ def handler_arrival_city(text, context):
 
 def handler_date(text, context):
     match = re.match(re_date, text)
-    if match:
+    date = datetime.datetime.strptime(text, '%d-%m-%Y').date()
+    if match and date>=datetime.datetime.now().date():
         context["date"] = text
         return True
     else:

@@ -4,8 +4,8 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
 from bot_dispatcher import handlers_dispatcher, settings_dispatcher
-
 log = logging.getLogger('bot_dispatcher')
+
 
 
 def configure_logging():
@@ -73,17 +73,19 @@ class Bot:
         self.user_states = dict()  # user_id --> UserState
 
     def run(self):
-        #print("=====run=====")
+        print("=====run=====")
         '''Запуск бота.'''
-        vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
-        vk = vk_session.get_api()
-        chat_id = vk.messages.searchConversations()["items"][0]["peer"]["local_id"]
-        start_text = START_TEXT
-        self.api.messages.send(
-            message=start_text,
-            random_id=randint(0, 2 ** 20),
-            peer_id=chat_id
-        )
+        if __name__ == "__main__":
+            vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
+            vk = vk_session.get_api()
+            chat_id = vk.messages.searchConversations()["items"][0]["peer"]["local_id"]
+            start_text = START_TEXT
+            self.api.messages.send(
+                message=start_text,
+                random_id=randint(0, 2 ** 20),
+                peer_id=chat_id
+            )
+
 
         for event in self.long_poller.listen():
             log.debug("полученло событие")
@@ -93,8 +95,14 @@ class Bot:
                 log.exception('Ошибка в обработке события:')
 
     def on_event(self, event):
-        #print("==========on_event===============")
+        print("==========on_event===============")
 
+
+        print(settings_dispatcher.DATE)
+        print(len(settings_dispatcher.DATE))
+        if len(settings_dispatcher.DATE)==0:
+            print("len(settings_dispatcher.DATE) =",len(settings_dispatcher.DATE))
+            exit()
 
         text_to_send = ''
         if event.type != VkBotEventType.MESSAGE_NEW:
@@ -103,10 +111,10 @@ class Bot:
         user_id = event.object['message']['peer_id']
         text = event.obj['message']["text"]
 
+
         for intent in settings_dispatcher.INTENTS:
             log.debug(f"User gets {intent}")
             if any(token in text.lower() for token in intent["tokens"]):
-                #print("tokens", intent["tokens"], intent["tokens"] in text.lower(), text.lower())
                 # run intent
                 if intent["tokens"] in text.lower() or text.lower()[1:] in intent["tokens"][1:]:
                     if intent["answer"]:
@@ -126,7 +134,9 @@ class Bot:
                 text_to_send = self.continue_scenario(user_id, text)
                 break
 
-        #print("Отправляем в вк", text_to_send)
+        print("Отправляем в вк", text_to_send)
+        if text_to_send == "":
+            exit()
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -134,14 +144,14 @@ class Bot:
         )
 
     def start_scenario(self, user_id):
-        #print("==========start_scenario===============")
+        print("==========start_scenario===============")
         scanerio_name = "registration"
         scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
         self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
 
     def continue_scenario(self, user_id, text):
-        #print("==========continue_scenario===============")
+        print("==========continue_scenario===============")
         state = self.user_states[user_id]
         #print(state.context)
 
@@ -157,13 +167,15 @@ class Bot:
 
             if state.step_name == "step3":
                 otvet = []
-                date = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
-                for line in settings_dispatcher.DATE:
+                date  = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
+                DATE = settings_dispatcher.create_DATEBASE()
+                for line in DATE:
+
                     date_in_line = line["date"]
+                    bool_time = date_in_line>=datetime.datetime.now().date()
                     if date_in_line >= date and line["departure_city"] == state.context["departure_city"] and line[
                         "arrival_city"] == state.context["arrival_city"]:
                         otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
-
                 if len(otvet) == 0:
                     text = 'Нет таких рейсов!\n\n'
                     self.user_states.pop(user_id)

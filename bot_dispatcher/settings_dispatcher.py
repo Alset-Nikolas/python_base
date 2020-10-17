@@ -11,33 +11,36 @@ CITY = {"Гонконг", "Бангкок", "Макао",
         "Куала-Лумпур", "Москва", "Санкт-Петербург"}
 
 ALL_FLY_NUMBERS = set()
-
 DATE = []
-date_now = datetime.datetime.now().date()
+def create_DATEBASE():
+    date_now = datetime.datetime.now().date()
 
-date = date_now
-while date != date_now + datetime.timedelta(weeks=1):
+    date = date_now
+    while date != date_now + datetime.timedelta(weeks=1):
 
-    number_of_flights = random.randint(180, 300)
-    for flight in range(number_of_flights):
+        number_of_flights = random.randint(180, 300)
+        for flight in range(number_of_flights):
 
-        departure_time = random.randint(0, 23)
-        departure_city = random.choice(list(CITY))
+            departure_time = random.randint(0, 23)
+            departure_city = random.choice(list(CITY))
 
-        arrival_city = random.choice(list(CITY - set(departure_city)))
+            arrival_city = random.choice(list(CITY - set(departure_city)))
 
-        fly_time = str(departure_time) + ".00"
-        while True:
-            flight_number = random.randint(1000, 9999)
-            if flight_number not in ALL_FLY_NUMBERS:
-                ALL_FLY_NUMBERS.add(flight_number)
-                break
-        DATE.append({"departure_city": departure_city, "arrival_city": arrival_city,
-                     "date": date, "fly_time": fly_time, "flight number": flight_number,
-                     "free places": random.randint(1, 5)})
+            fly_time = str(departure_time) + ".00"
+            while True:
+                flight_number = random.randint(1000, 9999)
+                if flight_number not in ALL_FLY_NUMBERS:
+                    ALL_FLY_NUMBERS.add(flight_number)
+                    break
+            DATE.append({"departure_city": departure_city, "arrival_city": arrival_city,
+                         "date": date, "fly_time": fly_time, "flight number": flight_number,
+                         "free places": random.randint(1, 5)})
 
-    date += datetime.timedelta(days=1)
-# pprint(DATE)
+        date += datetime.timedelta(days=1)
+    return DATE
+
+DATE = create_DATEBASE()
+#pprint(DATE)
 
 
 TEXT_HELP = '''
@@ -91,7 +94,7 @@ SCENARIOS = {
             },
             "step3": {
                 "text": "Будем искать билеты на '{date}'.\n",
-                "failure_text": "Пример: 14-10-2020",
+                "failure_text": "Пример: 14-10-2020. В прошлое билет брать нельзя!",
                 "handler": "handler_date",
                 "next_step": "step4"
             },
