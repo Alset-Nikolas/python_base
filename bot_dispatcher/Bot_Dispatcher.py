@@ -100,7 +100,7 @@ class Bot:
 
         print(settings_dispatcher.DATE)
         print(len(settings_dispatcher.DATE))
-        if len(settings_dispatcher.DATE)==0:
+        if len(settings_dispatcher.DATE)!=1:
             print("len(settings_dispatcher.DATE) =",len(settings_dispatcher.DATE))
             exit()
 

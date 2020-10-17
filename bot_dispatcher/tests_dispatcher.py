@@ -1,7 +1,7 @@
 import datetime
 from copy import deepcopy
 from unittest import TestCase
-from unittest.mock import patch, Mock, ANY
+from unittest.mock import patch, Mock, ANY, MagicMock
 
 from vk_api.bot_longpoll import VkBotMessageEvent
 from vk_api import VkApi
@@ -33,7 +33,7 @@ class Test1(TestCase):
         long_poller_listen_mock.listen = long_poller_mock
 
         settings_dispatcher_mock = Mock()
-        settings_dispatcher_mock.DATE = self.DATE
+        settings_dispatcher_mock.DATE = MagicMock(return_value=self.DATE)
         settings_dispatcher_mock.INTENTS = settings_dispatcher.INTENTS
         settings_dispatcher_mock.SCENARIOS = settings_dispatcher.SCENARIOS
 
@@ -102,12 +102,17 @@ class Test1(TestCase):
 
 
 
-        settings_dispatcher_mock = Mock()
-        settings_dispatcher_mock.DATE = settings_dispatcher.DATE
-        settings_dispatcher_mock.INTENTS = settings_dispatcher.INTENTS
-        settings_dispatcher_mock.SCENARIOS = settings_dispatcher.SCENARIOS
+        settings_dispatcher_mock = MagicMock()
+        settings_dispatcher_mock.DATE = MagicMock()
+        settings_dispatcher_mock.INTENTS = MagicMock()
+        settings_dispatcher_mock.SCENARIOS = MagicMock()
+        settings_dispatcher_mock.DATE.__iter__.return_value = self.DATE
+        settings_dispatcher_mock.INTENTS.__iter__.return_value = settings_dispatcher.INTENTS
+        settings_dispatcher_mock.SCENARIOS.__iter__.return_value = settings_dispatcher.SCENARIOS
 
-        with patch("Bot_Dispatcher.settings_dispatcher", return_value=settings_dispatcher_mock):
+        for x in settings_dispatcher_mock.DATE:
+            print(x)
+        with patch("Bot_Dispatcher.settings_dispatcher", settings_dispatcher_mock):
             with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
                 bot = Bot("", "")
                 bot.api = api_mock
