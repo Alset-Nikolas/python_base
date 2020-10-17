@@ -147,8 +147,7 @@ class Test1(TestCase):
 
     def test_change_date(self):
         print(len(settings_dispatcher.DATE))
-        new_func = Mock(return_value=self.DATE)
-        new_func.__len__.return_value = len(self.DATE)
-        with patch("settings_dispatcher.create_DATEBASE", return_value=new_func):
+        with patch("settings_dispatcher.create_DATEBASE") as new_func:
+            new_func.return_value = self.DATE
             print("тут длина = ", len(settings_dispatcher.create_DATEBASE()))
             print(len(settings_dispatcher.DATE), 'а должно быть = 1')
