@@ -18,10 +18,10 @@ class Test1(TestCase):
                    'client_info': {'button_actions': ['text', 'vkpay', 'open_app', 'location', 'open_link'],
                                    'keyboard': True, 'inline_keyboard': True, 'carousel': False, 'lang_id': 0}},
         'group_id': 198507410, 'event_id': '7eaa4ff72c79d802328422c91cde763d6ee5b4a5'}
-    DATE = [{'arrival_city': 'Москва',
+    DATE = [{'arrival_city': 'Санкт-Петербург',
              'date': datetime.date(2020, 10, 18),
-             'departure_city': 'Санкт-Петербург',
-             'flight number': 3546,
+             'departure_city': 'Москва',
+             'flight number': "3546",
              'fly_time': '20.00',
              'free places': 3}]
 
@@ -66,20 +66,22 @@ class Test1(TestCase):
 
         """Будем искать билеты на '18-10-2020'.
 Варианты:
-2020-10-15 в 19.00 номер рейса 3546 свободных мест 3
-Укажите номер рейса!""",
+2020-10-18 в 20.00 номер рейса 3546 свободных мест 3
+Укажите номер рейса!
+""",
 
-        "Выбор рейса 3546.Предлагаем написать комментарий в произвольной форме.",
+        """Выбор рейса 3546.
+Предлагаем написать комментарий в произвольной форме.""",
 
         """Спасибо за комментарий! ФФФФФ.
-Уточняем введенные данные.
-Москва —> Санкт-Петербург 18-10-2020 рейс 3546!
-да или нет?"""
+ Уточняем введенные данные.
+ Москва --> Санкт-Петербург 18-10-2020 рейс 3546!
+ да или нет?""",
         
         "Супер! Введите номер телефона",
 
-        """Мы будем звонить на 88888888888.\n
-Спасибо за регистрацию!\n
+        """Мы будем звонить на 88888888888.
+Спасибо за регистрацию!
 Если хотите заказать еще один билет Введите город отправления:"""
 
     ]
@@ -114,40 +116,39 @@ class Test1(TestCase):
 
         '''
 
-        with patch('Bot_Dispatcher.settings_dispatcher.DATE', self.DATE):
+        with patch("Bot_Dispatcher.settings_dispatcher.DATE", self.DATE):
             with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
-                bot = Bot("", "")
-                bot.api = api_mock
-                bot.run()
-            print("===============")
-            print(send_mock)
-            print("===============")
-            print(self.INPUTS)
-            print("===============")
-            print(send_mock.call_count, len(self.INPUTS))
-            assert send_mock.call_count == len(self.INPUTS)
+                with patch("Bot_Dispatcher.handlers_dispatcher.ALL_FLY_NUMBERS", {3546}):
+                    bot = Bot("", "")
+                    bot.api = api_mock
+                    bot.run()
+                print("===============")
+                print(send_mock)
+                print("===============")
+                print(self.INPUTS)
+                print("===============")
+                print(send_mock.call_count, len(self.INPUTS))
+                assert send_mock.call_count == len(self.INPUTS)
 
-            real_outputs = []
-            for call in send_mock.call_args_list:
-                args, kwargs = call
-                print(call)
-                real_outputs.append(kwargs["message"])
+                real_outputs = []
+                for call in send_mock.call_args_list:
+                    args, kwargs = call
+                    real_outputs.append(kwargs["message"])
 
-            for i in range(len(self.INPUTS)-1):
-                if real_outputs[i]!=self.EXPECTED_OUTPUTS[i]:
-                    pass
-                    '''print("=-="*70)
-                    print(real_outputs[i])
-                    print("&=&" * 70)
-                    print(self.EXPECTED_OUTPUTS[i])
-                    print("=-="*70)'''
+                for i in range(len(self.INPUTS)):
+                    if real_outputs[i]!=self.EXPECTED_OUTPUTS[i]:
+                        pass
+                        print("=-="*70)
+                        print(real_outputs[i])
+                        print("&=&" * 70)
+                        print(self.EXPECTED_OUTPUTS[i])
+                        print("=-="*70)
 
 
-            assert real_outputs == self.EXPECTED_OUTPUTS
+                assert real_outputs == self.EXPECTED_OUTPUTS
 
     def test_change_date(self):
         print(len(settings_dispatcher.DATE))
-        with patch("settings_dispatcher.create_DATEBASE") as new_func:
-            new_func.return_value = self.DATE
-            print("тут длина = ", len(settings_dispatcher.create_DATEBASE()))
+        with patch("settings_dispatcher.DATE",self.DATE):
             print(len(settings_dispatcher.DATE), 'а должно быть = 1')
+            print(Bot)

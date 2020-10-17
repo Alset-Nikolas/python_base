@@ -71,9 +71,9 @@ class Bot:
         self.long_poller = VkBotLongPoll(vk=self.vk, group_id=self.group_id)
         self.api = self.vk.get_api()
         self.user_states = dict()  # user_id --> UserState
+        self.DATE = settings_dispatcher.DATE
 
     def run(self):
-        print("=====run=====")
         '''Запуск бота.'''
         if __name__ == "__main__":
             vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
@@ -95,7 +95,6 @@ class Bot:
                 log.exception('Ошибка в обработке события:')
 
     def on_event(self, event):
-        print("==========on_event===============")
 
 
         text_to_send = ''
@@ -126,8 +125,6 @@ class Bot:
 
                 text_to_send = self.continue_scenario(user_id, text)
                 break
-
-        print("Отправляем в вк", text_to_send)
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -135,14 +132,12 @@ class Bot:
         )
 
     def start_scenario(self, user_id):
-        print("==========start_scenario===============")
         scanerio_name = "registration"
         scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
         self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
 
     def continue_scenario(self, user_id, text):
-        print("==========continue_scenario===============")
         state = self.user_states[user_id]
         #print(state.context)
 
@@ -159,11 +154,9 @@ class Bot:
             if state.step_name == "step3":
                 otvet = []
                 date  = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
-                DATE = settings_dispatcher.DATE
-                for line in DATE:
+                for line in self.DATE:
 
                     date_in_line = line["date"]
-                    bool_time = date_in_line>=datetime.datetime.now().date()
                     if date_in_line >= date and line["departure_city"] == state.context["departure_city"] and line[
                         "arrival_city"] == state.context["arrival_city"]:
                         otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
