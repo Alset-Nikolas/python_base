@@ -142,3 +142,8 @@ class Test1(TestCase):
 
 
             assert real_outputs == self.EXPECTED_OUTPUTS
+
+    def test_change_date(self):
+        print(len(settings_dispatcher.DATE))
+        with patch('settings_dispatcher.DATE', [1,2,3]):
+            print(settings_dispatcher.DATE, len(settings_dispatcher.DATE))
