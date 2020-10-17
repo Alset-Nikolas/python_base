@@ -35,7 +35,6 @@ class Test1(TestCase):
         settings_dispatcher_mock = Mock()
         settings_dispatcher_mock.DATE = self.DATE
         settings_dispatcher_mock.INTENTS = settings_dispatcher.INTENTS
-
         settings_dispatcher_mock.SCENARIOS = settings_dispatcher.SCENARIOS
 
         with patch("Bot_Dispatcher.settings_dispatcher", return_value=settings_dispatcher_mock):
@@ -102,15 +101,13 @@ class Test1(TestCase):
         long_poller_mock.listen = Mock(return_value=events)
 
 
-        '''
+
         settings_dispatcher_mock = Mock()
         settings_dispatcher_mock.DATE = settings_dispatcher.DATE
         settings_dispatcher_mock.INTENTS = settings_dispatcher.INTENTS
         settings_dispatcher_mock.SCENARIOS = settings_dispatcher.SCENARIOS
-        '''
-        m = Mock()
-        m.DATE = self.DATE
-        with patch("Bot_Dispatcher.settings_dispatcher.DATE", return_value=m.DATE):
+
+        with patch("Bot_Dispatcher.settings_dispatcher", return_value=settings_dispatcher_mock):
             with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
                 bot = Bot("", "")
                 bot.api = api_mock
