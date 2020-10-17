@@ -19,7 +19,7 @@ class Test1(TestCase):
                                    'keyboard': True, 'inline_keyboard': True, 'carousel': False, 'lang_id': 0}},
         'group_id': 198507410, 'event_id': '7eaa4ff72c79d802328422c91cde763d6ee5b4a5'}
     DATE = [{'arrival_city': 'Москва',
-             'date': datetime.date(2020, 10, 16),
+             'date': datetime.date(2020, 10, 18),
              'departure_city': 'Санкт-Петербург',
              'flight number': 3546,
              'fly_time': '20.00',
@@ -52,7 +52,7 @@ class Test1(TestCase):
         "/help",
         "москв",
         "питер",
-        "16-10-2020",
+        "18-10-2020",
         "3546",
         "ФФФФФ",
         "да",
@@ -64,7 +64,7 @@ class Test1(TestCase):
         "Город отправления принят 'Москва'. Введите город назначения.",
         "Город назначения принят 'Санкт-Петербург'. Введите дату отправления.",
 
-        """Будем искать билеты на '16-10-2020'.
+        """Будем искать билеты на '18-10-2020'.
 Варианты:
 2020-10-15 в 19.00 номер рейса 3546 свободных мест 3
 Укажите номер рейса!""",
@@ -73,7 +73,7 @@ class Test1(TestCase):
 
         """Спасибо за комментарий! ФФФФФ.
 Уточняем введенные данные.
-Москва —> Санкт-Петербург 14-10-2020 рейс 3546!
+Москва —> Санкт-Петербург 18-10-2020 рейс 3546!
 да или нет?"""
         
         "Супер! Введите номер телефона",
@@ -101,18 +101,20 @@ class Test1(TestCase):
         long_poller_mock.listen = Mock(return_value=events)
 
 
-
+        '''
         settings_dispatcher_mock = MagicMock()
         settings_dispatcher_mock.DATE = MagicMock()
         settings_dispatcher_mock.INTENTS = MagicMock()
         settings_dispatcher_mock.SCENARIOS = MagicMock()
         settings_dispatcher_mock.DATE.__iter__.return_value = self.DATE
         settings_dispatcher_mock.INTENTS.__iter__.return_value = settings_dispatcher.INTENTS
-        settings_dispatcher_mock.SCENARIOS.__iter__.return_value = settings_dispatcher.SCENARIOS
-
+        settings_dispatcher_mock.SCENARIOS.__iter__.return_value = settings_dispatcher.INTENTS
         for x in settings_dispatcher_mock.DATE:
             print(x)
-        with patch("Bot_Dispatcher.settings_dispatcher", settings_dispatcher_mock):
+
+        '''
+
+        with patch('Bot_Dispatcher.settings_dispatcher.DATE', self.DATE):
             with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
                 bot = Bot("", "")
                 bot.api = api_mock
@@ -145,5 +147,8 @@ class Test1(TestCase):
 
     def test_change_date(self):
         print(len(settings_dispatcher.DATE))
-        with patch('settings_dispatcher.DATE', [1,2,3]):
-            print(settings_dispatcher.DATE, len(settings_dispatcher.DATE))
+        new_func = Mock(return_value=self.DATE)
+        new_func.__len__.return_value = len(self.DATE)
+        with patch("settings_dispatcher.create_DATEBASE", return_value=new_func):
+            print("тут длина = ", len(settings_dispatcher.create_DATEBASE()))
+            print(len(settings_dispatcher.DATE), 'а должно быть = 1')

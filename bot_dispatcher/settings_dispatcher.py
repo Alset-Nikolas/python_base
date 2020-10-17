@@ -11,8 +11,8 @@ CITY = {"Гонконг", "Бангкок", "Макао",
         "Куала-Лумпур", "Москва", "Санкт-Петербург"}
 
 ALL_FLY_NUMBERS = set()
-DATE = []
 def create_DATEBASE():
+    DATE = []
     date_now = datetime.datetime.now().date()
 
     date = date_now
@@ -38,11 +38,7 @@ def create_DATEBASE():
 
         date += datetime.timedelta(days=1)
     return DATE
-
 DATE = create_DATEBASE()
-#pprint(DATE)
-
-
 TEXT_HELP = '''
 ==================================
 Весь сценарий:
@@ -57,7 +53,6 @@ TEXT_HELP = '''
 Если во время сценария вводится команда (/ticket или /help), то сценарий останавливается и выполняется команда 
 ==================================
 '''
-
 INTENTS = [
     {
         "name": 'начинает сценарий заказа билетов',
@@ -75,7 +70,6 @@ INTENTS = [
     },
 
 ]
-
 SCENARIOS = {
     "registration": {
         "first_step": "step1",

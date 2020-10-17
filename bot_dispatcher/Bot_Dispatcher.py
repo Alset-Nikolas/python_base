@@ -98,19 +98,12 @@ class Bot:
         print("==========on_event===============")
 
 
-        print(settings_dispatcher.DATE)
-        print(len(settings_dispatcher.DATE))
-        if len(settings_dispatcher.DATE)!=1:
-            print("len(settings_dispatcher.DATE) =",len(settings_dispatcher.DATE))
-            exit()
-
         text_to_send = ''
         if event.type != VkBotEventType.MESSAGE_NEW:
             log.info('не умею обрабатывать %s', event.type)
             return
         user_id = event.object['message']['peer_id']
         text = event.obj['message']["text"]
-
 
         for intent in settings_dispatcher.INTENTS:
             log.debug(f"User gets {intent}")
@@ -135,8 +128,6 @@ class Bot:
                 break
 
         print("Отправляем в вк", text_to_send)
-        if text_to_send == "":
-            exit()
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -168,7 +159,7 @@ class Bot:
             if state.step_name == "step3":
                 otvet = []
                 date  = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
-                DATE = settings_dispatcher.create_DATEBASE()
+                DATE = settings_dispatcher.DATE
                 for line in DATE:
 
                     date_in_line = line["date"]

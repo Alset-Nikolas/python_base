@@ -98,6 +98,7 @@ def handler_date(text, context):
         context["date"] = text
         return True
     else:
+        print(date)
         return False
 
 
