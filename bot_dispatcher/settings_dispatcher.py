@@ -11,6 +11,8 @@ CITY = {"Гонконг", "Бангкок", "Макао",
         "Куала-Лумпур", "Москва", "Санкт-Петербург"}
 
 ALL_FLY_NUMBERS = set()
+
+
 def create_DATEBASE():
     DATE = []
     date_now = datetime.datetime.now().date()
@@ -38,6 +40,8 @@ def create_DATEBASE():
 
         date += datetime.timedelta(days=1)
     return DATE
+
+
 DATE = create_DATEBASE()
 TEXT_HELP = '''
 ==================================

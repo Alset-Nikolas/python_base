@@ -8,6 +8,7 @@ from vk_api import VkApi
 import settings_dispatcher
 from Bot_Dispatcher import Bot, START_TEXT
 
+
 class Test1(TestCase):
     RAW_EVENT = {
         'type': 'message_new',
@@ -46,8 +47,6 @@ class Test1(TestCase):
                     bot.on_event.assert_called_with({})
                     assert bot.on_event.call_count == count
 
-
-
     INPUTS = [
         "/help",
         "москв",
@@ -77,7 +76,7 @@ class Test1(TestCase):
  Уточняем введенные данные.
  Москва --> Санкт-Петербург 18-10-2020 рейс 3546!
  да или нет?""",
-        
+
         "Супер! Введите номер телефона",
 
         """Мы будем звонить на 88888888888.
@@ -92,7 +91,6 @@ class Test1(TestCase):
         api_mock = Mock()
         api_mock.messages.send = send_mock
 
-
         events = []
         for input_text in self.INPUTS:
             event = deepcopy(self.RAW_EVENT)
@@ -101,7 +99,6 @@ class Test1(TestCase):
 
         long_poller_mock = Mock()
         long_poller_mock.listen = Mock(return_value=events)
-
 
         '''
         settings_dispatcher_mock = MagicMock()
@@ -136,19 +133,13 @@ class Test1(TestCase):
                     real_outputs.append(kwargs["message"])
 
                 for i in range(len(self.INPUTS)):
-                    if real_outputs[i]!=self.EXPECTED_OUTPUTS[i]:
+                    if real_outputs[i] != self.EXPECTED_OUTPUTS[i]:
                         pass
-                        print("=-="*70)
+                        print("=-=" * 70)
                         print(real_outputs[i])
                         print("&=&" * 70)
                         print(self.EXPECTED_OUTPUTS[i])
-                        print("=-="*70)
-
+                        print("=-=" * 70)
 
                 assert real_outputs == self.EXPECTED_OUTPUTS
 
-    def test_change_date(self):
-        print(len(settings_dispatcher.DATE))
-        with patch("settings_dispatcher.DATE",self.DATE):
-            print(len(settings_dispatcher.DATE), 'а должно быть = 1')
-            print(Bot)

@@ -4,8 +4,8 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
 from bot_dispatcher import handlers_dispatcher, settings_dispatcher
-log = logging.getLogger('bot_dispatcher')
 
+log = logging.getLogger('bot_dispatcher')
 
 
 def configure_logging():
@@ -86,7 +86,6 @@ class Bot:
                 peer_id=chat_id
             )
 
-
         for event in self.long_poller.listen():
             log.debug("полученло событие")
             try:
@@ -95,7 +94,6 @@ class Bot:
                 log.exception('Ошибка в обработке события:')
 
     def on_event(self, event):
-
 
         text_to_send = ''
         if event.type != VkBotEventType.MESSAGE_NEW:
@@ -110,7 +108,7 @@ class Bot:
                 # run intent
                 if intent["tokens"] in text.lower() or text.lower()[1:] in intent["tokens"][1:]:
                     if intent["answer"]:
-                        #print("intent['answer']")
+                        # print("intent['answer']")
                         text_to_send = intent["answer"]
                         break
                     else:
@@ -121,7 +119,7 @@ class Bot:
 
                 if user_id not in self.user_states:
                     self.start_scenario(user_id)
-                    #print("user_id not in")
+                    # print("user_id not in")
 
                 text_to_send = self.continue_scenario(user_id, text)
                 break
@@ -139,23 +137,23 @@ class Bot:
 
     def continue_scenario(self, user_id, text):
         state = self.user_states[user_id]
-        #print(state.context)
+        # print(state.context)
 
         steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
 
         handler = getattr(handlers_dispatcher, step["handler"])
-        #print("handler = ", handler(text=text, context=state.context))
+        # print("handler = ", handler(text=text, context=state.context))
 
         if handler(text=text, context=state.context):
             # next step
             text_to_send = step["text"]
 
             if state.step_name == "step3":
+                # TODO вот этот ответ можете сформировать в handler-е?
                 otvet = []
-                date  = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
+                date = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
                 for line in self.DATE:
-
                     date_in_line = line["date"]
                     if date_in_line >= date and line["departure_city"] == state.context["departure_city"] and line[
                         "arrival_city"] == state.context["arrival_city"]:
@@ -183,12 +181,11 @@ class Bot:
                 # switch to next step
                 state.step_name = step["next_step"]
 
-
         else:
             # retry current step
             text_to_send = step["failure_text"]
 
-        #print(state.step_name, '--->', text_to_send)
+        # print(state.step_name, '--->', text_to_send)
         return text_to_send.format(**state.context)
 
 
