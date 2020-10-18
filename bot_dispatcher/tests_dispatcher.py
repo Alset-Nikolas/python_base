@@ -114,32 +114,33 @@ class Test1(TestCase):
         '''
 
         with patch("Bot_Dispatcher.settings_dispatcher.DATE", self.DATE):
-            with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
-                with patch("Bot_Dispatcher.handlers_dispatcher.ALL_FLY_NUMBERS", {3546}):
-                    bot = Bot("", "")
-                    bot.api = api_mock
-                    bot.run()
-                print("===============")
-                print(send_mock)
-                print("===============")
-                print(self.INPUTS)
-                print("===============")
-                print(send_mock.call_count, len(self.INPUTS))
-                assert send_mock.call_count == len(self.INPUTS)
+            with patch("Bot_Dispatcher.handlers_dispatcher.DATE", self.DATE):
+                with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
+                    with patch("Bot_Dispatcher.handlers_dispatcher.ALL_FLY_NUMBERS", {3546}):
+                        bot = Bot("", "")
+                        bot.api = api_mock
+                        bot.run()
+                    print("===============")
+                    print(send_mock)
+                    print("===============")
+                    print(self.INPUTS)
+                    print("===============")
+                    print(send_mock.call_count, len(self.INPUTS))
+                    assert send_mock.call_count == len(self.INPUTS)
 
-                real_outputs = []
-                for call in send_mock.call_args_list:
-                    args, kwargs = call
-                    real_outputs.append(kwargs["message"])
+                    real_outputs = []
+                    for call in send_mock.call_args_list:
+                        args, kwargs = call
+                        real_outputs.append(kwargs["message"])
 
-                for i in range(len(self.INPUTS)):
-                    if real_outputs[i] != self.EXPECTED_OUTPUTS[i]:
-                        pass
-                        print("=-=" * 70)
-                        print(real_outputs[i])
-                        print("&=&" * 70)
-                        print(self.EXPECTED_OUTPUTS[i])
-                        print("=-=" * 70)
+                    for i in range(len(self.INPUTS)):
+                        if real_outputs[i] != self.EXPECTED_OUTPUTS[i]:
+                            pass
+                            print("=-=" * 70)
+                            print(real_outputs[i])
+                            print("&=&" * 70)
+                            print(self.EXPECTED_OUTPUTS[i])
+                            print("=-=" * 70)
 
-                assert real_outputs == self.EXPECTED_OUTPUTS
+                    assert real_outputs == self.EXPECTED_OUTPUTS
 

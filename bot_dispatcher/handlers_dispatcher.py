@@ -90,41 +90,30 @@ def handler_arrival_city(text, context):
         context["var"] = text
         return False
 
-
+from bot_dispatcher.settings_dispatcher import DATE
 def handler_date(text, context):
     match = re.match(re_date, text)
     date = datetime.datetime.strptime(text, '%d-%m-%Y').date()
+    otvet = []
+    for line in DATE:
+        date_in_line = line["date"]
+        if date_in_line >= date and line["departure_city"] == context["departure_city"] and line[
+            "arrival_city"] == context["arrival_city"]:
+            otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
 
-    if match and date>=datetime.datetime.now().date():
+    text_to_send = 'Варианты:\n'
+    for line in otvet:
+        text_to_send += f'{line[0]} в {line[1]} номер рейса {line[2]} свободных мест {line[3]}\n'
+    text_to_send += "Укажите номер рейса!\n"
+
+
+    if match and date>=datetime.datetime.now().date() and len(otvet)!= 0:
         context["date"] = text
-        return True
+        return text_to_send
     else:
 
         return False
 
-def pars_datebase(DATE, text, context, user_states, user_id, START_TEXT):
-    text_to_send = ''
-    otvet = []
-    date = datetime.datetime.strptime(text, '%d-%m-%Y').date()
-    for line in DATE:
-
-        date_in_line = line["date"]
-
-        if date_in_line >= date and line["departure_city"] == context["departure_city"] and line[
-            "arrival_city"] == context["arrival_city"]:
-            otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
-    if len(otvet) == 0:
-        text_to_send = 'Нет таких рейсов!\n\n'
-        user_states.pop(user_id)
-        text_to_send += START_TEXT
-
-    else:
-        text_to_send = 'Варианты:\n'
-        for line in otvet:
-            text_to_send += f'{line[0]} в {line[1]} номер рейса {line[2]} свободных мест {line[3]}\n'
-        text_to_send += "Укажите номер рейса!\n"
-
-    return text_to_send, otvet,
 
 
 def handler_true(text, context):

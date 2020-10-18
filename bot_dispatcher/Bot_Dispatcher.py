@@ -149,26 +149,8 @@ class Bot:
             # next step
             text_to_send = step["text"]
 
-            if state.step_name == "step3":
-                # TODO вот этот ответ можете сформировать в handler-е?
-                otvet = []
-                date = datetime.datetime.strptime(state.context["date"], '%d-%m-%Y').date()
-                for line in self.DATE:
-                    date_in_line = line["date"]
-                    if date_in_line >= date and line["departure_city"] == state.context["departure_city"] and line[
-                        "arrival_city"] == state.context["arrival_city"]:
-                        otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
-                if len(otvet) == 0:
-                    text = 'Нет таких рейсов!\n\n'
-                    self.user_states.pop(user_id)
-                    text += START_TEXT
-                    text_to_send = text
-                else:
-                    text = 'Варианты:\n'
-                    for line in otvet:
-                        text += f'{line[0]} в {line[1]} номер рейса {line[2]} свободных мест {line[3]}\n'
-                    text_to_send += text
-                    text_to_send += "Укажите номер рейса!\n"
+            if handler(text=text, context=state.context) not in [True, False]:
+                text_to_send += handler(text=text, context=state.context)
 
             if state.step_name == "step6":
                 if not state.context["right"]:
