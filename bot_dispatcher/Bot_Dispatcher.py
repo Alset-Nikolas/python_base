@@ -87,6 +87,7 @@ class Bot:
             )
 
         for event in self.long_poller.listen():
+
             log.debug("полученло событие")
             try:
                 self.on_event(event)

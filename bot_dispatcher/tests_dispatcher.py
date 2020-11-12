@@ -8,6 +8,7 @@ from vk_api import VkApi
 import settings_dispatcher
 from Bot_Dispatcher import Bot, START_TEXT
 
+date_now = datetime.datetime.now().date().strftime('%d-%m-%Y')
 
 class Test1(TestCase):
     RAW_EVENT = {
@@ -20,7 +21,7 @@ class Test1(TestCase):
                                    'keyboard': True, 'inline_keyboard': True, 'carousel': False, 'lang_id': 0}},
         'group_id': 198507410, 'event_id': '7eaa4ff72c79d802328422c91cde763d6ee5b4a5'}
     DATE = [{'arrival_city': 'Санкт-Петербург',
-             'date': datetime.date(2020, 10, 18),
+             'date': datetime.datetime.now().date(),
              'departure_city': 'Москва',
              'flight number': "3546",
              'fly_time': '20.00',
@@ -51,7 +52,7 @@ class Test1(TestCase):
         "/help",
         "москв",
         "питер",
-        "18-10-2020",
+        datetime.datetime.now().date().strftime('%d-%m-%Y'),
         "3546",
         "ФФФФФ",
         "да",
@@ -62,19 +63,18 @@ class Test1(TestCase):
         settings_dispatcher.INTENTS[1]["answer"],
         "Город отправления принят 'Москва'. Введите город назначения.",
         "Город назначения принят 'Санкт-Петербург'. Введите дату отправления.",
-
-        """Будем искать билеты на '18-10-2020'.
+        f"""Будем искать билеты на '{datetime.datetime.now().date().strftime('%d-%m-%Y')}'.
 Варианты:
-2020-10-18 в 20.00 номер рейса 3546 свободных мест 3
+{datetime.datetime.now().date()} в 20.00 номер рейса 3546 свободных мест 3
 Укажите номер рейса!
 """,
 
         """Выбор рейса 3546.
 Предлагаем написать комментарий в произвольной форме.""",
 
-        """Спасибо за комментарий! ФФФФФ.
+        f"""Спасибо за комментарий! ФФФФФ.
  Уточняем введенные данные.
- Москва --> Санкт-Петербург 18-10-2020 рейс 3546!
+ Москва --> Санкт-Петербург {datetime.datetime.now().date().strftime('%d-%m-%Y')} рейс 3546!
  да или нет?""",
 
         "Супер! Введите номер телефона",
@@ -120,12 +120,6 @@ class Test1(TestCase):
                         bot = Bot("", "")
                         bot.api = api_mock
                         bot.run()
-                    print("===============")
-                    print(send_mock)
-                    print("===============")
-                    print(self.INPUTS)
-                    print("===============")
-                    print(send_mock.call_count, len(self.INPUTS))
                     assert send_mock.call_count == len(self.INPUTS)
 
                     real_outputs = []

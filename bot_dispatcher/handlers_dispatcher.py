@@ -95,8 +95,10 @@ def handler_date(text, context):
     match = re.match(re_date, text)
     date = datetime.datetime.strptime(text, '%d-%m-%Y').date()
     otvet = []
+
     for line in DATE:
         date_in_line = line["date"]
+
         if date_in_line >= date and line["departure_city"] == context["departure_city"] and line[
             "arrival_city"] == context["arrival_city"]:
             otvet.append([line["date"], line['fly_time'], line['flight number'], line['free places']])
