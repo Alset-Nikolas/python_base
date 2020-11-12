@@ -93,7 +93,10 @@ def handler_arrival_city(text, context):
 from bot_dispatcher.settings_dispatcher import DATE
 def handler_date(text, context):
     match = re.match(re_date, text)
-    date = datetime.datetime.strptime(text, '%d-%m-%Y').date()
+    try:
+        date = datetime.datetime.strptime(text, '%d-%m-%Y').date()
+    except:
+        return False
     otvet = []
 
     for line in DATE:
