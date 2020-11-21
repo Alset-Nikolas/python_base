@@ -1,11 +1,22 @@
+import os
 from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import patch, Mock, ANY
-
+from generate_ticket import generate_ticket
+from pony.orm import rollback, db_session
 from vk_api.bot_longpoll import VkBotMessageEvent
 from vk_api import VkApi
 import settings
 from bot import Bot
+
+
+def isolate_db(test_func):
+    def wrapper(*args, **kwargs):
+        with db_session:
+            test_func(*args, **kwargs)
+            rollback()
+
+    return wrapper
 
 
 class Test1(TestCase):
@@ -26,15 +37,13 @@ class Test1(TestCase):
         long_poller_listen_mock = Mock()
         long_poller_listen_mock.listen = long_poller_mock
         with patch("bot.vk_api.VkApi"):
-
             with patch("bot.VkBotLongPoll", return_value=long_poller_listen_mock):
                 bot = Bot("", "")
                 bot.on_event = Mock()
+                bot.send_image = Mock()
                 bot.run()
                 bot.on_event.assert_called_with({})
                 assert bot.on_event.call_count == count
-
-
 
     INPUTS = [
         "Привет",
@@ -55,11 +64,11 @@ class Test1(TestCase):
         settings.SCENARIOS["registration"]["steps"]["step3"]["text"].format(name='Вениамин', email='email@email.ru'),
     ]
 
+    @isolate_db
     def test_run_ok(self):
         send_mock = Mock()
         api_mock = Mock()
         api_mock.messages.send = send_mock
-
 
         events = []
         for input_text in self.INPUTS:
@@ -73,6 +82,7 @@ class Test1(TestCase):
         with patch("bot.VkBotLongPoll", return_value=long_poller_mock):
             bot = Bot("", "")
             bot.api = api_mock
+            bot.send_image = Mock()
             bot.run()
         assert send_mock.call_count == len(self.INPUTS)
 
@@ -88,3 +98,23 @@ class Test1(TestCase):
             print(real == expec)
             print('_' * 50)
         assert real_outputs == self.EXPECTED_OUTPUTS
+
+    def test_image_generation(self):
+
+        try:
+            f = open('Files\\probe.png')
+            f.close()
+        except FileNotFoundError:
+            print('Файл не существует!')
+
+        with patch("generate_ticket.PATH_AVATAR", r"Avatars\var6.png"):
+            file = generate_ticket("111", "aaa")
+            a = file.read()
+        with open("Files\\probe.png", 'rb') as f:
+            b = f.read()
+
+        if a != b:
+            print("f.read()=", f.read())
+            print("file.read()=", file.read())
+
+        assert a == b

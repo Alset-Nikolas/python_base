@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from random import randint
+
+import requests
 import vk_api
+from pony.orm import db_session
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
 import handlers
+from models import UserState, Registration
 
 log = logging.getLogger('bot')
-
 
 
 def configure_logging():
@@ -29,7 +32,7 @@ except ImportError as er:
     print(er)
     exit("DO cp settings.py.default settings.py and set token!")
 
-
+'''
 class UserState:
     """ Состояние пользователя внутри сценария"""
 
@@ -37,6 +40,7 @@ class UserState:
         self.scenario_name = scenario_name
         self.step_name = step_name
         self.context = context or {"name": None, "email": None}
+'''
 
 
 class Bot:
@@ -61,7 +65,7 @@ class Bot:
         self.vk = vk_api.VkApi(token=self.token)
         self.long_poller = VkBotLongPoll(vk=self.vk, group_id=self.group_id)
         self.api = self.vk.get_api()
-        self.user_states = dict()  # user_id --> UserState
+        # self.user_states = dict()  # user_id --> UserState
 
     def run(self):
         '''Запуск бота.'''
@@ -72,6 +76,7 @@ class Bot:
             except Exception:
                 log.exception('Ошибка в обработке события:')
 
+    @db_session
     def on_event(self, event):
         '''Отправляет сообщение назад, если это текст.
         :param event: VkBotMessageEvent
@@ -81,10 +86,10 @@ class Bot:
             return
         user_id = event.object['message']['peer_id']
         text = event.obj['message']["text"]
-        if user_id in self.user_states:
+        state = UserState.get(user_id=str(user_id))
+        if state is not None:
             # continue scenario
-            text_to_send = self.continue_scenario(user_id, text=text)
-
+            self.continue_scenario(text=text, state=state, user_id=user_id)
         else:
             # serch intent
 
@@ -93,28 +98,50 @@ class Bot:
                 if any(token in text.lower() for token in intent["tokens"]):
                     # run intent
                     if intent["answer"]:
-                        text_to_send = intent["answer"]
+                        self.send_text(intent["answer"], user_id)
                     else:
-                        text_to_send = self.start_scenario(user_id, intent["scenario"])
+                        self.start_scenario(user_id, intent["scenario"], text)
                     break
             else:
-                text_to_send = settings.DEFAULT_ANSWER
+                self.send_text(settings.DEFAULT_ANSWER, user_id)
+
+    def send_text(self, text_to_send, user_id):
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
-            peer_id=event.object['message']['peer_id']
+            peer_id=user_id
         )
 
-    def start_scenario(self, user_id, scanerio_name):
+    def send_image(self, image, user_id):
+        upload_url = self.api.photos.getMessagesUploadServer()["upload_url"]
+        upload_date = requests.post(url=upload_url, files={"photo": ("image.png", image, "image/png")}).json()
+        image_data = self.api.photos.saveMessagesPhoto(**upload_date)
+        owner_id = image_data[0]["owner_id"]
+        media_id = image_data[0]["id"]
+        access_key = image_data[0]['access_key']
+        attachment = f'photo{owner_id}_{media_id}_{access_key}'
+        self.api.messages.send(
+            attachment=attachment,
+            random_id=randint(0, 2 ** 20),
+            peer_id=user_id
+        )
+
+    def send_step(self, step, user_id, text, context):
+        if 'text' in step:
+            self.send_text(step["text"].format(**context), user_id)
+        if 'image' in step:
+            handler = getattr(handlers, step["image"])
+            image = handler(text, context)
+            self.send_image(image, user_id)
+
+    def start_scenario(self, user_id, scanerio_name, text):
         scanerio = settings.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
         step = scanerio["steps"][first_step]
-        text_to_send = step["text"]
-        self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
-        return text_to_send
+        self.send_step(step, user_id, text, context={})
+        UserState(user_id=str(user_id), scenario_name=scanerio_name, step_name=first_step, context={})
 
-    def continue_scenario(self, user_id, text):
-        state = self.user_states[user_id]
+    def continue_scenario(self, text, state, user_id):
         steps = settings.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
 
@@ -122,19 +149,18 @@ class Bot:
         if handler(text=text, context=state.context):
             # next step
             next_step = steps[step["next_step"]]
-            text_to_send = next_step["text"].format(**state.context)
-
+            self.send_step(next_step, user_id, text, state.context)
             if next_step["next_step"]:
                 # switch to next step
                 state.step_name = step["next_step"]
             else:
                 # finish scenario
-                self.user_states.pop(user_id)
                 log.info("Заргеистрирован {name} , {email}".format(**state.context))
+                Registration(name=state.context["name"], email=state.context["email"])
+                state.delete()
         else:
             # retry current step
-            text_to_send = step["failure_text"].format(**state.context)
-        return text_to_send
+            self.send_text(step["failure_text"].format(**state.context), user_id)
 
 
 if __name__ == '__main__':
