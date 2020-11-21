@@ -22,8 +22,8 @@ def generate_ticket(name, email):
 
     d = ImageDraw.Draw(txt)
     d.text((X_size - 300, Y_size // 2 - 75), name, font=fnt, fill=(255, 255, 255), )
-    d.text((X_size - 300, Y_size // 2 - 25), email, font=fnt, fill=(255, 255, 255, 255))
-    out = Image.alpha_composite(base, txt)
+    d.text((X_size - 350, Y_size // 2 - 25), email, font=fnt, fill=(255, 255, 255, 255))
+    base = Image.alpha_composite(base, txt)
 
     avatar_base = Image.open(PATH_AVATAR).convert("RGBA").resize((125, 125))
 
