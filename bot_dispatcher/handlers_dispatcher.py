@@ -12,7 +12,8 @@ re_flight = re.compile(r"\d{4}")
 re_telephone = re.compile(r"\d{11}")
 
 from bot_dispatcher.settings_dispatcher import CITY
-
+# TODO и тут, путь надо указать без bot_dispatcher
+# TODO + импорты должны идти до создания переменных
 
 def city_check(city):
     city_lower = city.lower()
