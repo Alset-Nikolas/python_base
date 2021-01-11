@@ -4,6 +4,7 @@ True если шаг пройден, False если данные введены 
 """
 import datetime
 import re
+from settings_dispatcher import CITY
 
 re_departure_city = re.compile(r'^[\w\-\s]{1,40}$')
 re_arrival_city = re.compile(r'^[\w\-\s]{1,40}$')
@@ -11,9 +12,6 @@ re_date = re.compile(r"\d{1,2}-\d{1,2}-\d{4}")
 re_flight = re.compile(r"\d{4}")
 re_telephone = re.compile(r"\d{11}")
 
-from bot_dispatcher.settings_dispatcher import CITY
-# TODO и тут, путь надо указать без bot_dispatcher
-# TODO + импорты должны идти до создания переменных
 
 def city_check(city):
     city_lower = city.lower()
@@ -26,7 +24,7 @@ def city_check(city):
         correct_city_lower = correct_city.lower()
         letter_match = 0
         if correct_city_lower[:-1] == city_lower[:-1]:
-            print(1)
+            print("city_check correct_city =", correct_city)
             return correct_city
 
         if correct_city_lower in city_lower or city_lower in correct_city_lower:
@@ -56,6 +54,7 @@ def handler_departure_city(text, context):
     match = re.match(re_departure_city, text)
     if match and city_check(text):
         variant = city_check(text)
+        print("handler_departure_city  variant =", variant)
         if type(variant) != list or len(variant) == 1:
             context["departure_city"] = variant
 
@@ -76,6 +75,7 @@ def handler_arrival_city(text, context):
     match = re.match(re_departure_city, text)
     if match and city_check(text):
         variant = city_check(text)
+        print("handler_arrival_city  variant =", variant)
         if type(variant) != list or len(variant) == 1:
             context["arrival_city"] = variant
 

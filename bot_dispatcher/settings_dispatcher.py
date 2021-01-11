@@ -2,8 +2,8 @@ from pprint import pprint
 import random
 import datetime
 
-TOKEN = '837e839267c0530c017f10f6fbc97cddf46da4444963f4bc12bf0ff3eee04d9b5b6dcf17e1abf46e1aeba'
-GROUP_ID = 58369654
+GROUP_ID=198507410
+TOKEN = 'a8fb6d94efec9852f7287f73067ecb502eb57a55675b0cb6a53295e1f8a0892e9739126335f98f0ee514c'
 CITY = {"Гонконг", "Бангкок", "Макао",
         "Сингапур", "Сингапур", "Париж",
         "Дубай", "Дели", "Стамбул",
@@ -130,3 +130,11 @@ SCENARIOS = {
     }
 
 }
+
+DB_CONFIG = dict(
+    provider='postgres',
+    user='postgres',
+    password='81k',
+    host='localhost',
+    database='vk_dispatcher_bot'
+)

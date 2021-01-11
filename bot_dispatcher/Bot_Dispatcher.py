@@ -1,12 +1,11 @@
 import datetime
 from random import randint
 import vk_api
+from pony.orm import db_session
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
-import handlers_dispatcher
-import settings_dispatcher
-
-
+from bot_dispatcher import handlers_dispatcher, settings_dispatcher
+from  models_dispatcher import UserState, Registration
 
 log = logging.getLogger('bot_dispatcher')
 
@@ -32,6 +31,7 @@ except ImportError as er:
     exit("DO cp settings_dispatcher.py.default settings_dispatcher.py and set token!")
 
 
+'''
 class UserState:
     """ Состояние пользователя внутри сценария"""
 
@@ -41,6 +41,7 @@ class UserState:
         self.context = context or {"departure_city": None, "arrival_city": None,
                                    "date": None, "flight": None, "comment": None,
                                    "right": None, "telephone": None, "var": ""}
+'''
 
 
 START_TEXT = """
@@ -73,7 +74,7 @@ class Bot:
         self.vk = vk_api.VkApi(token=self.token)
         self.long_poller = VkBotLongPoll(vk=self.vk, group_id=self.group_id)
         self.api = self.vk.get_api()
-        self.user_states = dict()  # user_id --> UserState
+        #self.user_states = dict()  # user_id --> UserState
         self.DATE = settings_dispatcher.DATE
 
     def run(self):
@@ -88,7 +89,7 @@ class Bot:
                 random_id=randint(0, 2 ** 20),
                 peer_id=chat_id
             )
-
+        print("Отправили", "start_text")
         for event in self.long_poller.listen():
 
             log.debug("полученло событие")
@@ -97,6 +98,7 @@ class Bot:
             except Exception:
                 log.exception('Ошибка в обработке события:')
 
+    @db_session
     def on_event(self, event):
 
         text_to_send = ''
@@ -105,28 +107,33 @@ class Bot:
             return
         user_id = event.object['message']['peer_id']
         text = event.obj['message']["text"]
-
-        for intent in settings_dispatcher.INTENTS:
-            log.debug(f"User gets {intent}")
-            if any(token in text.lower() for token in intent["tokens"]):
-                # run intent
-                if intent["tokens"] in text.lower() or text.lower()[1:] in intent["tokens"][1:]:
-                    if intent["answer"]:
-                        # print("intent['answer']")
-                        text_to_send = intent["answer"]
-                        break
-                    else:
+        print("Пришло", text)
+        state = UserState.get(user_id=str(user_id))
+        if state is not None:
+            # continue scenario
+            text_to_send = self.continue_scenario(text=text, state=state)
+        else:
+        # serch intent
+            for intent in settings_dispatcher.INTENTS:
+                log.debug(f"User gets {intent}")
+                if any(token in text.lower() for token in intent["tokens"]):
+                    # run intent
+                    if intent["tokens"] in text.lower() or text.lower()[1:] in intent["tokens"][1:]:
+                        if intent["answer"]:
+                            # print("intent['answer']")
+                            text_to_send = intent["answer"]
+                            break
+                        else:
+                            self.start_scenario(user_id)
+                            text_to_send = '==Start==\nВас приветствует Диспетчер! Введите город отправления:\n'
+                            break
+                else:
                         self.start_scenario(user_id)
-                        text_to_send = '==Start==\nВас приветствует Диспетчер! Введите город отправления:\n'
+                        state = UserState.get(user_id=str(user_id))
+                        print("on_event state.context = ", state.context)
+                        text_to_send = self.continue_scenario(text=text, state=state)
                         break
-            else:
-
-                if user_id not in self.user_states:
-                    self.start_scenario(user_id)
-                    # print("user_id not in")
-
-                text_to_send = self.continue_scenario(user_id, text)
-                break
+            print("text_to_send=", text_to_send)
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -137,17 +144,19 @@ class Bot:
         scanerio_name = "registration"
         scanerio = settings_dispatcher.SCENARIOS[scanerio_name]
         first_step = scanerio["first_step"]
-        self.user_states[user_id] = UserState(scenario_name=scanerio_name, step_name=first_step)
+        UserState(user_id=str(user_id), scenario_name=scanerio_name, step_name=first_step, context={})
 
-    def continue_scenario(self, user_id, text):
-        state = self.user_states[user_id]
-        # print(state.context)
+
+
+    def continue_scenario(self, text, state):
+
+        print("continue_scenario state.context=", state.context)
 
         steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
 
         handler = getattr(handlers_dispatcher, step["handler"])
-        # print("handler = ", handler(text=text, context=state.context))
+        print("continue_scenario handler = ", handler(text=text, context=state.context))
 
         if handler(text=text, context=state.context):
             # next step
@@ -159,13 +168,24 @@ class Bot:
             if state.step_name == "step6":
                 if not state.context["right"]:
                     step["next_step"] = None
-                    self.user_states.pop(user_id)
+                    state.delete()
+                    print("Удаляем из базы")
                     text += 'Вас приветствует Диспетчер! Введите город отправления:'
                     text_to_send += text
 
             if step["next_step"]:
                 # switch to next step
                 state.step_name = step["next_step"]
+            else:
+                Registration(departure_city=state.context["departure_city"],
+                             arrival_city=state.context["arrival_city"],
+                             date=state.context["date"],
+                             flight=state.context["flight"],
+                             comment=state.context["comment"],
+                             right=state.context["right"],
+                             telephone=state.context["telephone"])
+                state.delete()
+                print("Удаляем из базы")
 
         else:
             # retry current step
