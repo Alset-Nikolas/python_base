@@ -69,6 +69,7 @@ class Bot:
 
     def run(self):
         '''Запуск бота.'''
+        print("run")
         for event in self.long_poller.listen():
             log.debug("полученло событие")
             try:
@@ -85,6 +86,7 @@ class Bot:
             log.info('не умею обрабатывать %s', event.type)
             return
         user_id = event.object['message']['peer_id']
+        print()
         text = event.obj['message']["text"]
         state = UserState.get(user_id=str(user_id))
         if state is not None:
