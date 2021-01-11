@@ -15,14 +15,13 @@ class UserState(db.Entity):
 
 class Registration(db.Entity):
     """Заявка на регистрауию"""
-    #user_id = Required(str, unique=True)
-    departure_city = Required(str),
-    arrival_city = Required(str),
-    date = Required(str),
-    flight = Required(str),
-    comment = Required(str),
-    right = Required(str)
-    telephone = Required(str),
+    user_id = Required(str, unique=True)
+    departure_city = Required(str)
+    arrival_city = Required(str)
+    date = Required(str)
+    flight = Required(str)
+    comment = Required(str)
+    telephone = Required(str)
 
 
 db.generate_mapping(create_tables=True)

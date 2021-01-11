@@ -1,11 +1,13 @@
 import datetime
 from random import randint
+
+import requests
 import vk_api
 from pony.orm import db_session
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
 from bot_dispatcher import handlers_dispatcher, settings_dispatcher
-from  models_dispatcher import UserState, Registration
+from models_dispatcher import UserState, Registration
 
 log = logging.getLogger('bot_dispatcher')
 
@@ -111,7 +113,7 @@ class Bot:
         state = UserState.get(user_id=str(user_id))
         if state is not None:
             # continue scenario
-            text_to_send = self.continue_scenario(text=text, state=state)
+            text_to_send = self.continue_scenario(text=text, state=state,user_id=user_id)
         else:
         # serch intent
             for intent in settings_dispatcher.INTENTS:
@@ -131,7 +133,7 @@ class Bot:
                         self.start_scenario(user_id)
                         state = UserState.get(user_id=str(user_id))
                         print("on_event state.context = ", state.context)
-                        text_to_send = self.continue_scenario(text=text, state=state)
+                        text_to_send = self.continue_scenario(text=text, state=state,user_id=user_id)
                         break
             print("text_to_send=", text_to_send)
         self.api.messages.send(
@@ -148,7 +150,7 @@ class Bot:
 
 
 
-    def continue_scenario(self, text, state):
+    def continue_scenario(self, text, state,user_id):
 
         print("continue_scenario state.context=", state.context)
 
@@ -177,13 +179,18 @@ class Bot:
                 # switch to next step
                 state.step_name = step["next_step"]
             else:
-                Registration(departure_city=state.context["departure_city"],
+                print("state.context=", state.context)
+                print("state.context['departure_city']", state.context["departure_city"])
+                Registration(user_id=str(user_id),
+                             departure_city=state.context["departure_city"],
                              arrival_city=state.context["arrival_city"],
                              date=state.context["date"],
                              flight=state.context["flight"],
                              comment=state.context["comment"],
-                             right=state.context["right"],
                              telephone=state.context["telephone"])
+                handler = getattr(handlers_dispatcher, step["image"])
+                image = handler(text, state.context)
+                self.send_image(image, user_id)
                 state.delete()
                 print("Удаляем из базы")
 
@@ -194,6 +201,19 @@ class Bot:
         # print(state.step_name, '--->', text_to_send)
         return text_to_send.format(**state.context)
 
+    def send_image(self, image, user_id):
+        upload_url = self.api.photos.getMessagesUploadServer()["upload_url"]
+        upload_date = requests.post(url=upload_url, files={"photo": ("image.png", image, "image/png")}).json()
+        image_data = self.api.photos.saveMessagesPhoto(**upload_date)
+        owner_id = image_data[0]["owner_id"]
+        media_id = image_data[0]["id"]
+        access_key = image_data[0]['access_key']
+        attachment = f'photo{owner_id}_{media_id}_{access_key}'
+        self.api.messages.send(
+            attachment=attachment,
+            random_id=randint(0, 2 ** 20),
+            peer_id=user_id
+        )
 
 if __name__ == '__main__':
     configure_logging()

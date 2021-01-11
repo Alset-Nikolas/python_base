@@ -123,6 +123,7 @@ SCENARIOS = {
 Если хотите заказать еще один билет Введите город отправления:''',
                 "failure_text": "Пример 89991112233",
                 "handler": "handler_telephone",
+                "image": "handler_generate_ticket",
                 "next_step": None
             },
 

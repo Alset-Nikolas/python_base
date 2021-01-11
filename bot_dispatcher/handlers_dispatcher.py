@@ -163,3 +163,14 @@ def handler_telephone(text, context):
 
 
 
+from generate_ticket import generate_ticket
+
+
+def handler_generate_ticket(text, context):
+    return generate_ticket(
+                             departure_city=context["departure_city"],
+                             arrival_city=context["arrival_city"],
+                             date=context["date"],
+                             flight=context["flight"],
+                             comment=context["comment"],
+                             telephone=context["telephone"])
