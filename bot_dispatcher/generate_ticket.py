@@ -32,7 +32,7 @@ def generate_ticket(departure_city, arrival_city, date, flight, comment, telepho
     idraw.text((x0, y0+5*dy+3), telephone, font=fnt, fill=(0, 0, 0))
     base = Image.alpha_composite(base, txt)
 
-    base.show()
+
     temp_file = BytesIO()
     base.save(temp_file, 'png')
     temp_file.seek(0)
