@@ -3,12 +3,26 @@ from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import patch, Mock, ANY, MagicMock
 
+from pony.orm import db_session, rollback
 from vk_api.bot_longpoll import VkBotMessageEvent
 from vk_api import VkApi
 import settings_dispatcher
 from Bot_Dispatcher import Bot, START_TEXT
 
 date_now = datetime.datetime.now().date().strftime('%d-%m-%Y')
+
+
+
+def isolate_db(test_func):
+    def wrapper(*args, **kwargs):
+        with db_session:
+            test_func(*args, **kwargs)
+            rollback()
+
+    return wrapper
+
+
+
 
 class Test1(TestCase):
     RAW_EVENT = {
@@ -82,9 +96,9 @@ class Test1(TestCase):
         """Мы будем звонить на 88888888888.
 Спасибо за регистрацию!
 Если хотите заказать еще один билет Введите город отправления:"""
+]
 
-    ]
-
+    @isolate_db
     def test_run_ok(self):
 
         send_mock = Mock()
@@ -95,31 +109,25 @@ class Test1(TestCase):
         for input_text in self.INPUTS:
             event = deepcopy(self.RAW_EVENT)
             event["object"]['message']["text"] = input_text
+            print(input_text)
             events.append(VkBotMessageEvent(event))
 
         long_poller_mock = Mock()
         long_poller_mock.listen = Mock(return_value=events)
 
-        '''
-        settings_dispatcher_mock = MagicMock()
-        settings_dispatcher_mock.DATE = MagicMock()
-        settings_dispatcher_mock.INTENTS = MagicMock()
-        settings_dispatcher_mock.SCENARIOS = MagicMock()
-        settings_dispatcher_mock.DATE.__iter__.return_value = self.DATE
-        settings_dispatcher_mock.INTENTS.__iter__.return_value = settings_dispatcher.INTENTS
-        settings_dispatcher_mock.SCENARIOS.__iter__.return_value = settings_dispatcher.INTENTS
-        for x in settings_dispatcher_mock.DATE:
-            print(x)
-
-        '''
-
         with patch("Bot_Dispatcher.settings_dispatcher.DATE", self.DATE):
             with patch("Bot_Dispatcher.handlers_dispatcher.DATE", self.DATE):
                 with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
                     with patch("Bot_Dispatcher.handlers_dispatcher.ALL_FLY_NUMBERS", {3546}):
+
+
                         bot = Bot("", "")
+                        bot.send_image=Mock()
                         bot.api = api_mock
                         bot.run()
+                    print(send_mock.call_count)
+                    print(self.INPUTS)
+
                     assert send_mock.call_count == len(self.INPUTS)
 
                     real_outputs = []
@@ -128,13 +136,21 @@ class Test1(TestCase):
                         real_outputs.append(kwargs["message"])
 
                     for i in range(len(self.INPUTS)):
-                        if real_outputs[i] != self.EXPECTED_OUTPUTS[i]:
-                            pass
-                            print("=-=" * 70)
-                            print(real_outputs[i])
-                            print("&=&" * 70)
-                            print(self.EXPECTED_OUTPUTS[i])
-                            print("=-=" * 70)
+                        try:
+                            if real_outputs[i] != self.EXPECTED_OUTPUTS[i]:
+                                print(i)
+                                print("0" * 70)
+                                print(real_outputs[i])
+                                print("&=&" * 70)
+                                print(self.EXPECTED_OUTPUTS[i])
+                                print("0" * 70)
+                        except:
+                            if len(real_outputs)>len(self.EXPECTED_OUTPUTS):
+                                print("Почему-то есть лишнее смс")
+                                print(real_outputs[-1])
+                            else:
+                                print("Почему-то нет такого смс")
+                                print(self.EXPECTED_OUTPUTS[-1])
 
                     assert real_outputs == self.EXPECTED_OUTPUTS
 

@@ -37,6 +37,8 @@ def generate_ticket(departure_city, arrival_city, date, flight, comment, telepho
     base.save(temp_file, 'png')
     temp_file.seek(0)
 
+
+    #print(temp_file)
     return temp_file
 
 

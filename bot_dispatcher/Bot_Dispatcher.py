@@ -91,7 +91,7 @@ class Bot:
                 random_id=randint(0, 2 ** 20),
                 peer_id=chat_id
             )
-        print("Отправили", "start_text")
+        #print("Отправили", "start_text")
         for event in self.long_poller.listen():
 
             log.debug("полученло событие")
@@ -109,7 +109,7 @@ class Bot:
             return
         user_id = event.object['message']['peer_id']
         text = event.obj['message']["text"]
-        print("Пришло", text)
+        #print("Пришло", text)
         state = UserState.get(user_id=str(user_id))
         if state is not None:
             # continue scenario
@@ -132,10 +132,10 @@ class Bot:
                 else:
                         self.start_scenario(user_id)
                         state = UserState.get(user_id=str(user_id))
-                        print("on_event state.context = ", state.context)
+                        #print("on_event state.context = ", state.context)
                         text_to_send = self.continue_scenario(text=text, state=state,user_id=user_id)
                         break
-            print("text_to_send=", text_to_send)
+            #print("text_to_send=", text_to_send)
         self.api.messages.send(
             message=text_to_send,
             random_id=randint(0, 2 ** 20),
@@ -152,13 +152,13 @@ class Bot:
 
     def continue_scenario(self, text, state,user_id):
 
-        print("continue_scenario state.context=", state.context)
+        #print("continue_scenario state.context=", state.context)
 
         steps = settings_dispatcher.SCENARIOS[state.scenario_name]["steps"]
         step = steps[state.step_name]
 
         handler = getattr(handlers_dispatcher, step["handler"])
-        print("continue_scenario handler = ", handler(text=text, context=state.context))
+        #print("continue_scenario handler = ", handler(text=text, context=state.context))
 
         if handler(text=text, context=state.context):
             # next step
@@ -171,7 +171,7 @@ class Bot:
                 if not state.context["right"]:
                     step["next_step"] = None
                     state.delete()
-                    print("Удаляем из базы")
+                    #print("Удаляем из базы")
                     text += 'Вас приветствует Диспетчер! Введите город отправления:'
                     text_to_send += text
 
@@ -179,8 +179,8 @@ class Bot:
                 # switch to next step
                 state.step_name = step["next_step"]
             else:
-                print("state.context=", state.context)
-                print("state.context['departure_city']", state.context["departure_city"])
+                #print("state.context=", state.context)
+                #print("state.context['departure_city']", state.context["departure_city"])
                 Registration(user_id=str(user_id),
                              departure_city=state.context["departure_city"],
                              arrival_city=state.context["arrival_city"],
@@ -192,7 +192,7 @@ class Bot:
                 image = handler(text, state.context)
                 self.send_image(image, user_id)
                 state.delete()
-                print("Удаляем из базы")
+                #print("Удаляем из базы")
 
         else:
             # retry current step
@@ -202,6 +202,7 @@ class Bot:
         return text_to_send.format(**state.context)
 
     def send_image(self, image, user_id):
+
         upload_url = self.api.photos.getMessagesUploadServer()["upload_url"]
         upload_date = requests.post(url=upload_url, files={"photo": ("image.png", image, "image/png")}).json()
         image_data = self.api.photos.saveMessagesPhoto(**upload_date)
