@@ -12,7 +12,6 @@ from Bot_Dispatcher import Bot, START_TEXT
 date_now = datetime.datetime.now().date().strftime('%d-%m-%Y')
 
 
-
 def isolate_db(test_func):
     def wrapper(*args, **kwargs):
         with db_session:
@@ -20,8 +19,6 @@ def isolate_db(test_func):
             rollback()
 
     return wrapper
-
-
 
 
 class Test1(TestCase):
@@ -96,7 +93,7 @@ class Test1(TestCase):
         """Мы будем звонить на 88888888888.
 Спасибо за регистрацию!
 Если хотите заказать еще один билет Введите город отправления:"""
-]
+    ]
 
     @isolate_db
     def test_run_ok(self):
@@ -120,9 +117,8 @@ class Test1(TestCase):
                 with patch("Bot_Dispatcher.VkBotLongPoll", return_value=long_poller_mock):
                     with patch("Bot_Dispatcher.handlers_dispatcher.ALL_FLY_NUMBERS", {3546}):
 
-
                         bot = Bot("", "")
-                        bot.send_image=Mock()
+                        bot.send_image = Mock()
                         bot.api = api_mock
                         bot.run()
                     print(send_mock.call_count)
@@ -135,22 +131,12 @@ class Test1(TestCase):
                         args, kwargs = call
                         real_outputs.append(kwargs["message"])
 
-                    for i in range(len(self.INPUTS)):
-                        try:
-                            if real_outputs[i] != self.EXPECTED_OUTPUTS[i]:
-                                print(i)
-                                print("0" * 70)
-                                print(real_outputs[i])
-                                print("&=&" * 70)
-                                print(self.EXPECTED_OUTPUTS[i])
-                                print("0" * 70)
-                        except:
-                            if len(real_outputs)>len(self.EXPECTED_OUTPUTS):
-                                print("Почему-то есть лишнее смс")
-                                print(real_outputs[-1])
-                            else:
-                                print("Почему-то нет такого смс")
-                                print(self.EXPECTED_OUTPUTS[-1])
+                    for real, expec in zip(real_outputs, self.EXPECTED_OUTPUTS):
+                        print(real)
+                        print('-' * 50)
+                        print(expec)
+                        print('-' * 50)
+                        print(real == expec)
+                        print('_' * 50)
 
                     assert real_outputs == self.EXPECTED_OUTPUTS
-

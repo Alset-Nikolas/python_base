@@ -192,13 +192,16 @@ class Bot:
                 image = handler(text, state.context)
                 self.send_image(image, user_id)
                 state.delete()
-                #print("Удаляем из базы")
+                print("Удаляем из базы")
+                # TODO происходит удаление из базы
 
         else:
             # retry current step
             text_to_send = step["failure_text"]
 
         # print(state.step_name, '--->', text_to_send)
+        # TODO а затем происходит обращение к этому state
+        # TODO отсюда и UserState[new:1] was cancelled
         return text_to_send.format(**state.context)
 
     def send_image(self, image, user_id):
