@@ -106,7 +106,7 @@ class Test1(TestCase):
         for input_text in self.INPUTS:
             event = deepcopy(self.RAW_EVENT)
             event["object"]['message']["text"] = input_text
-            print(input_text)
+            #print(input_text)
             events.append(VkBotMessageEvent(event))
 
         long_poller_mock = Mock()
@@ -126,17 +126,20 @@ class Test1(TestCase):
 
                     assert send_mock.call_count == len(self.INPUTS)
 
+
                     real_outputs = []
                     for call in send_mock.call_args_list:
                         args, kwargs = call
                         real_outputs.append(kwargs["message"])
 
                     for real, expec in zip(real_outputs, self.EXPECTED_OUTPUTS):
-                        print(real)
-                        print('-' * 50)
-                        print(expec)
-                        print('-' * 50)
-                        print(real == expec)
-                        print('_' * 50)
+                            if real != expec:
+                                print(real)
+                                print('-' * 50)
+                                print(expec)
+                                print('-' * 50)
+
+
+
 
                     assert real_outputs == self.EXPECTED_OUTPUTS
