@@ -4,7 +4,11 @@ True если шаг пройден, False если данные введены 
 """
 import datetime
 import re
-from settings_dispatcher import CITY
+from .settings_dispatcher import CITY
+from app.settings_dispatcher import DATE
+from app.settings_dispatcher import ALL_FLY_NUMBERS
+from app.generate_ticket import generate_ticket
+
 
 re_departure_city = re.compile(r'^[\w\-\s]{1,40}$')
 re_arrival_city = re.compile(r'^[\w\-\s]{1,40}$')
@@ -91,7 +95,7 @@ def handler_arrival_city(text, context):
         context["var"] = text
         return False
 
-from bot_dispatcher.settings_dispatcher import DATE
+
 def handler_date(text, context):
     match = re.match(re_date, text)
     try:
@@ -126,7 +130,6 @@ def handler_true(text, context):
     return True
 
 
-from bot_dispatcher.settings_dispatcher import ALL_FLY_NUMBERS
 
 
 def handler_flight_selection(text, context):
@@ -163,7 +166,6 @@ def handler_telephone(text, context):
 
 
 
-from generate_ticket import generate_ticket
 
 
 def handler_generate_ticket(text, context):

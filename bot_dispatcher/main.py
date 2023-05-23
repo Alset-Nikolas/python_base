@@ -6,8 +6,8 @@ import vk_api
 from pony.orm import db_session
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
-from bot_dispatcher import handlers_dispatcher, settings_dispatcher
-from models_dispatcher import UserState, Registration
+from app import handlers_dispatcher, settings_dispatcher
+from app.models_dispatcher import UserState, Registration
 
 log = logging.getLogger('bot_dispatcher')
 
@@ -81,19 +81,7 @@ class Bot:
 
     def run(self):
         '''Запуск бота.'''
-        if __name__ == "__main__":
-            vk_session = vk_api.VkApi(token=settings_dispatcher.TOKEN)
-            vk = vk_session.get_api()
-            chat_id = vk.messages.searchConversations()["items"][0]["peer"]["local_id"]
-            start_text = START_TEXT
-            self.api.messages.send(
-                message=start_text,
-                random_id=randint(0, 2 ** 20),
-                peer_id=chat_id
-            )
-        #print("Отправили", "start_text")
         for event in self.long_poller.listen():
-
             log.debug("полученло событие")
             try:
                 self.on_event(event)

@@ -7,7 +7,7 @@ from pony.orm import db_session, rollback
 from vk_api.bot_longpoll import VkBotMessageEvent
 from vk_api import VkApi
 import settings_dispatcher
-from Bot_Dispatcher import Bot, START_TEXT
+from bot_dispatcher.main import Bot, START_TEXT
 
 date_now = datetime.datetime.now().date().strftime('%d-%m-%Y')
 

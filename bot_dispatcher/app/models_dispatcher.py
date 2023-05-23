@@ -1,5 +1,5 @@
 from pony.orm import Database, Required, Json
-from settings_dispatcher import DB_CONFIG
+from .settings_dispatcher import DB_CONFIG
 
 db = Database()
 db.bind(**DB_CONFIG)

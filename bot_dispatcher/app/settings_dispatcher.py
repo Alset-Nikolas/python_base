@@ -135,7 +135,7 @@ SCENARIOS = {
 DB_CONFIG = dict(
     provider='postgres',
     user='postgres',
-    password='81k',
+    password='qwerty',
     host='localhost',
     database='vk_dispatcher_bot'
 )
