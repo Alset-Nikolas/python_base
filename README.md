@@ -1,7 +1,7 @@
 <h1 align="center">Дипломный проект курса от Skillbox <a href='https://skillbox.ru/course/python-basic/'>Python-разработчик с нуля</a></h1>
 
 <h1 align="center">Привет </a> 
-<img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
+<img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32" width="32"/></h1>
 <h3 align="center">Несколько интересных проектов, которые у меня получились в ходе прохождения курса </h3>
 
 
